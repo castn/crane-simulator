@@ -57,7 +57,6 @@ def create_segment(i):
 
 
 def get_nodes():
-
     return numpy.array(nodes).astype(float)
 
 
