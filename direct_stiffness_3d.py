@@ -8,10 +8,10 @@ A = 0.111
 nodes = []
 bars = []
 
-#test data
-levels = 5
-block_width = 2000
-block_height = 2000
+SEGMENT_WIDTH = 2000
+SEGMENT_HEIGHT = 2000
+
+
 # nodes.append([0, 0, 0])               #node 0
 # nodes.append([block_width, 0, 0])           #node 1
 # nodes.append([block_width, block_width, 0])       #node 2
@@ -20,11 +20,7 @@ block_height = 2000
 # nodes.append([block_width, 0, block_height])      #node 5
 # nodes.append([block_width, block_width, block_height])  #node 6
 # nodes.append([0, block_width, block_height])      #node 7
-for i in range(levels + 1):
-  nodes.append([0, 0, block_height * i])
-  nodes.append([block_width, 0, block_height * i])
-  nodes.append([block_width, block_width, block_height * i])
-  nodes.append([0, block_width, block_height * i])
+
 
 # #base beams
 # bars.append([0, 1])
@@ -49,26 +45,56 @@ for i in range(levels + 1):
 # #base and top diagonals
 # bars.append([0, 2])
 # bars.append([4, 6])
-for i in range(levels + 1):
-  print(i)
-  #base beams
-  bars.append([0 + 4 * i, 1 + 4 * i])
-  bars.append([1 + 4 * i, 2 + 4 * i])
-  bars.append([2 + 4 * i, 3 + 4 * i])
-  bars.append([3 + 4 * i, 0 + 4 * i])
-  #base diag
-  bars.append([0 + 4 * i, 2 + 4 * i])
-  if (i < levels):
-    #vertical beams
-    bars.append([0 + 4 * i, 4 + 4 * i])
-    bars.append([1 + 4 * i, 5 + 4 * i])
-    bars.append([2 + 4 * i, 6 + 4 * i])
-    bars.append([3 + 4 * i, 7 + 4 * i])
-    #diagonal beams
-    bars.append([0 + 4 * i, 5 + 4 * i])
-    bars.append([5 + 4 * i, 2 + 4 * i])
-    bars.append([2 + 4 * i, 7 + 4 * i])
-    bars.append([7 + 4 * i, 0 + 4 * i])
+def create_tower(number_of_segments, is_hollow):
+    create_segments(number_of_segments)
+    create_beams(is_hollow, number_of_segments)
+
+
+def create_beams(is_hollow, number_of_segments):
+    for i in range(number_of_segments + 1):
+        print(f'Create segment: {i}')
+        create_horizontal_beams(i)
+        if not is_hollow:
+            bars.append([0 + 4 * i, 2 + 4 * i])
+        if i < number_of_segments:
+            create_vertical_beams(i)
+            create_diagonal_beams(i)
+
+
+def create_diagonal_beams(i):
+    bars.append([0 + 4 * i, 5 + 4 * i])  # front face
+    bars.append([5 + 4 * i, 2 + 4 * i])  # right face
+    bars.append([2 + 4 * i, 7 + 4 * i])  # rear face
+    bars.append([7 + 4 * i, 0 + 4 * i])  # left face
+
+
+def create_vertical_beams(i):
+    bars.append([0 + 4 * i, 4 + 4 * i])  # front_left_vertical beam
+    bars.append([1 + 4 * i, 5 + 4 * i])  # front_right_vertical beam
+    bars.append([3 + 4 * i, 7 + 4 * i])  # rear_left_vertical beam
+    bars.append([2 + 4 * i, 6 + 4 * i])  # rear_right_vertical beam
+
+
+def create_horizontal_beams(i):
+    bars.append([0 + 4 * i, 1 + 4 * i])  # front_horizontal beam
+    bars.append([1 + 4 * i, 2 + 4 * i])  # right_horizontal beam
+    bars.append([2 + 4 * i, 3 + 4 * i])  # rear_horizontal beam
+    bars.append([3 + 4 * i, 0 + 4 * i])  # left_horizontal beam
+
+
+def create_segments(number_of_segments):
+    for i in range(number_of_segments + 1):
+        create_segment(i)
+
+
+def create_segment(i):
+    nodes.append([0, 0, SEGMENT_HEIGHT * i])
+    nodes.append([SEGMENT_WIDTH, 0, SEGMENT_HEIGHT * i])
+    nodes.append([SEGMENT_WIDTH, SEGMENT_WIDTH, SEGMENT_HEIGHT * i])
+    nodes.append([0, SEGMENT_WIDTH, SEGMENT_HEIGHT * i])
+
+
+create_tower(5, True)
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
 nodes = np.array(nodes).astype(float)
@@ -95,40 +121,6 @@ DOFCON[2, :] = 0
 DOFCON[3, :] = 0
 
 
-# Truss structural analysis 
-def TrussAnalysis(): 
-  NN = len(nodes)
-  NE = len(bars)
-  DOF = 3
-  NDOF = DOF * NN
-  # structural analysis
-  d = nodes[bars[:,1],:] - nodes[bars[:,0],:]
-  L = np.sqrt((d**2).sum(axis=1))
-  angle = d.T/L
-  a = np.concatenate((-angle.T,angle.T), axis=1)
-  K = np.zeros([NDOF,NDOF])
-  for k in range(NE):
-    aux = DOF * bars[k,:]
-    index = np.r_[aux[0]:aux[0] + DOF, aux[1]:aux[1] + DOF]
-    ES = np.dot(a[k][np.newaxis].T*E*A, a[k][np.newaxis]) / L[k]
-    K[np.ix_(index, index)] = K[np.ix_(index, index)] + ES
-  freeDOF = DOFCON.flatten().nonzero()[0]
-  supportDOF = (DOFCON.flatten() == 0).nonzero()[0]
-  Kff = K[np.ix_(freeDOF, freeDOF)]
-  Kfr = K[np.ix_(freeDOF, supportDOF)]
-  Krf = Kfr.T
-  Krr = K[np.ix_(supportDOF, supportDOF)]
-  Pf = P.flatten()[freeDOF]
-  Uf = np.linalg.solve(Kff, Pf)
-  U = DOFCON.astype(float).flatten()
-  U[freeDOF] = Uf
-  U[supportDOF] = Ur
-  U = U.reshape(NN, DOF)
-  u = np.concatenate((U[bars[:,0]], U[bars[:,1]]), axis=1)
-  N = E * A / L[:] * (a[:] + u[:]).sum(axis=1)
-  R = (Krf[:] * Uf).sum(axis=1) + (Krr[:] * Ur).sum(axis=1)
-  R = R.reshape(4, DOF)
-  return np.array(N), np.array(R), U
 # Truss structural analysis
 def TrussAnalysis():
     NN = len(nodes)
