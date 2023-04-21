@@ -29,8 +29,6 @@ pts = m.points
 p.show(window_size=[512, 384], cpos="xy")
 display.stop()
 
-
-
 # Definition of finite element methods and integration method
 mfu = gf.MeshFem(mesh, 1)
 elements_degree = 2
@@ -67,4 +65,3 @@ p.add_mesh(m.contour(8).extract_largest(), opacity=0.1)
 pts = m.points
 p.show(window_size=[384, 384], cpos="xy")
 display.stop()
-

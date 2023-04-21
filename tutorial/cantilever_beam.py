@@ -206,6 +206,3 @@ for i in range(4):
         p.add_mesh(mesh.warp_by_vector("u"), color="tan", show_edges=True)
 
 p.show(cpos="xy")
-
-
-
