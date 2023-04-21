@@ -9,42 +9,33 @@ nodes = []
 bars = []
 
 #test data
-nodes.append([-37.5,0,200])
-nodes.append([37.5,0,200])
-nodes.append([-37.5,37.5,100])
-nodes.append([37.5,37.5,100])
-nodes.append([37.5,-37.5,100])
-nodes.append([-37.5,-37.5,100])
-nodes.append([-100,100,0])
-nodes.append([100,100,0])
-nodes.append([100,-100,0])
-nodes.append([-100,-100,0])
+nodes.append([0, 0, 0])           #node 0
+nodes.append([2000, 0, 0])        #node 1
+nodes.append([2000, 2000, 0])     #node 2
+nodes.append([0, 2000, 0])        #node 3
+nodes.append([0, 0, 2000])        #node 4
+nodes.append([2000, 0, 2000])     #node 5
+nodes.append([2000, 2000, 2000])  #node 6
+nodes.append([0, 2000, 2000])     #node 7
 
-bars.append([0,1])
-bars.append([3,0])
-bars.append([2,1])
-bars.append([4,0])
-bars.append([5,1])
-bars.append([3,1])
-bars.append([4,1])
-bars.append([2,0])
-bars.append([5,0])
-bars.append([5,2])
-bars.append([4,3])
-bars.append([2,3])
-bars.append([5,4])
-bars.append([9,2])
-bars.append([6,5])
-bars.append([8,3])
-bars.append([7,4])
-bars.append([6,3])
-bars.append([7,2])
-bars.append([9,4])
-bars.append([8,5])
-bars.append([9,5])
-bars.append([6,2])
-bars.append([7,3])
-bars.append([8,4])
+bars.append([0, 1])
+bars.append([1, 2])
+bars.append([2, 3])
+bars.append([3, 0])
+bars.append([0, 4])
+bars.append([1, 5])
+bars.append([2, 6])
+bars.append([3, 7])
+bars.append([0, 5])
+bars.append([5, 2])
+bars.append([2, 7])
+bars.append([7, 0])
+bars.append([4, 5])
+bars.append([5, 6])
+bars.append([6, 7])
+bars.append([7, 4])
+bars.append([0, 2])
+bars.append([4, 6])
 
 nodes = np.array(nodes).astype(float)
 bars = np.array(bars)
@@ -64,10 +55,10 @@ Ur = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 #Condition of DOF (1 = free, 0 = fixed)
 DOFCON = np.ones_like(nodes).astype(int)
-DOFCON[6,:] = 0
-DOFCON[7,:] = 0
-DOFCON[8,:] = 0
-DOFCON[9,:] = 0
+DOFCON[0,:] = 0
+DOFCON[1,:] = 0
+DOFCON[2,:] = 0
+DOFCON[3,:] = 0
 
 #Truss structural analysis 
 def TrussAnalysis(): 
@@ -112,18 +103,18 @@ def Plot(nodes, c, lt, lw, lg):
     zi, zf = nodes[bars[i,0],2], nodes[bars[i,1],2]
     line, = plt.plot([xi, xf], [yi, yf], [zi, zf], color=c, linestyle=lt, linewidth=lw)
   line.set_label(lg)
-  plt.legend(prop={'size': 14})
+  plt.legend(prop={'size': 10})
 
 #Run test with known data
-N, R, U = TrussAnalysis()
-print('Axial Forces (positive = tension, negative = compression)')
-print(N[np.newaxis].T)
-print('Reaction Forces (positive = upward, negative = downward)')
-print(R)
-print('Deformation at nodes')
-print(U)
+# N, R, U = TrussAnalysis()
+# print('Axial Forces (positive = tension, negative = compression)')
+# print(N[np.newaxis].T)
+# print('Reaction Forces (positive = upward, negative = downward)')
+# print(R)
+# print('Deformation at nodes')
+# print(U)
 Plot(nodes, 'gray', '--', 1, 'Undeformed')
-scale = 1
-Dnodes = U * scale + nodes
-Plot(Dnodes, 'red', '-', 2, 'Deformed')
+# scale = 1 #increase to make more evident in plot
+# Dnodes = U * scale + nodes
+# Plot(Dnodes, 'red', '-', 2, 'Deformed')
 plt.show()
