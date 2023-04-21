@@ -1,3 +1,5 @@
+import numpy
+
 nodes = []
 bars = []
 
@@ -55,8 +57,9 @@ def create_segment(i):
 
 
 def get_nodes():
-    return nodes
+
+    return numpy.array(nodes).astype(float)
 
 
 def get_bars():
-    return bars
+    return numpy.array(bars)

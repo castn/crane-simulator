@@ -11,8 +11,8 @@ A = 0.111
 tower.create(5, True)
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
-nodes = np.array(tower.get_nodes()).astype(float)
-bars = np.array(tower.get_bars())
+nodes = tower.get_nodes()
+bars = tower.get_bars()
 
 # Applied forces
 P = np.zeros_like(nodes)
