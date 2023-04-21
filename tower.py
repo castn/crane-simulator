@@ -12,7 +12,7 @@ SEGMENT_HEIGHT = 2000
 class Style(Enum):
     CROSS = 1
     ZICKZACK = 2
-    DIAGONAL = 3
+    PARALLEL = 3
 
 
 def create(number_of_segments, has_horizontal, is_hollow, style_of_face):
@@ -33,7 +33,7 @@ def create_beams(number_of_segments, has_horizontal, is_hollow, style_of_face):
 
 
 def create_diagonal_beams(i, style_of_face):
-    if style_of_face == Style.DIAGONAL:
+    if style_of_face == Style.PARALLEL:
         bars.append([0 + 4 * i, 5 + 4 * i])  # front face
         bars.append([5 + 4 * i, 2 + 4 * i])  # right face
         bars.append([2 + 4 * i, 7 + 4 * i])  # rear face
