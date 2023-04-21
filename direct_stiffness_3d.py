@@ -73,7 +73,7 @@ DOFCON[9,:] = 0
 def TrussAnalysis(): 
   NN = len(nodes)
   NE = len(bars)
-  DOF = 2
+  DOF = 3
   NDOF = DOF * NN
   #structural analysis
   d = nodes[bars[:,1],:] - nodes[bars[:,0],:]
@@ -82,29 +82,29 @@ def TrussAnalysis():
   a = np.concatenate((-angle.T,angle.T), axis=1)
   K = np.zeros([NDOF,NDOF])
   for k in range(NE):
-    aux = 2*bars[k,:]
-    index = np.r_[aux[0]:aux[0]+2,aux[1]:aux[1]+2]
-    ES = np.dot(a[k][np.newaxis].T*E*A,a[k][np.newaxis])/L[k]
-    K[np.ix_(index,index)] = K[np.ix_(index,index)] + ES
+    aux = DOF * bars[k,:]
+    index = np.r_[aux[0]:aux[0] + DOF, aux[1]:aux[1] + DOF]
+    ES = np.dot(a[k][np.newaxis].T*E*A, a[k][np.newaxis]) / L[k]
+    K[np.ix_(index, index)] = K[np.ix_(index, index)] + ES
   freeDOF = DOFCON.flatten().nonzero()[0]
   supportDOF = (DOFCON.flatten() == 0).nonzero()[0]
-  Kff = K[np.ix_(freeDOF,freeDOF)]
-  Kfr = K[np.ix_(freeDOF,supportDOF)]
+  Kff = K[np.ix_(freeDOF, freeDOF)]
+  Kfr = K[np.ix_(freeDOF, supportDOF)]
   Krf = Kfr.T
-  Krr = K[np.ix_(supportDOF,supportDOF)]
+  Krr = K[np.ix_(supportDOF, supportDOF)]
   Pf = P.flatten()[freeDOF]
-  Uf = np.linalg.solve(Kff,Pf)
+  Uf = np.linalg.solve(Kff, Pf)
   U = DOFCON.astype(float).flatten()
   U[freeDOF] = Uf
   U[supportDOF] = Ur
   U = U.reshape(NN, DOF)
-  u = np.concatenate((U[bars[:,0]],U[bars[:,1]]),axis=1)
+  u = np.concatenate((U[bars[:,0]], U[bars[:,1]]), axis=1)
   N = E*A/L[:]*(a[:]+u[:]).sum(axis=1)
   R = (Krf[:]*Uf).sum(axis=1) + (Krr[:]*Ur).sum(axis=1)
-  R = R.reshape(2,DOF)
+  R = R.reshape(4, DOF)
   return np.array(N), np.array(R), U
 
-def Plot(nodes,c,lt,lw,lg):
+def Plot(nodes, c, lt, lw, lg):
   plt.axes(projection='3d')
   for i in range(len(bars)):
     xi, xf = nodes[bars[i,0],0], nodes[bars[i,1],0]
@@ -112,8 +112,18 @@ def Plot(nodes,c,lt,lw,lg):
     zi, zf = nodes[bars[i,0],2], nodes[bars[i,1],2]
     line, = plt.plot([xi, xf], [yi, yf], [zi, zf], color=c, linestyle=lt, linewidth=lw)
   line.set_label(lg)
-  plt.legend(prop={'size': 8})
-  plt.show()
+  plt.legend(prop={'size': 14})
 
 #Run test
+N, R, U = TrussAnalysis()
+print('Axial Forces (positive = tension, negative = compression)')
+print(N[np.newaxis].T)
+print('Reaction Forces (positive = upward, negative = downward)')
+print(R)
+print('Deformation at nodes')
+print(U)
 Plot(nodes, 'gray', '--', 1, 'Undeformed')
+scale = 1
+Dnodes = U * scale + nodes
+Plot(Dnodes, 'red', '-', 2, 'Deformed')
+plt.show()
