@@ -114,7 +114,7 @@ def Plot(nodes, c, lt, lw, lg):
   line.set_label(lg)
   plt.legend(prop={'size': 14})
 
-#Run test
+#Run test with known data
 N, R, U = TrussAnalysis()
 print('Axial Forces (positive = tension, negative = compression)')
 print(N[np.newaxis].T)
