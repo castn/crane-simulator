@@ -9,14 +9,16 @@ nodes = []
 bars = []
 
 #test data
-nodes.append([0, 0, 0])           #node 0
-nodes.append([2000, 0, 0])        #node 1
-nodes.append([2000, 2000, 0])     #node 2
-nodes.append([0, 2000, 0])        #node 3
-nodes.append([0, 0, 2000])        #node 4
-nodes.append([2000, 0, 2000])     #node 5
-nodes.append([2000, 2000, 2000])  #node 6
-nodes.append([0, 2000, 2000])     #node 7
+width = 2000
+height = 2000
+nodes.append([0, 0, 0])               #node 0
+nodes.append([width, 0, 0])           #node 1
+nodes.append([width, width, 0])       #node 2
+nodes.append([0, width, 0])           #node 3
+nodes.append([0, 0, height])          #node 4
+nodes.append([width, 0, height])      #node 5
+nodes.append([width, width, height])  #node 6
+nodes.append([0, width, height])      #node 7
 
 bars.append([0, 1])
 bars.append([1, 2])
