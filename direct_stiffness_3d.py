@@ -1,50 +1,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# truss structure data
+# Constants
 E = 1e4
 A = 0.111
+SEGMENT_WIDTH = 2000
+SEGMENT_HEIGHT = 2000
 
 nodes = []
 bars = []
 
-SEGMENT_WIDTH = 2000
-SEGMENT_HEIGHT = 2000
 
-
-# nodes.append([0, 0, 0])               #node 0
-# nodes.append([block_width, 0, 0])           #node 1
-# nodes.append([block_width, block_width, 0])       #node 2
-# nodes.append([0, block_width, 0])           #node 3
-# nodes.append([0, 0, block_height])          #node 4
-# nodes.append([block_width, 0, block_height])      #node 5
-# nodes.append([block_width, block_width, block_height])  #node 6
-# nodes.append([0, block_width, block_height])      #node 7
-
-
-# #base beams
-# bars.append([0, 1])
-# bars.append([1, 2])
-# bars.append([2, 3])
-# bars.append([3, 0])
-# #vertical beams
-# bars.append([0, 4])
-# bars.append([1, 5])
-# bars.append([2, 6])
-# bars.append([3, 7])
-# #diagonal beams
-# bars.append([0, 5])
-# bars.append([5, 2])
-# bars.append([2, 7])
-# bars.append([7, 0])
-# #top beams
-# bars.append([4, 5])
-# bars.append([5, 6])
-# bars.append([6, 7])
-# bars.append([7, 4])
-# #base and top diagonals
-# bars.append([0, 2])
-# bars.append([4, 6])
 def create_tower(number_of_segments, is_hollow):
     create_segments(number_of_segments)
     create_beams(is_hollow, number_of_segments)
