@@ -12,8 +12,8 @@ SEGMENT_HEIGHT = 2000
 
 class Style(Enum):
     CROSS = 1
-    ZICKZACK = 2
-    PARALLEL = 3
+    ZIGZAG = 2
+    DIAGONAL = 3
 
 
 def create(number_of_segments, has_horizontal, is_hollow, style_of_face):
@@ -23,7 +23,7 @@ def create(number_of_segments, has_horizontal, is_hollow, style_of_face):
     :param number_of_segments: Define how many segments the tower should have
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
-    :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZICKZACK (/\/)
+    :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZIGZAG (/\/)
     """
     create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face)
 
@@ -35,7 +35,7 @@ def create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style
     :param number_of_segments: Define the number of segments the tower has
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
-    :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZICKZACK (/\/)
+    :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZIGZAG (/\/)
     """
     if has_horizontal:
         create_horizontal_beams(i)
@@ -51,17 +51,17 @@ def create_diagonal_beams(i, style_of_face):
     Create the diagonal beams on the faces of the tower.
 
     :param i: Current number of segment
-    :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZICKZACK (/\/)
+    :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZIGZAG (/\/)
     """
     if style_of_face == Style.PARALLEL:
         create_parallel_face_beams_LR(i)
     elif style_of_face == Style.CROSS:
         create_cross_face_beam(i)
-    elif style_of_face == Style.ZICKZACK:
-        create_zickzack_face_beams(i)
+    elif style_of_face == Style.ZIGZAG:
+        create_zigzag_face_beams(i)
 
 
-def create_zickzack_face_beams(i):
+def create_zigzag_face_beams(i):
     if i % 2 == 0:
         # For even numbers create diagonal from left to right
         create_parallel_face_beams_LR(i)
@@ -120,7 +120,7 @@ def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face
     :param number_of_segments: Define how many segments the tower should have
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
-    :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZICKZACK (/\/)
+    :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZIGZAG (/\/)
     """
     logging.debug("Initialize segment nodes")
     for i in range(number_of_segments + 1):

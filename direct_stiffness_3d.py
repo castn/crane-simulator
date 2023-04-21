@@ -2,30 +2,36 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import tower
+import jib
 
 # Constants
 E = 1e4
 A = 0.111
 
 # Create Tower
-tower.create(5, True, True, tower.Style.PARALLEL)
+tower.create(5, True, True, tower.Style.DIAGONAL)
+jib.create(0, 2000, 6000)
+
+# Override Python arrays with Numpy arrays, nodes are of type float64
 nodes = tower.get_nodes()
 bars = tower.get_bars()
+# nodes = jib.get_nodes()
+# bars = jib.get_bars()
 
 # Applied forces
 P = np.zeros_like(nodes)
-P[0, 0] = 1
-P[0, 1] = -10
-P[0, 2] = -10
-P[1, 1] = -10
-P[1, 2] = -10
-P[2, 0] = 0.5
-P[5, 0] = 0.6
+# P[0, 0] = 1
+# P[0, 1] = -10
+# P[0, 2] = -10
+# P[1, 1] = -10
+# P[1, 2] = -10
+# P[2, 0] = 0.5
+# P[5, 0] = 0.6
 
 # Support Displacement
 Ur = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-# Condition of DOF (1 = free, 0 = fixed)
+# Condition of DOF (0 = fixed, 1 = free)
 DOFCON = np.ones_like(nodes).astype(int)
 DOFCON[0, :] = 0
 DOFCON[1, :] = 0
@@ -80,10 +86,10 @@ def Plot(nodes, color, line_style, pen_width, label):
     """
     # Create 3d environment
     plt.axes(projection='3d')
-    plt.autoscale(True)
-    plt.figaspect(1)
+    # plt.axes().set_aspect('equal')
+    # plt.figaspect(1)
     for i in range(len(bars)):
-        # Create two variables at the same time.
+        # Create initial and final coordinates
         xi, xf = nodes[bars[i, 0], 0], nodes[bars[i, 1], 0]
         yi, yf = nodes[bars[i, 0], 1], nodes[bars[i, 1], 1]
         zi, zf = nodes[bars[i, 0], 2], nodes[bars[i, 1], 2]
