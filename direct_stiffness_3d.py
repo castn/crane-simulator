@@ -8,7 +8,7 @@ E = 1e4
 A = 0.111
 
 # Create Tower
-tower.create(5, True)
+tower.create(5, True, True, tower.Style.DIAGONAL)
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
 nodes = tower.get_nodes()
@@ -82,6 +82,8 @@ def Plot(nodes, color, line_style, pen_width, label):
     """
     # Create 3d environment
     plt.axes(projection='3d')
+    plt.autoscale(True)
+    plt.figaspect(1)
     for i in range(len(bars)):
         # Create two variables at the same time.
         xi, xf = nodes[bars[i, 0], 0], nodes[bars[i, 1], 0]
