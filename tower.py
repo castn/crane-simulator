@@ -53,7 +53,7 @@ def create_diagonal_beams(i, style_of_face):
     :param i: Current number of segment
     :param style_of_face: Define the style of diagonal beams of each face. Can be PARALLEL (//), CROSS (X) or ZIGZAG (/\/)
     """
-    if style_of_face == Style.PARALLEL:
+    if style_of_face == Style.DIAGONAL: # hier stand parallel aber es gibt keine entsprechende enum
         create_parallel_face_beams_LR(i)
     elif style_of_face == Style.CROSS:
         create_cross_face_beam(i)
@@ -115,7 +115,7 @@ def create_horizontal_beams(i):
 
 def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face):
     """
-    Create all the different segment the tower is made of.
+    Create all the different segment the tower is made of
 
     :param number_of_segments: Define how many segments the tower should have
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
@@ -144,5 +144,13 @@ def get_nodes():
     return numpy.array(nodes).astype(float)
 
 
+def get_nodes_raw():
+    return nodes
+
+
 def get_bars():
     return numpy.array(bars)
+
+
+def get_bars_raw():
+    return bars

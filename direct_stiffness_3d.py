@@ -9,14 +9,17 @@ E = 1e4
 A = 0.111
 
 # Create Tower
-tower.create(5, True, True, tower.Style.DIAGONAL)
-jib.create(0, 2000, 6000)
+# tower.create(5, True, True, tower.Style.DIAGONAL)
+# print(len(tower.get_nodes()), ' - ', len(tower.get_bars()))
+jib.create(0, 2000, 6000, 3)
+# jib.create_connected(tower.get_nodes_raw(), tower.get_bars_raw(), 6000, 3)
+print(len(jib.get_nodes()), ' - ', len(jib.get_bars()))
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
-nodes = tower.get_nodes()
-bars = tower.get_bars()
-# nodes = jib.get_nodes()
-# bars = jib.get_bars()
+# nodes = tower.get_nodes()
+# bars = tower.get_bars()
+nodes = jib.get_nodes()
+bars = jib.get_bars()
 
 # Applied forces
 P = np.zeros_like(nodes)
@@ -85,16 +88,20 @@ def Plot(nodes, color, line_style, pen_width, label):
     :param label: Name of the edge and what it should represent
     """
     # Create 3d environment
-    plt.axes(projection='3d')
-    # plt.axes().set_aspect('equal')
-    # plt.figaspect(1)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # temp plot scaling
+    # ax.set_box_aspect(aspect = (1, 1, 5)) # for tower
+    # ax.set_box_aspect(aspect = (3, 1, 1)) # for jib
+    
     for i in range(len(bars)):
         # Create initial and final coordinates
         xi, xf = nodes[bars[i, 0], 0], nodes[bars[i, 1], 0]
         yi, yf = nodes[bars[i, 0], 1], nodes[bars[i, 1], 1]
         zi, zf = nodes[bars[i, 0], 2], nodes[bars[i, 1], 2]
         # Create a Line3D object in list
-        line = plt.plot([xi, xf], [yi, yf], [zi, zf], color=color, linestyle=line_style, linewidth=pen_width)
+        line = ax.plot([xi, xf], [yi, yf], [zi, zf], color=color, linestyle=line_style, linewidth=pen_width)
         # Override list with first element in list, always the Line3D object.
         line = line[0]
     line.set_label(label)
