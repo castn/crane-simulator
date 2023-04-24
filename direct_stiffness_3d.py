@@ -1,7 +1,10 @@
+"""
+Provides all functions to build a crane plot the crane and deform it
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 
-import tower
 import jib
 
 # Constants
@@ -42,8 +45,8 @@ DOFCON[2, :] = 0
 DOFCON[3, :] = 0
 
 
-# Truss structural analysis
-def TrussAnalysis():
+def truss_analysis():
+    """Performe truss structural analysis"""
     NN = len(nodes)
     NE = len(bars)
     DOF = 3
@@ -78,7 +81,7 @@ def TrussAnalysis():
     return np.array(N), np.array(R), U
 
 
-def Plot(nodes, color, line_style, pen_width, label):
+def plot(nodes, color, line_style, pen_width, label):
     """
     Plot nodes using matplotlib
     :param nodes: Numpy array containing the coordinates of each node in three-dimensional space
@@ -90,11 +93,11 @@ def Plot(nodes, color, line_style, pen_width, label):
     # Create 3d environment
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    
+
     # temp plot scaling
     # ax.set_box_aspect(aspect = (1, 1, 5)) # for tower
     # ax.set_box_aspect(aspect = (3, 1, 1)) # for jib
-    
+
     for i in range(len(bars)):
         # Create initial and final coordinates
         xi, xf = nodes[bars[i, 0], 0], nodes[bars[i, 1], 0]
@@ -116,7 +119,7 @@ def Plot(nodes, color, line_style, pen_width, label):
 # print(R)
 # print('Deformation at nodes')
 # print(U)
-Plot(nodes, 'gray', '--', 1, 'Undeformed')
+plot(nodes, 'gray', '--', 1, 'Undeformed')
 # scale = 1 #increase to make more evident in plot
 # Dnodes = U * scale + nodes
 # Plot(Dnodes, 'red', '-', 2, 'Deformed')
