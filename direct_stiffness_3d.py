@@ -124,4 +124,5 @@ plot(nodes, 'gray', '--', 1, 'Undeformed')
 # scale = 1 #increase to make more evident in plot
 # Dnodes = U * scale + nodes
 # Plot(Dnodes, 'red', '-', 2, 'Deformed')
+plt.axis("equal")
 plt.show()
