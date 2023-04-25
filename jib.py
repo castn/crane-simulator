@@ -13,6 +13,8 @@ TOWER_WIDTH = 0
 SEGMENTS = 0
 IS_CONNECTED = False
 INIT_BAR = 0
+TOTAL_LENGTH = 0
+NODES_FLOAT = []
 
 
 def create(tower_height, tower_width, length, segments):
@@ -69,6 +71,10 @@ def create_connected(tower_nodes, tower_bars, tower_height, tower_width, length,
     INIT_BAR = max(numpy.asarray(bars).astype(int).max() - 1, 0) # wrapped in max just in case
 
     create_segments()
+    
+    global NODES_FLOAT
+    NODES_FLOAT = numpy.array(nodes).astype(float)
+    
     create_beams()
 
 
@@ -103,12 +109,15 @@ def create_horizontal_beams(i):
     val_to_add = 3 * i + INIT_BAR
     if i == 0 and not IS_CONNECTED:
         bars.append([0 + val_to_add, 1 + val_to_add])  # first horizontal (0-1)
+        add_length(numpy.linalg.norm(NODES_FLOAT[0 + val_to_add] - NODES_FLOAT[1 + val_to_add]))
     if i < SEGMENTS - 1:
         bars.append([2 + val_to_add, 5 + val_to_add])  # top connection
+        add_length(numpy.linalg.norm(NODES_FLOAT[2 + val_to_add] - NODES_FLOAT[5 + val_to_add]))
     bars.append([1 + val_to_add, 4 + val_to_add])
     bars.append([4 + val_to_add, 3 + val_to_add])
     bars.append([3 + val_to_add, 0 + val_to_add])
     bars.append([1 + val_to_add, 3 + val_to_add])  # diagonal beam
+    add_length(4 * numpy.linalg.norm(NODES_FLOAT[1 + val_to_add] - NODES_FLOAT[4 + val_to_add]))
 
 
 def create_diagonal_beams(i):
@@ -121,6 +130,12 @@ def create_diagonal_beams(i):
     bars.append([1 + val_to_add, 2 + val_to_add])
     bars.append([4 + val_to_add, 2 + val_to_add])
     bars.append([3 + val_to_add, 2 + val_to_add])
+    add_length(4 * numpy.linalg.norm(NODES_FLOAT[0 + val_to_add] - NODES_FLOAT[2 + val_to_add]))
+
+
+def add_length(length):
+    global TOTAL_LENGTH
+    TOTAL_LENGTH += length
 
 
 def get_nodes():
@@ -133,3 +148,7 @@ def get_nodes():
 def get_bars():
     """Return the bars of jib as numpy array"""
     return numpy.array(bars)
+
+
+def get_length():
+    return TOTAL_LENGTH
