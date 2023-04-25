@@ -12,6 +12,7 @@ START_HEIGHT = 0
 TOWER_WIDTH = 0
 SEGMENTS = 0
 IS_CONNECTED = False
+INIT_BAR = 0
 
 
 def create(tower_height, tower_width, length, segments):
@@ -40,7 +41,7 @@ def create(tower_height, tower_width, length, segments):
     create_beams()
 
 
-def create_connected(tower_nodes, tower_bars, length, segments):
+def create_connected(tower_nodes, tower_bars, tower_height, tower_width, length, segments):
     """
     Creates jib attached to the tower as to have the entire crane in one block
 
@@ -54,12 +55,18 @@ def create_connected(tower_nodes, tower_bars, length, segments):
     nodes = tower_nodes
     global bars
     bars = tower_bars
+    global START_HEIGHT
+    START_HEIGHT = tower_height #(numpy.asarray(nodes).astype(float))[len(nodes) - 1, 2]
+    global TOWER_WIDTH
+    TOWER_WIDTH = tower_width
     global SEGMENT_LENGTH
     SEGMENT_LENGTH = length / segments
     global SEGMENTS
     SEGMENTS = segments
     global IS_CONNECTED
     IS_CONNECTED = True
+    global INIT_BAR
+    INIT_BAR = numpy.asarray(bars).astype(int).max() - 1
 
     create_segments()
     create_beams()
@@ -83,8 +90,8 @@ def create_beams():
     Create all beams of a single segment
     """
     for i in range(SEGMENTS):
-        create_horizontal_beams(len(bars) + i)
-        create_diagonal_beams(len(bars) + i)
+        create_horizontal_beams(i)
+        create_diagonal_beams(i)
 
 
 def create_horizontal_beams(i):
@@ -93,14 +100,15 @@ def create_horizontal_beams(i):
     :param i:
     """
     # connects all base nodes
+    val_to_add = 3 * i + INIT_BAR
     if i == 0 and not IS_CONNECTED:
-        bars.append([0 + 3 * i, 1 + 3 * i])  # first horizontal (0-1)
+        bars.append([0 + val_to_add, 1 + val_to_add])  # first horizontal (0-1)
     if i < SEGMENTS - 1:
-        bars.append([2 + 3 * i, 5 + 3 * i])  # top connection
-    bars.append([1 + 3 * i, 4 + 3 * i])
-    bars.append([4 + 3 * i, 3 + 3 * i])
-    bars.append([3 + 3 * i, 0 + 3 * i])
-    bars.append([1 + 3 * i, 3 + 3 * i])  # diagonal beam
+        bars.append([2 + val_to_add, 5 + val_to_add])  # top connection
+    bars.append([1 + val_to_add, 4 + val_to_add])
+    bars.append([4 + val_to_add, 3 + val_to_add])
+    bars.append([3 + val_to_add, 0 + val_to_add])
+    bars.append([1 + val_to_add, 3 + val_to_add])  # diagonal beam
 
 
 def create_diagonal_beams(i):
@@ -108,10 +116,11 @@ def create_diagonal_beams(i):
     Create the diagonal beams of a segment, here the diagonal beams are the side of a pyramid
     :param i:
     """
-    bars.append([0 + 3 * i, 2 + 3 * i])
-    bars.append([1 + 3 * i, 2 + 3 * i])
-    bars.append([4 + 3 * i, 2 + 3 * i])
-    bars.append([3 + 3 * i, 2 + 3 * i])
+    val_to_add = 3 * i + INIT_BAR
+    bars.append([0 + val_to_add, 2 + val_to_add])
+    bars.append([1 + val_to_add, 2 + val_to_add])
+    bars.append([4 + val_to_add, 2 + val_to_add])
+    bars.append([3 + val_to_add, 2 + val_to_add])
 
 
 def get_nodes():

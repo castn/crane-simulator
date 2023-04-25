@@ -5,6 +5,7 @@ Provides all functions to build a crane plot the crane and deform it
 import matplotlib.pyplot as plt
 import numpy as np
 
+import tower
 import jib
 
 # Constants
@@ -12,10 +13,10 @@ E = 1e4
 A = 0.111
 
 # Create Tower
-# tower.create(5, True, True, tower.Style.DIAGONAL)
-# print(len(tower.get_nodes()), ' - ', len(tower.get_bars()))
-jib.create(0, 2000, 6000, 3)
-# jib.create_connected(tower.get_nodes_raw(), tower.get_bars_raw(), 6000, 3)
+tower.create(1, True, True, tower.Style.DIAGONAL)
+print(len(tower.get_nodes()), ' - ', len(tower.get_bars()))
+# jib.create(0, 2000, 6000, 3)
+jib.create_connected(tower.get_nodes_raw(), tower.get_bars_raw(), 2000, 2000, 2000, 1)
 print(len(jib.get_nodes()), ' - ', len(jib.get_bars()))
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
