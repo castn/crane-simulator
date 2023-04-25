@@ -66,7 +66,7 @@ def create_connected(tower_nodes, tower_bars, tower_height, tower_width, length,
     global IS_CONNECTED
     IS_CONNECTED = True
     global INIT_BAR
-    INIT_BAR = numpy.asarray(bars).astype(int).max() - 1
+    INIT_BAR = max(numpy.asarray(bars).astype(int).max() - 1, 0) # wrapped in max just in case
 
     create_segments()
     create_beams()

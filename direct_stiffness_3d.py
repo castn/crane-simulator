@@ -13,11 +13,14 @@ E = 1e4
 A = 0.111
 
 # Create Tower
-tower.create(1, True, True, tower.Style.DIAGONAL)
+tower.create(2, True, True, tower.Style.DIAGONAL)
 print(len(tower.get_nodes()), ' - ', len(tower.get_bars()))
+# print(tower.get_bars())
+print(tower.get_length())
 # jib.create(0, 2000, 6000, 3)
-jib.create_connected(tower.get_nodes_raw(), tower.get_bars_raw(), 2000, 2000, 2000, 1)
+jib.create_connected(tower.get_nodes_raw(), tower.get_bars_raw(), 4000, 2000, 4000, 2)
 print(len(jib.get_nodes()), ' - ', len(jib.get_bars()))
+# print(jib.get_bars())
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
 # nodes = tower.get_nodes()
