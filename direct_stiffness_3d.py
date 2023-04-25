@@ -98,10 +98,6 @@ def plot(nodes, color, line_style, pen_width, label):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    # temp plot scaling
-    # ax.set_box_aspect(aspect = (1, 1, 5)) # for tower
-    # ax.set_box_aspect(aspect = (3, 1, 1)) # for jib
-
     for i in range(len(bars)):
         # Create initial and final coordinates
         xi, xf = nodes[bars[i, 0], 0], nodes[bars[i, 1], 0]
