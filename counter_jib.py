@@ -48,7 +48,7 @@ def create_beams():
     for i in range(SEGMENTS):
         val_to_add = 2 * i
         create_frame_beams(i, start_node_cj, val_to_add)
-        create_diag_beams(i, start_node_cj, val_to_add)
+        create_diag_beams(start_node_cj, val_to_add)
     # before
     # 18 nodes
     # 45 bars -> 17 highest index
