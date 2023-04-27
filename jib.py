@@ -83,7 +83,7 @@ def create_segments():
     Create the segments of a jib
     """
     for i in range(SEGMENTS + 1):
-        if not (i == 0 and IS_CONNECTED):  # skips the first run-through if nodes already exist (i hope)
+        if not (i == 0 and IS_CONNECTED):  # skips the first run-through if nodes already exist
             nodes.append([TOWER_WIDTH + SEGMENT_LENGTH * i, 0, START_HEIGHT])
             nodes.append([TOWER_WIDTH + SEGMENT_LENGTH * i, TOWER_WIDTH, START_HEIGHT])
         if i < SEGMENTS:
@@ -145,9 +145,17 @@ def get_nodes():
     return numpy.array(nodes).astype(float)
 
 
+def get_nodes_raw():
+    return nodes
+
+
 def get_bars():
     """Return the bars of jib as numpy array"""
     return numpy.array(bars)
+
+
+def get_bars_raw():
+    return bars
 
 
 def get_length():

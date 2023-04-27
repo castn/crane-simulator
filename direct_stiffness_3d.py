@@ -5,8 +5,6 @@ Provides all functions to build a crane plot the crane and deform it
 import matplotlib.pyplot as plt
 import numpy as np
 
-import tower
-import jib
 import crane
 
 # Constants
@@ -14,8 +12,7 @@ E = 210e6 # 210GPa?
 A = 0.01 # 0.01m^2?
 
 # Create Tower
-crane.create_tower()
-crane.create_jib()
+crane.create_crane()
 print(f'Total length: {crane.get_length() / 1000} m')
 print(f'Total volume: {crane.get_length() / 1000 * A} m^3')
 density = 7850
@@ -46,7 +43,7 @@ DOFCON[3, :] = 0
 
 
 def truss_analysis():
-    """Performe truss structural analysis"""
+    """Perform truss structural analysis"""
     NN = len(nodes)
     NE = len(bars)
     DOF = 3
