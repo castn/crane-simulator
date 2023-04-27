@@ -10,30 +10,19 @@ import jib
 import crane
 
 # Constants
-E = 1e4 # 210GPa?
-A = 0.111 # 0.01m^2?
+E = 210e6 # 210GPa?
+A = 0.01 # 0.01m^2?
 
 # Create Tower
-tower.create(2, True, True, tower.Style.DIAGONAL)
-print(len(tower.get_nodes()), ' - ', len(tower.get_bars()))
-# print(tower.get_bars())
-print(tower.get_length())
-# jib.create(0, 2000, 6000, 3)
-jib.create_connected(tower.get_nodes_raw(), tower.get_bars_raw(), 4000, 2000, 4000, 2)
-print(len(jib.get_nodes()), ' - ', len(jib.get_bars()))
-# print(jib.get_bars())
-print(jib.get_length())
-print(f'Total length: {(tower.get_length() + jib.get_length()) / 1000} m')
-steel_area = 0.01
-print(f'Total volume: {(tower.get_length() + jib.get_length()) / 1000 * steel_area} m^3')
+crane.create_tower()
+crane.create_jib()
+print(f'Total length: {crane.get_length() / 1000} m')
+print(f'Total volume: {crane.get_length() / 1000 * A} m^3')
 density = 7850
-print(f'Total mass: {(tower.get_length() + jib.get_length()) / 1000 * steel_area * density} kg with a cost of {(tower.get_length() + jib.get_length()) / 1000 * steel_area * density / 1000 * 1000} euros')
+print(f'Total mass: {crane.get_length() / 1000 * A * density} kg with a cost of {crane.get_length() / 1000 * A * density / 1000 * 1000} euros')
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
-# nodes = tower.get_nodes()
-# bars = tower.get_bars()
-nodes = jib.get_nodes()
-bars = jib.get_bars()
+nodes, bars = crane.get_jib()
 
 # Applied forces
 P = np.zeros_like(nodes)

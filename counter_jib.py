@@ -28,3 +28,7 @@ def get_nodes():
 def get_bars():
     """Return the bars of tower as numpy array"""
     return numpy.array(bars)
+
+
+def get_length():
+    return 0
