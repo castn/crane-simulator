@@ -101,9 +101,6 @@ def plot(nodes, color, line_style, pen_width, label):
     :param pen_width: Width of the edge
     :param label: Name of the edge and what it should represent
     """
-    # Create 3d environment
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
 
     for i in range(len(bars)):
         # Create initial and final coordinates
@@ -118,6 +115,10 @@ def plot(nodes, color, line_style, pen_width, label):
     plt.legend(prop={'size': 10})
 
 
+# Create 3d environment
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
 # Run test with known data
 # N, R, U = TrussAnalysis()
 # print('Axial Forces (positive = tension, negative = compression)')
@@ -129,6 +130,6 @@ def plot(nodes, color, line_style, pen_width, label):
 plot(nodes, 'gray', '--', 1, 'Undeformed')
 # scale = 1 #increase to make more evident in plot
 # Dnodes = U * scale + nodes
-# Plot(Dnodes, 'red', '-', 2, 'Deformed')
+# plot(nodes, 'red', '-', 2, 'Deformed')
 plt.axis("equal")
 plt.show()
