@@ -11,15 +11,16 @@ import crane
 E = 210e6 # 210GPa?
 A = 0.01 # 0.01m^2?
 
-# Create Tower
+# Create crane
 crane.create_crane()
 print(f'Total length: {crane.get_length() / 1000} m')
 print(f'Total volume: {crane.get_length() / 1000 * A} m^3')
 density = 7850
 print(f'Total mass: {crane.get_length() / 1000 * A * density} kg with a cost of {crane.get_length() / 1000 * A * density / 1000 * 1000} euros')
+# crane.create_counter_jib()
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
-nodes, bars = crane.get_jib()
+nodes, bars = crane.get_counter_jib()
 
 # Applied forces
 P = np.zeros_like(nodes)

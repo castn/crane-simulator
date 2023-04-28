@@ -10,7 +10,17 @@ SEGMENTS = 0
 NODES_FLOAT = []
 IS_CONNECTED = False
 END_NODE_TOWER = 0
-END_NODE_JIB = 0
+END_NODE_JIB = 2
+
+
+def create(tower_width, length):
+    global TOWER_WIDTH
+    TOWER_WIDTH = tower_width
+    global SEGMENTS
+    SEGMENTS = int(length / SEGMENT_LENGTH)
+    
+    create_segments()
+    create_beams()
 
 
 def create_connected(crane_nodes, crane_bars, tower_height, tower_width, tower_num_nodes, length):
@@ -42,22 +52,18 @@ def create_connected(crane_nodes, crane_bars, tower_height, tower_width, tower_n
 def create_segments():
     for i in range(SEGMENTS + 1):
         if not (i == 0 and IS_CONNECTED):  # skips the first run-through if nodes already exist
-            nodes.append([TOWER_WIDTH - SEGMENT_LENGTH * i, 0, START_HEIGHT])
-            nodes.append([TOWER_WIDTH - SEGMENT_LENGTH * i, TOWER_WIDTH, START_HEIGHT])
+            nodes.append([- SEGMENT_LENGTH * i, 0, START_HEIGHT])
+            nodes.append([- SEGMENT_LENGTH * i, TOWER_WIDTH, START_HEIGHT])
 
 
 def create_beams():
     start_node_cj = END_NODE_JIB #len(nodes)
+    if not IS_CONNECTED:
+        bars.append([0, 1])
     for i in range(SEGMENTS):
         val_to_add = 2 * (i - 1)
         create_frame_beams(i, start_node_cj, val_to_add)
         create_diag_beams(i, start_node_cj, val_to_add)
-    # before
-    # 18 nodes
-    # 45 bars -> 17 highest index
-    # after
-    # 22 nodes
-    # 55 bars -> 27 highest index (should be 21)
         
 
 def create_frame_beams(i, start_node_cj, val_to_add):
@@ -67,7 +73,7 @@ def create_frame_beams(i, start_node_cj, val_to_add):
     else:
         bars.append([start_node_cj + val_to_add, start_node_cj + 2 + val_to_add])
         bars.append([start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add])
-    bars.append([start_node_cj + val_to_add, start_node_cj + 1 + val_to_add])
+    bars.append([start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2])
 
 
 def create_diag_beams(i, start_node_cj, val_to_add):

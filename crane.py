@@ -39,6 +39,7 @@ def get_jib_length():
 
 def create_counter_jib():
     counter_jib.create_connected(jib.get_nodes_raw(), jib.get_bars_raw(), 4000, 2000, tower_num_nodes, 4000)
+    # counter_jib.create(2000, 4000)
 
 
 def get_counter_jib():
