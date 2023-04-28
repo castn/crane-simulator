@@ -9,6 +9,7 @@ import plotter
 E = 210e6  # 210GPa
 # Cross section of each beam
 A = 0.01  # 0.01m^2
+DENSITY = 7850
 
 
 if __name__ == '__main__':
@@ -16,9 +17,8 @@ if __name__ == '__main__':
     crane.create_crane()
     print(f'Total length: {crane.get_length() / 1000} m')
     print(f'Total volume: {crane.get_length() / 1000 * A} m^3')
-    density = 7850
     print(
-        f'Total mass: {crane.get_length() / 1000 * A * density} kg with a cost of {crane.get_length() / 1000 * A * density / 1000 * 1000} euros')
+        f'Total mass: {crane.get_length() / 1000 * A * DENSITY} kg with a cost of {crane.get_length() / 1000 * A * DENSITY / 1000 * 1000} euros')
     # crane.create_counter_jib()
 
     # Override Python arrays with Numpy arrays, nodes are of type float64
