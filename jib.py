@@ -79,9 +79,7 @@ def create_connected(tower_nodes, tower_bars, tower_height, tower_width, length,
 
 
 def create_segments():
-    """
-    Create the segments of a jib
-    """
+    """Create the segments of a jib"""
     for i in range(SEGMENTS + 1):
         if not (i == 0 and IS_CONNECTED):  # skips the first run-through if nodes already exist
             nodes.append([TOWER_WIDTH + SEGMENT_LENGTH * i, 0, START_HEIGHT])
@@ -92,19 +90,14 @@ def create_segments():
 
 
 def create_beams():
-    """
-    Create all beams of a single segment
-    """
+    """Create all beams of a single segment"""
     for i in range(SEGMENTS):
         create_horizontal_beams(i)
         create_diagonal_beams(i)
 
 
 def create_horizontal_beams(i):
-    """
-    Create the horizontal beam of a segment
-    :param i:
-    """
+    """Create the horizontal beam of a segment"""
     # connects all base nodes
     val_to_add = 3 * i + INIT_BAR
     if i == 0 and not IS_CONNECTED:
@@ -124,10 +117,7 @@ def create_horizontal_beams(i):
 
 
 def create_diagonal_beams(i):
-    """
-    Create the diagonal beams of a segment, here the diagonal beams are the side of a pyramid
-    :param i:
-    """
+    """Create the diagonal beams of a segment, here the diagonal beams are the side of a pyramid"""
     val_to_add = 3 * i + INIT_BAR
     bars.append([0 + val_to_add, 2 + val_to_add])
     add_length(0 + val_to_add, 2 + val_to_add)
@@ -140,13 +130,12 @@ def create_diagonal_beams(i):
 
 
 def get_nodes():
-    """
-    Return the nodes of jib as numpy array of type float64
-    """
+    """Return the nodes of jib as numpy array of type float64"""
     return numpy.array(nodes).astype(float)
 
 
 def get_nodes_raw():
+    """Returns the nodes of the tower in original format"""
     return nodes
 
 
@@ -156,13 +145,22 @@ def get_bars():
 
 
 def get_bars_raw():
+    """Returns the bars of the tower in original format"""
     return bars
 
 
 def add_length(start_node, end_node):
+    """
+    Calculates distance between 2 given points and adds it to a running length
+    
+    Args:
+    :param start_node: start node of the beam
+    :param end_node: end node of the beam
+    """
     global TOTAL_LENGTH
     TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
 
 
 def get_length():
+    """Returns total length of all beams"""
     return TOTAL_LENGTH

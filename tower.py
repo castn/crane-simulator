@@ -29,6 +29,7 @@ def create(number_of_segments, has_horizontal, is_hollow, style_of_face):
     """
     Create a tower
 
+    Args:
     :param number_of_segments: Define how many segments the tower should have
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
@@ -41,6 +42,7 @@ def create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style
     """
     Create all beams of a single segment of the tower
 
+    Args:
     :param number_of_segments: Define the number of segments the tower has
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
@@ -59,8 +61,9 @@ def create_diagonal_beams(i, style_of_face):
     """
     Create the diagonal beams on the faces of the tower.
 
-    :param i: Current number of segment
-    :param style_of_face: Define the style of diagonal beams of each face. Using the Style Enum
+    Args:
+    :param i: current number of segment
+    :param style_of_face: define the style of diagonal beams of each face. Using the Style Enum
     """
     if style_of_face == Style.DIAGONAL:  # hier stand parallel aber es gibt keine entsprechende enum
         create_parallel_face_beams_LR(i)
@@ -107,6 +110,7 @@ def create_cross_face_beam(i):
 
 
 def create_parallel_face_beams_RL(i):
+    """Creates bottom right to top left diagonals"""
     val_to_add = 4 * i
     bars.append([4 + val_to_add, 1 + val_to_add])  # front face
     add_length(4 + val_to_add, 1 + val_to_add)
@@ -119,6 +123,7 @@ def create_parallel_face_beams_RL(i):
 
 
 def create_parallel_face_beams_LR(i):
+    """Creates bottom left to top right diagonals"""
     val_to_add = 4 * i
     bars.append([0 + val_to_add, 5 + val_to_add])  # front face
     add_length(0 + val_to_add, 5 + val_to_add)
@@ -160,6 +165,7 @@ def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face
     """
     Create all the different segment the tower is made of
 
+    Args:
     :param number_of_segments: Define how many segments the tower should have
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
@@ -188,9 +194,7 @@ def create_segment_nodes(i):
 
 
 def get_nodes():
-    """
-    Return the nodes of tower as numpy array of type float64
-    """
+    """Return the nodes of tower as numpy array of type float64"""
     return numpy.array(nodes).astype(float)
 
 
@@ -210,6 +214,13 @@ def get_bars_raw():
 
 
 def add_length(start_node, end_node):
+    """
+    Calculates distance between 2 given points and adds it to a running length
+
+    Args:
+    :param start_node: start node of the beam
+    :param end_node: end node of the beam
+    """
     global TOTAL_LENGTH
     TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
 
