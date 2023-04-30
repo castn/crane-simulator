@@ -11,6 +11,7 @@ NODES_FLOAT = []
 IS_CONNECTED = False
 END_NODE_TOWER = 0
 END_NODE_JIB = 2
+TOTAL_LENGTH = 0
 
 
 def create(tower_width, length):
@@ -60,6 +61,7 @@ def create_beams():
     start_node_cj = END_NODE_JIB #len(nodes)
     if not IS_CONNECTED:
         bars.append([0, 1])
+        add_length(0, 1)
     for i in range(SEGMENTS):
         val_to_add = 2 * (i - 1)
         create_frame_beams(i, start_node_cj, val_to_add)
@@ -69,20 +71,29 @@ def create_beams():
 def create_frame_beams(i, start_node_cj, val_to_add):
     if i == 0:
         bars.append([END_NODE_TOWER, start_node_cj])
+        add_length(END_NODE_TOWER, start_node_cj)
         bars.append([END_NODE_TOWER + 1, start_node_cj + 1])
+        add_length(END_NODE_TOWER + 1, start_node_cj + 1)
     else:
         bars.append([start_node_cj + val_to_add, start_node_cj + 2 + val_to_add])
+        add_length(start_node_cj + val_to_add, start_node_cj + 2 + val_to_add)
         bars.append([start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add])
+        add_length(start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add)
     bars.append([start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2])
+    add_length(start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2)
 
 
 def create_diag_beams(i, start_node_cj, val_to_add):
     if i == 0:
         bars.append([END_NODE_TOWER, start_node_cj + 1])
+        add_length(END_NODE_TOWER, start_node_cj + 1)
         bars.append([END_NODE_TOWER + 1, start_node_cj])
+        add_length(END_NODE_TOWER + 1, start_node_cj)
     else:
         bars.append([start_node_cj + val_to_add, start_node_cj + 3 + val_to_add])
+        add_length(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add)
         bars.append([start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add])
+        add_length(start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add)
 
 
 def get_nodes():
@@ -92,10 +103,23 @@ def get_nodes():
     return numpy.array(nodes).astype(float)
 
 
+def get_nodes_raw():
+    return nodes
+
+
 def get_bars():
     """Return the bars of tower as numpy array"""
     return numpy.array(bars)
 
 
+def get_bars_raw():
+    return bars
+
+
+def add_length(start_node, end_node):
+    global TOTAL_LENGTH
+    TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
+
+
 def get_length():
-    return 0
+    return TOTAL_LENGTH

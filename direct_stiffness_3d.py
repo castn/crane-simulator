@@ -13,10 +13,12 @@ A = 0.01 # 0.01m^2?
 
 # Create crane
 crane.create_crane()
-print(f'Total length: {crane.get_length() / 1000} m')
-print(f'Total volume: {crane.get_length() / 1000 * A} m^3')
+total_length = crane.get_length()
+print(f'Total length: {total_length / 1000:.5f} m')
+print(f'Total volume: {total_length / 1000 * A:.5f} m^3')
 density = 7850
-print(f'Total mass: {crane.get_length() / 1000 * A * density} kg with a cost of {crane.get_length() / 1000 * A * density / 1000 * 1000} euros')
+print(f'Total mass: {total_length / 1000 * A * density:.5f} kg')
+print(f'Total cost: {(total_length / 1000 * A * density / 1000 * 1000):.2f} euros')
 # crane.create_counter_jib()
 
 # Override Python arrays with Numpy arrays, nodes are of type float64

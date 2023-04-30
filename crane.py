@@ -2,6 +2,8 @@ import tower
 import jib
 import counter_jib
 
+nodes = []
+bars = []
 tower_num_nodes = 0
 
 
@@ -15,6 +17,10 @@ def create_tower():
     tower.create(2, True, True, tower.Style.DIAGONAL)
     global tower_num_nodes
     tower_num_nodes = len(tower.get_nodes())
+    # global nodes
+    # nodes = tower.get_nodes_raw()
+    # global bars
+    # bars = tower.get_bars_raw()
 
 
 def get_tower():
@@ -26,7 +32,11 @@ def get_tower_length():
 
 
 def create_jib():
-    jib.create_connected(tower.get_nodes_raw(), tower.get_bars_raw(), 4000, 2000, 4000, 2)
+    jib.create_connected(tower.get_nodes_raw().copy(), tower.get_bars_raw().copy(), 4000, 2000, 4000, 2)
+    # global nodes
+    # nodes = jib.get_nodes_raw()
+    # global bars
+    # bars = jib.get_bars_raw()
 
 
 def get_jib():
@@ -38,7 +48,11 @@ def get_jib_length():
 
 
 def create_counter_jib():
-    counter_jib.create_connected(jib.get_nodes_raw(), jib.get_bars_raw(), 4000, 2000, tower_num_nodes, 4000)
+    counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_bars_raw().copy(), 4000, 2000, tower_num_nodes, 4000)
+    # global nodes
+    # nodes = counter_jib.get_nodes_raw()
+    # global bars
+    # bars = counter_jib.get_bars_raw()
     # counter_jib.create(2000, 4000)
 
 
@@ -48,6 +62,10 @@ def get_counter_jib():
 
 def get_counter_jib_length():
     return counter_jib.get_length()
+
+
+def get_crane():
+    return 
 
 
 def get_length():

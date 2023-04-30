@@ -14,11 +14,6 @@ SEGMENT_HEIGHT = 2000
 TOTAL_LENGTH = 0
 NODES_FLOAT = []
 
-# class length:
-#     TOTAL_LENGTH = 0
-#     NODES_FLOAT = []
-#     def abc():
-#         a = TOT
 
 class Style(Enum):
     """
@@ -87,54 +82,54 @@ def create_zigzag_face_beams(i):
 
 def create_cross_face_beam(i):
     """All sides of the segments the tower have a cross of beams"""
+    val_to_add = 4 * i
     # front face
-    bars.append([0 + 4 * i, 5 + 4 * i])
-    bars.append([4 + 4 * i, 1 + 4 * i])
+    bars.append([0 + val_to_add, 5 + val_to_add])
+    bars.append([4 + val_to_add, 1 + val_to_add])
     # right face
-    bars.append([5 + 4 * i, 3 + 4 * i])
-    bars.append([1 + 4 * i, 7 + 4 * i])
+    bars.append([5 + val_to_add, 3 + val_to_add])
+    bars.append([1 + val_to_add, 7 + val_to_add])
     # rear face
-    bars.append([2 + 4 * i, 7 + 4 * i])
-    bars.append([6 + 4 * i, 3 + 4 * i])
+    bars.append([2 + val_to_add, 7 + val_to_add])
+    bars.append([6 + val_to_add, 3 + val_to_add])
     # left face
-    bars.append([6 + 4 * i, 0 + 4 * i])
-    bars.append([2 + 4 * i, 4 + 4 * i])
+    bars.append([6 + val_to_add, 0 + val_to_add])
+    bars.append([2 + val_to_add, 4 + val_to_add])
     # length of material used
-    add_length(8 * numpy.linalg.norm(NODES_FLOAT[0 + 4 * i] - NODES_FLOAT[5 + 4 * i]))
 
 
 def create_parallel_face_beams_RL(i):
-    bars.append([4 + 4 * i, 1 + 4 * i])  # front face
-    bars.append([5 + 4 * i, 3 + 4 * i])  # right face
-    bars.append([7 + 4 * i, 2 + 4 * i])  # rear face
-    bars.append([6 + 4 * i, 0 + 4 * i])  # left face
-    add_length(4 * numpy.linalg.norm(NODES_FLOAT[4 + 4 * i] - NODES_FLOAT[1 + 4 * i]))
+    val_to_add = 4 * i
+    bars.append([4 + val_to_add, 1 + val_to_add])  # front face
+    bars.append([5 + val_to_add, 3 + val_to_add])  # right face
+    bars.append([7 + val_to_add, 2 + val_to_add])  # rear face
+    bars.append([6 + val_to_add, 0 + val_to_add])  # left face
 
 
 def create_parallel_face_beams_LR(i):
-    bars.append([0 + 4 * i, 5 + 4 * i])  # front face
-    bars.append([5 + 4 * i, 3 + 4 * i])  # right face
-    bars.append([3 + 4 * i, 6 + 4 * i])  # rear face
-    bars.append([6 + 4 * i, 0 + 4 * i])  # left face
-    add_length(4 * numpy.linalg.norm(NODES_FLOAT[0 + 4 * i] - NODES_FLOAT[5 + 4 * i]))
+    val_to_add = 4 * i
+    bars.append([0 + val_to_add, 5 + val_to_add])  # front face
+    bars.append([5 + val_to_add, 3 + val_to_add])  # right face
+    bars.append([3 + val_to_add, 6 + val_to_add])  # rear face
+    bars.append([6 + val_to_add, 0 + val_to_add])  # left face
 
 
 def create_vertical_beams(i):
     """Create all vertical beams of a segment"""
-    bars.append([0 + 4 * i, 4 + 4 * i])  # front_left_vertical beam
-    bars.append([1 + 4 * i, 5 + 4 * i])  # front_right_vertical beam
-    bars.append([3 + 4 * i, 7 + 4 * i])  # rear_left_vertical beam
-    bars.append([2 + 4 * i, 6 + 4 * i])  # rear_right_vertical beam
-    add_length(4 * numpy.linalg.norm(NODES_FLOAT[0 + 4 * i] - NODES_FLOAT[4 + 4 * i]))
+    val_to_add = 4 * i
+    bars.append([0 + val_to_add, 4 + val_to_add])  # front_left_vertical beam
+    bars.append([1 + val_to_add, 5 + val_to_add])  # front_right_vertical beam
+    bars.append([3 + val_to_add, 7 + val_to_add])  # rear_left_vertical beam
+    bars.append([2 + val_to_add, 6 + val_to_add])  # rear_right_vertical beam
 
 
 def create_horizontal_beams(i):
     """Create all horizontal beams of a segment"""
-    bars.append([0 + 4 * i, 1 + 4 * i])  # front_horizontal beam
-    bars.append([1 + 4 * i, 3 + 4 * i])  # right_horizontal beam
-    bars.append([3 + 4 * i, 2 + 4 * i])  # rear_horizontal beam
-    bars.append([2 + 4 * i, 0 + 4 * i])  # left_horizontal beam
-    add_length(4 * numpy.linalg.norm(NODES_FLOAT[0 + 4 * i] - NODES_FLOAT[1 + 4 * i]))
+    val_to_add = 4 * i
+    bars.append([0 + val_to_add, 1 + val_to_add])  # front_horizontal beam
+    bars.append([1 + val_to_add, 3 + val_to_add])  # right_horizontal beam
+    bars.append([3 + val_to_add, 2 + val_to_add])  # rear_horizontal beam
+    bars.append([2 + val_to_add, 0 + val_to_add])  # left_horizontal beam
 
 
 def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face):
@@ -168,11 +163,6 @@ def create_segment_nodes(i):
     nodes.append([SEGMENT_WIDTH, SEGMENT_WIDTH, SEGMENT_HEIGHT * i])
 
 
-def add_length(length):
-    global TOTAL_LENGTH
-    TOTAL_LENGTH += length
-
-
 def get_nodes():
     """
     Return the nodes of tower as numpy array of type float64
@@ -193,6 +183,11 @@ def get_bars():
 def get_bars_raw():
     """Return the bars of tower from internal array"""
     return bars
+
+
+def add_length(start_node, end_node):
+    global TOTAL_LENGTH
+    TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
 
 
 def get_length():
