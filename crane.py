@@ -33,6 +33,7 @@ def get_tower_length():
 
 def create_jib():
     jib.create_connected(tower.get_nodes_raw().copy(), tower.get_bars_raw().copy(), 4000, 2000, 4000, 2)
+    # print(len(jib.get_nodes()))
     # global nodes
     # nodes = jib.get_nodes_raw()
     # global bars
@@ -49,6 +50,7 @@ def get_jib_length():
 
 def create_counter_jib():
     counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_bars_raw().copy(), 4000, 2000, tower_num_nodes, 4000)
+    print(len(counter_jib.get_nodes()))
     # global nodes
     # nodes = counter_jib.get_nodes_raw()
     # global bars

@@ -6,7 +6,7 @@ import numpy as np
 from direct_stiffness_3d import E, A, nodes
 
 # Applied forces
-p = np.zeros_like(nodes)
+P = np.zeros_like(nodes)
 # P[0, 0] = 1
 # P[0, 1] = -10
 # P[0, 2] = -10
@@ -14,6 +14,10 @@ p = np.zeros_like(nodes)
 # P[1, 2] = -10
 # P[2, 0] = 0.5
 # P[5, 0] = 0.6
+P[16, 2] = -500
+P[17, 2] = -500
+P[20, 2] = -100
+P[21, 2] = -100
 
 # Support Displacement
 Ur = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

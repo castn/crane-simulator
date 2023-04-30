@@ -33,6 +33,10 @@ P = np.zeros_like(nodes)
 # P[1, 2] = -10
 # P[2, 0] = 0.5
 # P[5, 0] = 0.6
+P[16, 2] = -500
+P[17, 2] = -500
+P[20, 2] = -100
+P[21, 2] = -100
 
 # Support Displacement
 Ur = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -109,7 +113,7 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
 # Run test with known data
-# N, R, U = TrussAnalysis()
+N, R, U = truss_analysis()
 # print('Axial Forces (positive = tension, negative = compression)')
 # print(N[np.newaxis].T)
 # print('Reaction Forces (positive = upward, negative = downward)')
@@ -117,8 +121,8 @@ ax = fig.add_subplot(111, projection='3d')
 # print('Deformation at nodes')
 # print(U)
 plot(nodes, 'gray', '--', 1, 'Undeformed')
-# scale = 1 #increase to make more evident in plot
-# Dnodes = U * scale + nodes
-# plot(nodes, 'red', '-', 2, 'Deformed')
+scale = 1 #increase to make more evident in plot
+deformed_nodes = U * scale + nodes
+plot(deformed_nodes, 'red', '-', 2, 'Deformed')
 plt.axis("equal")
 plt.show()

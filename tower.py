@@ -85,51 +85,75 @@ def create_cross_face_beam(i):
     val_to_add = 4 * i
     # front face
     bars.append([0 + val_to_add, 5 + val_to_add])
+    add_length(0 + val_to_add, 5 + val_to_add)
     bars.append([4 + val_to_add, 1 + val_to_add])
+    add_length(4 + val_to_add, 1 + val_to_add)
     # right face
     bars.append([5 + val_to_add, 3 + val_to_add])
+    add_length(5 + val_to_add, 3 + val_to_add)
     bars.append([1 + val_to_add, 7 + val_to_add])
+    add_length(1 + val_to_add, 7 + val_to_add)
     # rear face
     bars.append([2 + val_to_add, 7 + val_to_add])
+    add_length(2 + val_to_add, 7 + val_to_add)
     bars.append([6 + val_to_add, 3 + val_to_add])
+    add_length(6 + val_to_add, 3 + val_to_add)
     # left face
     bars.append([6 + val_to_add, 0 + val_to_add])
+    add_length(6 + val_to_add, 0 + val_to_add)
     bars.append([2 + val_to_add, 4 + val_to_add])
+    add_length(2 + val_to_add, 4 + val_to_add)
     # length of material used
 
 
 def create_parallel_face_beams_RL(i):
     val_to_add = 4 * i
     bars.append([4 + val_to_add, 1 + val_to_add])  # front face
+    add_length(4 + val_to_add, 1 + val_to_add)
     bars.append([5 + val_to_add, 3 + val_to_add])  # right face
+    add_length(5 + val_to_add, 3 + val_to_add)
     bars.append([7 + val_to_add, 2 + val_to_add])  # rear face
+    add_length(7 + val_to_add, 2 + val_to_add)
     bars.append([6 + val_to_add, 0 + val_to_add])  # left face
+    add_length(6 + val_to_add, 0 + val_to_add)
 
 
 def create_parallel_face_beams_LR(i):
     val_to_add = 4 * i
     bars.append([0 + val_to_add, 5 + val_to_add])  # front face
+    add_length(0 + val_to_add, 5 + val_to_add)
     bars.append([5 + val_to_add, 3 + val_to_add])  # right face
+    add_length(5 + val_to_add, 3 + val_to_add)
     bars.append([3 + val_to_add, 6 + val_to_add])  # rear face
+    add_length(3 + val_to_add, 6 + val_to_add)
     bars.append([6 + val_to_add, 0 + val_to_add])  # left face
+    add_length(6 + val_to_add, 0 + val_to_add)
 
 
 def create_vertical_beams(i):
     """Create all vertical beams of a segment"""
     val_to_add = 4 * i
-    bars.append([0 + val_to_add, 4 + val_to_add])  # front_left_vertical beam
-    bars.append([1 + val_to_add, 5 + val_to_add])  # front_right_vertical beam
-    bars.append([3 + val_to_add, 7 + val_to_add])  # rear_left_vertical beam
-    bars.append([2 + val_to_add, 6 + val_to_add])  # rear_right_vertical beam
+    bars.append([0 + val_to_add, 4 + val_to_add])  # front left vertical beam
+    add_length(0 + val_to_add, 4 + val_to_add)
+    bars.append([1 + val_to_add, 5 + val_to_add])  # front right vertical beam
+    add_length(1 + val_to_add, 5 + val_to_add)
+    bars.append([3 + val_to_add, 7 + val_to_add])  # rear left vertical beam
+    add_length(3 + val_to_add, 7 + val_to_add)
+    bars.append([2 + val_to_add, 6 + val_to_add])  # rear right vertical beam
+    add_length(2 + val_to_add, 6 + val_to_add)
 
 
 def create_horizontal_beams(i):
     """Create all horizontal beams of a segment"""
     val_to_add = 4 * i
-    bars.append([0 + val_to_add, 1 + val_to_add])  # front_horizontal beam
-    bars.append([1 + val_to_add, 3 + val_to_add])  # right_horizontal beam
-    bars.append([3 + val_to_add, 2 + val_to_add])  # rear_horizontal beam
-    bars.append([2 + val_to_add, 0 + val_to_add])  # left_horizontal beam
+    bars.append([0 + val_to_add, 1 + val_to_add])  # front horizontal beam
+    add_length(0 + val_to_add, 1 + val_to_add)
+    bars.append([1 + val_to_add, 3 + val_to_add])  # right horizontal beam
+    add_length(1 + val_to_add, 3 + val_to_add)
+    bars.append([3 + val_to_add, 2 + val_to_add])  # rear horizontal beam
+    add_length(3 + val_to_add, 2 + val_to_add)
+    bars.append([2 + val_to_add, 0 + val_to_add])  # left horizontal beam
+    add_length(2 + val_to_add, 0 + val_to_add)
 
 
 def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face):
