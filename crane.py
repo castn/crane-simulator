@@ -63,7 +63,7 @@ def get_jib_length():
 def create_counter_jib():
     """Creates a counterjib connected to the other elements of the crane"""
     counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_bars_raw().copy(), 4000, 2000, tower_num_nodes, 4000)
-    print(len(counter_jib.get_nodes()))
+    # print(len(counter_jib.get_nodes()))
     # global nodes
     # nodes = counter_jib.get_nodes_raw()
     # global bars
