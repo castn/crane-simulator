@@ -19,10 +19,9 @@ print(f'Total volume: {total_length / 1000 * A:.5f} m^3')
 density = 7850
 print(f'Total mass: {total_length / 1000 * A * density:.5f} kg')
 print(f'Total cost: {(total_length / 1000 * A * density / 1000 * 1000):.2f} euros')
-# crane.create_counter_jib()
 
 # Override Python arrays with Numpy arrays, nodes are of type float64
-nodes, bars = crane.get_counter_jib()
+nodes, bars = crane.get_crane()
 
 # Applied forces
 P = np.zeros_like(nodes)
