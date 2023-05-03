@@ -85,8 +85,7 @@ def create_beams():
     """Creates all beams needed for the counterjib"""
     start_node_cj = END_NODE_JIB #len(nodes)
     if not IS_CONNECTED:
-        bars.append([0, 1])
-        add_length(0, 1)
+        append_bar(0, 1)
     for i in range(SEGMENTS):
         val_to_add = 2 * (i - 1)
         create_frame_beams(i, start_node_cj, val_to_add)
@@ -96,31 +95,22 @@ def create_beams():
 def create_frame_beams(i, start_node_cj, val_to_add):
     """Creates the outer frame of the counterjib"""
     if i == 0:
-        bars.append([END_NODE_TOWER, start_node_cj])
-        add_length(END_NODE_TOWER, start_node_cj)
-        bars.append([END_NODE_TOWER + 1, start_node_cj + 1])
-        add_length(END_NODE_TOWER + 1, start_node_cj + 1)
+        append_bar(END_NODE_TOWER, start_node_cj)
+        append_bar(END_NODE_TOWER + 1, start_node_cj + 1)
     else:
-        bars.append([start_node_cj + val_to_add, start_node_cj + 2 + val_to_add])
-        add_length(start_node_cj + val_to_add, start_node_cj + 2 + val_to_add)
-        bars.append([start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add])
-        add_length(start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add)
-    bars.append([start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2])
-    add_length(start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2)
+        append_bar(start_node_cj + val_to_add, start_node_cj + 2 + val_to_add)
+        append_bar(start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add)
+    append_bar(start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2)
 
 
 def create_diag_beams(i, start_node_cj, val_to_add):
     """Creates the diagonal beams of the counterjib"""
     if i == 0:
-        bars.append([END_NODE_TOWER, start_node_cj + 1])
-        add_length(END_NODE_TOWER, start_node_cj + 1)
-        bars.append([END_NODE_TOWER + 1, start_node_cj])
-        add_length(END_NODE_TOWER + 1, start_node_cj)
+        append_bar(END_NODE_TOWER, start_node_cj + 1)
+        append_bar(END_NODE_TOWER + 1, start_node_cj)
     else:
-        bars.append([start_node_cj + val_to_add, start_node_cj + 3 + val_to_add])
-        add_length(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add)
-        bars.append([start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add])
-        add_length(start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add)
+        append_bar(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add)
+        append_bar(start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add)
 
 
 def create_support():
@@ -131,34 +121,31 @@ def create_support():
             nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + 3/4 * SEGMENT_LENGTH])
         else:
             nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + 1/2 * SEGMENT_LENGTH])
-        # first batch
-        if i == 0:
-            # diagonal sections
-            bars.append([END_NODE_TOWER, support_start])
-            bars.append([END_NODE_TOWER + 1, support_start])
-            bars.append([END_NODE_TOWER + 2, support_start])
-            bars.append([END_NODE_TOWER + 3, support_start])
-            # top section
-            bars.append([END_NODE_TOWER + 4, support_start])
+        global NODES_FLOAT
+        NODES_FLOAT = numpy.array(nodes).astype(float)
         # second batch
-        elif i == 1:
+        if i == 1:
             # diagonal sections
-            bars.append([END_NODE_TOWER, support_start + 1])
-            bars.append([END_NODE_TOWER + 1, support_start + 1])
-            bars.append([END_NODE_JIB, support_start + 1])
-            bars.append([END_NODE_JIB + 1, support_start + 1])
+            append_bar(END_NODE_TOWER, support_start + 1)
+            append_bar(END_NODE_TOWER + 1, support_start + 1)
+            append_bar(END_NODE_JIB, support_start + 1)
+            append_bar(END_NODE_JIB + 1, support_start + 1)
             # top section
-            bars.append([support_start + (i - 1), support_start + i])
+            append_bar(support_start, support_start + 1)
         # the rest
         else:
+            if i == 0:
+                start_node = END_NODE_TOWER
+                append_bar(END_NODE_TOWER + 4, support_start)
+            else:
+                start_node = END_NODE_JIB
+                append_bar(support_start + (i - 1), support_start + i)
             # diagonal sections
-            val_to_add = 3 * (i - 2)
-            bars.append([0 + END_NODE_JIB + val_to_add, support_start + i])
-            bars.append([1 + END_NODE_JIB + val_to_add, support_start + i])
-            bars.append([2 + END_NODE_JIB + val_to_add, support_start + i])
-            bars.append([3 + END_NODE_JIB + val_to_add, support_start + i])
-            # top section
-            bars.append([support_start + (i - 1), support_start + i])
+            val_to_add = max(3 * (i - 2), 0)
+            append_bar(0 + start_node + val_to_add, support_start + i)
+            append_bar(1 + start_node + val_to_add, support_start + i)
+            append_bar(2 + start_node + val_to_add, support_start + i)
+            append_bar(3 + start_node + val_to_add, support_start + i)
 
 
 def get_nodes():
@@ -181,18 +168,19 @@ def get_bars_raw():
     return bars
 
 
-def add_length(start_node, end_node):
+def get_length():
+    """Returns total length of all beams"""
+    return TOTAL_LENGTH
+
+
+def append_bar(start_node, end_node):
     """
-    Calculates distance between 2 given points and adds it to a running length
+    Creates a beam between 2 given points and adds the length to a running total
     
     Args:
     :param start_node: start node of the beam
     :param end_node: end node of the beam
     """
+    bars.append([start_node, end_node])
     global TOTAL_LENGTH
     TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
-
-
-def get_length():
-    """Returns total length of all beams"""
-    return TOTAL_LENGTH
