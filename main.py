@@ -16,11 +16,10 @@ if __name__ == '__main__':
     # Create crane
     crane.create_crane()
     total_length = crane.get_length()
-    print(f'Total length: {total_length / 1000:.5f} m')
-    print(f'Total volume: {total_length / 1000 * A:.5f} m^3')
-    density = 7850
-    print(f'Total mass: {total_length / 1000 * A * density:.5f} kg')
-    print(f'Total cost: {(total_length / 1000 * A * density / 1000 * 1000):.2f} euros')
+    print(f'Total length: {(total_length / 1000):.5f} m')
+    print(f'Total volume: {(total_length / 1000 * A):.5f} m^3')
+    print(f'Total mass: {(total_length / 1000 * A * DENSITY):.5f} kg')
+    print(f'Total cost: {(total_length / 1000 * A * DENSITY / 1000 * 1000):.2f} euros')
 
     # Override Python arrays with Numpy arrays, nodes are of type float64
     nodes, bars = crane.get_crane()

@@ -70,6 +70,7 @@ def create_connected(crane_nodes, crane_bars, tower_height, tower_width, tower_n
     NODES_FLOAT = numpy.array(nodes).astype(float)
     
     create_beams()
+    create_support()
 
 
 def create_segments():
@@ -120,6 +121,44 @@ def create_diag_beams(i, start_node_cj, val_to_add):
         add_length(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add)
         bars.append([start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add])
         add_length(start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add)
+
+
+def create_support():
+    support_start = len(nodes)
+    for i in range(SEGMENTS + 1):
+        # create required nodes
+        if i == 0:
+            nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + 3/4 * SEGMENT_LENGTH])
+        else:
+            nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + 1/2 * SEGMENT_LENGTH])
+        # first batch
+        if i == 0:
+            # diagonal sections
+            bars.append([END_NODE_TOWER, support_start])
+            bars.append([END_NODE_TOWER + 1, support_start])
+            bars.append([END_NODE_TOWER + 2, support_start])
+            bars.append([END_NODE_TOWER + 3, support_start])
+            # top section
+            bars.append([END_NODE_TOWER + 4, support_start])
+        # second batch
+        elif i == 1:
+            # diagonal sections
+            bars.append([END_NODE_TOWER, support_start + 1])
+            bars.append([END_NODE_TOWER + 1, support_start + 1])
+            bars.append([END_NODE_JIB, support_start + 1])
+            bars.append([END_NODE_JIB + 1, support_start + 1])
+            # top section
+            bars.append([support_start + (i - 1), support_start + i])
+        # the rest
+        else:
+            # diagonal sections
+            val_to_add = 3 * (i - 2)
+            bars.append([0 + END_NODE_JIB + val_to_add, support_start + i])
+            bars.append([1 + END_NODE_JIB + val_to_add, support_start + i])
+            bars.append([2 + END_NODE_JIB + val_to_add, support_start + i])
+            bars.append([3 + END_NODE_JIB + val_to_add, support_start + i])
+            # top section
+            bars.append([support_start + (i - 1), support_start + i])
 
 
 def get_nodes():
