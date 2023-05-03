@@ -22,7 +22,7 @@ if __name__ == '__main__':
     print(f'Total cost: {(total_length / 1000 * A * DENSITY / 1000 * 1000):.2f} euros')
 
     # Override Python arrays with Numpy arrays, nodes are of type float64
-    nodes, bars = crane.get_crane()
+    nodes, beams = crane.get_crane()
 
     # Run test with known data
     # N, R, U = TrussAnalysis()
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # print(R)
     # print('Deformation at nodes')
     # print(U)
-    plotter.plot(nodes, bars, 'gray', '--', 'Undeformed')
+    plotter.plot(nodes, beams, 'gray', '--', 'Undeformed')
     # scale = 1 #increase to make more evident in plot
     # Dnodes = U * scale + nodes
     # plot(nodes, 'red', '-', 'Deformed')

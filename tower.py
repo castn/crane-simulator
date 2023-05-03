@@ -7,7 +7,7 @@ from enum import Enum
 import numpy
 
 nodes = []
-bars = []
+beams = []
 
 SEGMENT_WIDTH = 2000
 SEGMENT_HEIGHT = 2000
@@ -17,7 +17,7 @@ NODES_FLOAT = []
 
 class Style(Enum):
     """
-    Enum to define a style how the bars of the tower are placed.
+    Enum to define a style how the beams of the tower are placed.
     Can be PARALLEL, CROSS or ZIGZAG
     """
     CROSS = 1
@@ -48,16 +48,17 @@ def create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
     :param style_of_face: Define the style of diagonal beams of each face. Using the Style Enum
     """
+    val_to_add = 4 * i
     if has_horizontal:
-        create_horizontal_beams(i)
+        create_horizontal_beams(val_to_add)
     if not is_hollow:
-        bars.append([0 + 4 * i, 2 + 4 * i])
+        append_bar(0 + 4 * i, 2 + 4 * i)
     if i < number_of_segments:
-        create_vertical_beams(i)
-        create_diagonal_beams(i, style_of_face)
+        create_vertical_beams(val_to_add)
+        create_diagonal_beams(val_to_add, style_of_face)
 
 
-def create_diagonal_beams(i, style_of_face):
+def create_diagonal_beams(val_to_add, style_of_face):
     """
     Create the diagonal beams on the faces of the tower.
 
@@ -66,99 +67,70 @@ def create_diagonal_beams(i, style_of_face):
     :param style_of_face: define the style of diagonal beams of each face. Using the Style Enum
     """
     if style_of_face == Style.DIAGONAL:  # hier stand parallel aber es gibt keine entsprechende enum
-        create_parallel_face_beams_LR(i)
+        create_parallel_face_beams_LR(val_to_add)
     elif style_of_face == Style.CROSS:
-        create_cross_face_beam(i)
+        create_cross_face_beam(val_to_add)
     elif style_of_face == Style.ZIGZAG:
-        create_zigzag_face_beams(i)
+        create_zigzag_face_beams(i, val_to_add)
 
 
-def create_zigzag_face_beams(i):
-    """All sides of the segments the tower is made of have zigzag bars to the top"""
+def create_zigzag_face_beams(i, val_to_add):
+    """All sides of the segments the tower is made of have zigzag beams to the top"""
     if i % 2 == 0:
         # For even numbers create diagonal from left to right
-        create_parallel_face_beams_LR(i)
+        create_parallel_face_beams_LR(val_to_add)
     else:
         # For odd numbers create diagonal from right to left
-        create_parallel_face_beams_RL(i)
+        create_parallel_face_beams_RL(val_to_add)
 
 
-def create_cross_face_beam(i):
+def create_cross_face_beam(val_to_add):
     """All sides of the segments the tower have a cross of beams"""
-    val_to_add = 4 * i
     # front face
-    bars.append([0 + val_to_add, 5 + val_to_add])
-    add_length(0 + val_to_add, 5 + val_to_add)
-    bars.append([4 + val_to_add, 1 + val_to_add])
-    add_length(4 + val_to_add, 1 + val_to_add)
+    append_bar(0 + val_to_add, 5 + val_to_add)
+    append_bar(4 + val_to_add, 1 + val_to_add)
     # right face
-    bars.append([5 + val_to_add, 3 + val_to_add])
-    add_length(5 + val_to_add, 3 + val_to_add)
-    bars.append([1 + val_to_add, 7 + val_to_add])
-    add_length(1 + val_to_add, 7 + val_to_add)
+    append_bar(5 + val_to_add, 3 + val_to_add)
+    append_bar(1 + val_to_add, 7 + val_to_add)
     # rear face
-    bars.append([2 + val_to_add, 7 + val_to_add])
-    add_length(2 + val_to_add, 7 + val_to_add)
-    bars.append([6 + val_to_add, 3 + val_to_add])
-    add_length(6 + val_to_add, 3 + val_to_add)
+    append_bar(2 + val_to_add, 7 + val_to_add)
+    append_bar(6 + val_to_add, 3 + val_to_add)
     # left face
-    bars.append([6 + val_to_add, 0 + val_to_add])
-    add_length(6 + val_to_add, 0 + val_to_add)
-    bars.append([2 + val_to_add, 4 + val_to_add])
-    add_length(2 + val_to_add, 4 + val_to_add)
+    append_bar(6 + val_to_add, 0 + val_to_add)
+    append_bar(2 + val_to_add, 4 + val_to_add)
     # length of material used
 
 
-def create_parallel_face_beams_RL(i):
+def create_parallel_face_beams_RL(val_to_add):
     """Creates bottom right to top left diagonals"""
-    val_to_add = 4 * i
-    bars.append([4 + val_to_add, 1 + val_to_add])  # front face
-    add_length(4 + val_to_add, 1 + val_to_add)
-    bars.append([5 + val_to_add, 3 + val_to_add])  # right face
-    add_length(5 + val_to_add, 3 + val_to_add)
-    bars.append([7 + val_to_add, 2 + val_to_add])  # rear face
-    add_length(7 + val_to_add, 2 + val_to_add)
-    bars.append([6 + val_to_add, 0 + val_to_add])  # left face
-    add_length(6 + val_to_add, 0 + val_to_add)
+    append_bar(4 + val_to_add, 1 + val_to_add)  # front face
+    append_bar(5 + val_to_add, 3 + val_to_add)  # right face
+    append_bar(7 + val_to_add, 2 + val_to_add)  # rear face
+    append_bar(6 + val_to_add, 0 + val_to_add)  # left face
 
 
-def create_parallel_face_beams_LR(i):
+def create_parallel_face_beams_LR(val_to_add):
     """Creates bottom left to top right diagonals"""
-    val_to_add = 4 * i
-    bars.append([0 + val_to_add, 5 + val_to_add])  # front face
-    add_length(0 + val_to_add, 5 + val_to_add)
-    bars.append([5 + val_to_add, 3 + val_to_add])  # right face
-    add_length(5 + val_to_add, 3 + val_to_add)
-    bars.append([3 + val_to_add, 6 + val_to_add])  # rear face
-    add_length(3 + val_to_add, 6 + val_to_add)
-    bars.append([6 + val_to_add, 0 + val_to_add])  # left face
-    add_length(6 + val_to_add, 0 + val_to_add)
+    append_bar(0 + val_to_add, 5 + val_to_add)  # front face
+    append_bar(5 + val_to_add, 3 + val_to_add)  # right face
+    append_bar(3 + val_to_add, 6 + val_to_add)  # rear face
+    append_bar(6 + val_to_add, 0 + val_to_add)  # left face
 
 
-def create_vertical_beams(i):
+def create_vertical_beams(val_to_add):
     """Create all vertical beams of a segment"""
-    val_to_add = 4 * i
-    bars.append([0 + val_to_add, 4 + val_to_add])  # front left vertical beam
-    add_length(0 + val_to_add, 4 + val_to_add)
-    bars.append([1 + val_to_add, 5 + val_to_add])  # front right vertical beam
-    add_length(1 + val_to_add, 5 + val_to_add)
-    bars.append([3 + val_to_add, 7 + val_to_add])  # rear left vertical beam
-    add_length(3 + val_to_add, 7 + val_to_add)
-    bars.append([2 + val_to_add, 6 + val_to_add])  # rear right vertical beam
-    add_length(2 + val_to_add, 6 + val_to_add)
+    append_bar(0 + val_to_add, 4 + val_to_add)  # front left vertical beam
+    append_bar(1 + val_to_add, 5 + val_to_add)  # front right vertical beam
+    append_bar(3 + val_to_add, 7 + val_to_add)  # rear left vertical beam
+    append_bar(2 + val_to_add, 6 + val_to_add)  # rear right vertical beam
 
 
-def create_horizontal_beams(i):
+def create_horizontal_beams(val_to_add):
     """Create all horizontal beams of a segment"""
-    val_to_add = 4 * i
-    bars.append([0 + val_to_add, 1 + val_to_add])  # front horizontal beam
-    add_length(0 + val_to_add, 1 + val_to_add)
-    bars.append([1 + val_to_add, 3 + val_to_add])  # right horizontal beam
-    add_length(1 + val_to_add, 3 + val_to_add)
-    bars.append([3 + val_to_add, 2 + val_to_add])  # rear horizontal beam
-    add_length(3 + val_to_add, 2 + val_to_add)
-    bars.append([2 + val_to_add, 0 + val_to_add])  # left horizontal beam
-    add_length(2 + val_to_add, 0 + val_to_add)
+    append_bar(0 + val_to_add, 1 + val_to_add)  # front horizontal beam
+    append_bar(1 + val_to_add, 3 + val_to_add)  # right horizontal beam
+    append_bar(3 + val_to_add, 2 + val_to_add)  # rear horizontal beam
+    append_bar(2 + val_to_add, 0 + val_to_add)  # left horizontal beam
 
 
 def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face):
@@ -186,7 +158,7 @@ def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face
 
 
 def create_segment_nodes(i):
-    """Create all nodes so the bars of a segment can connect to them"""
+    """Create all nodes so the beams of a segment can connect to them"""
     nodes.append([0, 0, SEGMENT_HEIGHT * i])
     nodes.append([0, SEGMENT_WIDTH, SEGMENT_HEIGHT * i])
     nodes.append([SEGMENT_WIDTH, 0, SEGMENT_HEIGHT * i])
@@ -203,24 +175,25 @@ def get_nodes_raw():
     return nodes
 
 
-def get_bars():
-    """Return the bars of tower as numpy array"""
-    return numpy.array(bars)
+def get_beams():
+    """Return the beams of tower as numpy array"""
+    return numpy.array(beams)
 
 
-def get_bars_raw():
-    """Return the bars of tower from internal array"""
-    return bars
+def get_beams_raw():
+    """Return the beams of tower from internal array"""
+    return beams
 
 
-def add_length(start_node, end_node):
+def append_bar(start_node, end_node):
     """
-    Calculates distance between 2 given points and adds it to a running length
-
+    Creates a beam between 2 given points and adds the length to a running total
+    
     Args:
     :param start_node: start node of the beam
     :param end_node: end node of the beam
     """
+    beams.append([start_node, end_node])
     global TOTAL_LENGTH
     TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
 

@@ -5,7 +5,7 @@ Provides all functions to build the counterjib of a crane
 import numpy
 
 nodes = []
-bars = []
+beams = []
 
 SEGMENT_LENGTH = 2000
 START_HEIGHT = 0
@@ -35,13 +35,13 @@ def create(tower_width, length):
     create_beams()
 
 
-def create_connected(crane_nodes, crane_bars, tower_height, tower_width, tower_num_nodes, length):
+def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes, length):
     """
     Creates a counterjib with desired dimensions connected to the rest of the crane
     
     Args:
     :param crane_nodes: array of nodes used by the crane
-    :param crane_bars: array of beams used by the crane
+    :param crane_beams: array of beams used by the crane
     :param tower_height: height of the tower of the crane
     :param tower_width: width of the tower of the crane
     :param tower_num_nodes: number of nodes used to construct the tower
@@ -49,8 +49,8 @@ def create_connected(crane_nodes, crane_bars, tower_height, tower_width, tower_n
     """
     global nodes
     nodes = crane_nodes
-    global bars
-    bars = crane_bars
+    global beams
+    beams = crane_beams
     global START_HEIGHT
     START_HEIGHT = tower_height
     global TOWER_WIDTH
@@ -158,14 +158,14 @@ def get_nodes_raw():
     return nodes
 
 
-def get_bars():
-    """Return the bars of the tower as numpy array"""
-    return numpy.array(bars)
+def get_beams():
+    """Return the beams of the tower as numpy array"""
+    return numpy.array(beams)
 
 
-def get_bars_raw():
-    """Retuns the bars of the tower in original format"""
-    return bars
+def get_beams_raw():
+    """Retuns the beams of the tower in original format"""
+    return beams
 
 
 def get_length():
@@ -181,6 +181,6 @@ def append_bar(start_node, end_node):
     :param start_node: start node of the beam
     :param end_node: end node of the beam
     """
-    bars.append([start_node, end_node])
+    beams.append([start_node, end_node])
     global TOTAL_LENGTH
     TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])

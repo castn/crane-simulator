@@ -5,7 +5,7 @@ Provides all functions to build the jib of a crane
 import numpy
 
 nodes = []
-bars = []
+beams = []
 
 SEGMENT_LENGTH = 2000
 START_HEIGHT = 0
@@ -43,20 +43,20 @@ def create(tower_height, tower_width, length, segments):
     create_beams()
 
 
-def create_connected(tower_nodes, tower_bars, tower_height, tower_width, length, segments):
+def create_connected(tower_nodes, tower_beams, tower_height, tower_width, length, segments):
     """
     Creates jib attached to the tower as to have the entire crane in one block
 
     Args:
     :param tower_nodes: nodes which make up the tower (float[])
-    :param tower_bars: bars which make up the tower (int[])
+    :param tower_beams: beams which make up the tower (int[])
     :param length: length of the jib to be created  (float)
     :param segments: number of segments the jib should consist of (int)
     """
     global nodes
     nodes = tower_nodes
-    global bars
-    bars = tower_bars
+    global beams
+    beams = tower_beams
     global START_HEIGHT
     START_HEIGHT = tower_height #(numpy.asarray(nodes).astype(float))[len(nodes) - 1, 2]
     global TOWER_WIDTH
@@ -68,7 +68,7 @@ def create_connected(tower_nodes, tower_bars, tower_height, tower_width, length,
     global IS_CONNECTED
     IS_CONNECTED = True
     global INIT_BAR
-    INIT_BAR = max(numpy.asarray(bars).astype(int).max() - 1, 0) # wrapped in max just in case
+    INIT_BAR = max(numpy.asarray(beams).astype(int).max() - 1, 0) # wrapped in max just in case
 
     create_segments()
     
@@ -92,41 +92,29 @@ def create_segments():
 def create_beams():
     """Create all beams of a single segment"""
     for i in range(SEGMENTS):
-        create_horizontal_beams(i)
-        create_diagonal_beams(i)
+        val_to_add = 3 * i + INIT_BAR
+        create_horizontal_beams(i, val_to_add)
+        create_diagonal_beams(val_to_add)
 
 
-def create_horizontal_beams(i):
-    """Create the horizontal beam of a segment"""
-    # connects all base nodes
-    val_to_add = 3 * i + INIT_BAR
+def create_horizontal_beams(i, val_to_add):
+    """Create the horizontal beams of a segment"""
     if i == 0 and not IS_CONNECTED:
-        bars.append([0 + val_to_add, 1 + val_to_add])  # first horizontal (0-1)
-        add_length(0 + val_to_add, 1 + val_to_add)
+        append_beam(0 + val_to_add, 1 + val_to_add)  # first horizontal (0-1)
     if i < SEGMENTS - 1:
-        bars.append([2 + val_to_add, 5 + val_to_add])  # top connection
-        add_length(2 + val_to_add, 5 + val_to_add)
-    bars.append([1 + val_to_add, 4 + val_to_add])
-    add_length(1 + val_to_add, 4 + val_to_add)
-    bars.append([4 + val_to_add, 3 + val_to_add])
-    add_length(4 + val_to_add, 3 + val_to_add)
-    bars.append([3 + val_to_add, 0 + val_to_add])
-    add_length(3 + val_to_add, 0 + val_to_add)
-    bars.append([1 + val_to_add, 3 + val_to_add])  # diagonal beam
-    add_length(1 + val_to_add, 3 + val_to_add)
+        append_beam(2 + val_to_add, 5 + val_to_add)  # top connection
+    append_beam(1 + val_to_add, 4 + val_to_add)
+    append_beam(4 + val_to_add, 3 + val_to_add)
+    append_beam(3 + val_to_add, 0 + val_to_add)
+    append_beam(1 + val_to_add, 3 + val_to_add)  # diagonal beam
 
 
-def create_diagonal_beams(i):
+def create_diagonal_beams(val_to_add):
     """Create the diagonal beams of a segment, here the diagonal beams are the side of a pyramid"""
-    val_to_add = 3 * i + INIT_BAR
-    bars.append([0 + val_to_add, 2 + val_to_add])
-    add_length(0 + val_to_add, 2 + val_to_add)
-    bars.append([1 + val_to_add, 2 + val_to_add])
-    add_length(1 + val_to_add, 2 + val_to_add)
-    bars.append([4 + val_to_add, 2 + val_to_add])
-    add_length(4 + val_to_add, 2 + val_to_add)
-    bars.append([3 + val_to_add, 2 + val_to_add])
-    add_length(3 + val_to_add, 2 + val_to_add)
+    append_beam(0 + val_to_add, 2 + val_to_add)
+    append_beam(1 + val_to_add, 2 + val_to_add)
+    append_beam(4 + val_to_add, 2 + val_to_add)
+    append_beam(3 + val_to_add, 2 + val_to_add)
 
 
 def get_nodes():
@@ -139,24 +127,25 @@ def get_nodes_raw():
     return nodes
 
 
-def get_bars():
-    """Return the bars of jib as numpy array"""
-    return numpy.array(bars)
+def get_beams():
+    """Return the beams of jib as numpy array"""
+    return numpy.array(beams)
 
 
-def get_bars_raw():
-    """Returns the bars of the tower in original format"""
-    return bars
+def get_beams_raw():
+    """Returns the beams of the tower in original format"""
+    return beams
 
 
-def add_length(start_node, end_node):
+def append_beam(start_node, end_node):
     """
-    Calculates distance between 2 given points and adds it to a running length
+    Creates a beam between 2 given points and adds the length to a running total
     
     Args:
     :param start_node: start node of the beam
     :param end_node: end node of the beam
     """
+    beams.append([start_node, end_node])
     global TOTAL_LENGTH
     TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
 
