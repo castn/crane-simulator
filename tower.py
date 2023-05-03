@@ -25,7 +25,7 @@ class Style(Enum):
     DIAGONAL = 3
 
 
-def create(number_of_segments, has_horizontal, is_hollow, style_of_face):
+def create(height, seg_height, width, has_horizontal, is_hollow, style_of_face):
     """
     Create a tower
 
@@ -34,7 +34,12 @@ def create(number_of_segments, has_horizontal, is_hollow, style_of_face):
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
     :param style_of_face: Define the style of diagonal beams of each face. Using the Style Enum
-    """
+    """ # need to adjust
+    global SEGMENT_WIDTH
+    SEGMENT_WIDTH = width
+    global SEGMENT_HEIGHT
+    SEGMENT_HEIGHT = seg_height
+    number_of_segments = int(height / seg_height)
     create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face)
 
 
@@ -146,7 +151,8 @@ def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face
     logging.debug("Initialize segment nodes")
     for i in range(number_of_segments + 1):
         logging.debug("Create nodes for segment: %s", i)
-        create_segment_nodes(i)
+        elevation = SEGMENT_HEIGHT * i
+        create_segment_nodes(elevation)
     
     global NODES_FLOAT
     NODES_FLOAT = numpy.array(nodes).astype(float)
@@ -157,12 +163,12 @@ def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face
         create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style_of_face)
 
 
-def create_segment_nodes(i):
+def create_segment_nodes(elevation):
     """Create all nodes so the beams of a segment can connect to them"""
-    nodes.append([0, 0, SEGMENT_HEIGHT * i])
-    nodes.append([0, SEGMENT_WIDTH, SEGMENT_HEIGHT * i])
-    nodes.append([SEGMENT_WIDTH, 0, SEGMENT_HEIGHT * i])
-    nodes.append([SEGMENT_WIDTH, SEGMENT_WIDTH, SEGMENT_HEIGHT * i])
+    nodes.append([0, 0, elevation])
+    nodes.append([0, SEGMENT_WIDTH, elevation])
+    nodes.append([SEGMENT_WIDTH, 0, elevation])
+    nodes.append([SEGMENT_WIDTH, SEGMENT_WIDTH, elevation])
 
 
 def get_nodes():
