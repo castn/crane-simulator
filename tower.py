@@ -4,7 +4,7 @@ Provides all functions to build the tower of a crane
 
 import logging
 from enum import Enum
-import numpy
+import numpy as np
 
 nodes = []
 beams = []
@@ -12,7 +12,6 @@ beams = []
 SEGMENT_WIDTH = 2000
 SEGMENT_HEIGHT = 2000
 TOTAL_LENGTH = 0
-NODES_FLOAT = []
 
 
 class Style(Enum):
@@ -153,9 +152,7 @@ def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face
         logging.debug("Create nodes for segment: %s", i)
         elevation = SEGMENT_HEIGHT * i
         create_segment_nodes(elevation)
-    
-    global NODES_FLOAT
-    NODES_FLOAT = numpy.array(nodes).astype(float)
+
 
     logging.debug("Initialize segment beams")
     for i in range(number_of_segments + 1):
@@ -173,7 +170,7 @@ def create_segment_nodes(elevation):
 
 def get_nodes():
     """Return the nodes of tower as numpy array of type float64"""
-    return numpy.array(nodes).astype(float)
+    return np.array(nodes).astype(float)
 
 
 def get_nodes_raw():
@@ -183,7 +180,7 @@ def get_nodes_raw():
 
 def get_beams():
     """Return the beams of tower as numpy array"""
-    return numpy.array(beams)
+    return np.array(beams)
 
 
 def get_beams_raw():
@@ -201,7 +198,9 @@ def append_bar(start_node, end_node):
     """
     beams.append([start_node, end_node])
     global TOTAL_LENGTH
-    TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
+    start_float = np.array(nodes[start_node]).astype(float)
+    end_float = np.array(nodes[end_node]).astype(float)
+    TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
 
 
 def get_length():

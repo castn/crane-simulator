@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # while width < 500 or width > 2000:
     #     width = float(input('Enter the width of the crane in mm: '))
     if np.sqrt(tower_seg_height ** 2 + tower_width ** 2) > 2000:
-        print(f'Error! The diagonal elements will have a length of {np.sqrt(tower_seg_height ** 2 + tower_width ** 2):.3f}mm which is greater than the 2000mm allowed!')
+        print(f'Warning! The diagonal elements will have a length of {np.sqrt(tower_seg_height ** 2 + tower_width ** 2):.3f}mm which is greater than the 2000mm allowed!')
     
     crane.create_crane(tower_height, tower_seg_height, tower_width)
     total_length = crane.get_length()

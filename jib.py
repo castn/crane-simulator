@@ -2,7 +2,7 @@
 Provides all functions to build the jib of a crane
 """
 
-import numpy
+import numpy as np
 
 nodes = []
 beams = []
@@ -14,7 +14,6 @@ SEGMENTS = 0
 IS_CONNECTED = False
 INIT_BAR = 0
 TOTAL_LENGTH = 0
-NODES_FLOAT = []
 
 
 def create(tower_height, tower_width, length, segments):
@@ -58,7 +57,7 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width, length
     global beams
     beams = tower_beams
     global START_HEIGHT
-    START_HEIGHT = tower_height #(numpy.asarray(nodes).astype(float))[len(nodes) - 1, 2]
+    START_HEIGHT = tower_height #(np.asarray(nodes).astype(float))[len(nodes) - 1, 2]
     global TOWER_WIDTH
     TOWER_WIDTH = tower_width
     global SEGMENT_LENGTH
@@ -68,13 +67,9 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width, length
     global IS_CONNECTED
     IS_CONNECTED = True
     global INIT_BAR
-    INIT_BAR = max(numpy.asarray(beams).astype(int).max() - 1, 0) # wrapped in max just in case
+    INIT_BAR = max(np.asarray(beams).astype(int).max() - 1, 0) # wrapped in max just in case
 
     create_segments()
-    
-    global NODES_FLOAT
-    NODES_FLOAT = numpy.array(nodes).astype(float)
-    
     create_beams()
 
 
@@ -119,7 +114,7 @@ def create_diagonal_beams(val_to_add):
 
 def get_nodes():
     """Return the nodes of jib as numpy array of type float64"""
-    return numpy.array(nodes).astype(float)
+    return np.array(nodes).astype(float)
 
 
 def get_nodes_raw():
@@ -129,7 +124,7 @@ def get_nodes_raw():
 
 def get_beams():
     """Return the beams of jib as numpy array"""
-    return numpy.array(beams)
+    return np.array(beams)
 
 
 def get_beams_raw():
@@ -147,7 +142,9 @@ def append_beam(start_node, end_node):
     """
     beams.append([start_node, end_node])
     global TOTAL_LENGTH
-    TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
+    start_float = np.array(nodes[start_node]).astype(float)
+    end_float = np.array(nodes[end_node]).astype(float)
+    TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
 
 
 def get_length():
