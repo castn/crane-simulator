@@ -117,6 +117,7 @@ def create_diag_beams(i, start_node_cj, val_to_add):
 
 
 def create_support():
+    """Creates truss style support structure for the counterjib"""
     support_start = len(nodes)
     for i in range(SEGMENTS + 1):
         # create required nodes
@@ -152,6 +153,7 @@ def create_support():
 
 
 def create_cable_support(one_node):
+    """Creates a cable style support for the counterjib"""
     cable_start = len(nodes)
     if one_node:
         nodes.append([TOWER_WIDTH / 2, TOWER_WIDTH / 2, START_HEIGHT + TOWER_WIDTH])
