@@ -2,7 +2,7 @@
 Provides all functions to build the counterjib of a crane
 """
 
-import numpy
+import numpy as np
 
 nodes = []
 beams = []
@@ -67,10 +67,11 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
     create_segments()
     
     global NODES_FLOAT
-    NODES_FLOAT = numpy.array(nodes).astype(float)
+    NODES_FLOAT = np.array(nodes).astype(float)
     
     create_beams()
-    create_support()
+    # create_support()
+    create_cable_support(False)
 
 
 def create_segments():
@@ -85,7 +86,7 @@ def create_beams():
     """Creates all beams needed for the counterjib"""
     start_node_cj = END_NODE_JIB #len(nodes)
     if not IS_CONNECTED:
-        append_bar(0, 1)
+        append_beam(0, 1)
     for i in range(SEGMENTS):
         val_to_add = 2 * (i - 1)
         create_frame_beams(i, start_node_cj, val_to_add)
@@ -95,22 +96,22 @@ def create_beams():
 def create_frame_beams(i, start_node_cj, val_to_add):
     """Creates the outer frame of the counterjib"""
     if i == 0:
-        append_bar(END_NODE_TOWER, start_node_cj)
-        append_bar(END_NODE_TOWER + 1, start_node_cj + 1)
+        append_beam(END_NODE_TOWER, start_node_cj)
+        append_beam(END_NODE_TOWER + 1, start_node_cj + 1)
     else:
-        append_bar(start_node_cj + val_to_add, start_node_cj + 2 + val_to_add)
-        append_bar(start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add)
-    append_bar(start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2)
+        append_beam(start_node_cj + val_to_add, start_node_cj + 2 + val_to_add)
+        append_beam(start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add)
+    append_beam(start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2)
 
 
 def create_diag_beams(i, start_node_cj, val_to_add):
     """Creates the diagonal beams of the counterjib"""
     if i == 0:
-        append_bar(END_NODE_TOWER, start_node_cj + 1)
-        append_bar(END_NODE_TOWER + 1, start_node_cj)
+        append_beam(END_NODE_TOWER, start_node_cj + 1)
+        append_beam(END_NODE_TOWER + 1, start_node_cj)
     else:
-        append_bar(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add)
-        append_bar(start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add)
+        append_beam(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add)
+        append_beam(start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add)
 
 
 def create_support():
@@ -122,35 +123,65 @@ def create_support():
         else:
             nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + 1/2 * SEGMENT_LENGTH])
         global NODES_FLOAT
-        NODES_FLOAT = numpy.array(nodes).astype(float)
+        NODES_FLOAT = np.array(nodes).astype(float)
         # second batch
         if i == 1:
             # diagonal sections
-            append_bar(END_NODE_TOWER, support_start + 1)
-            append_bar(END_NODE_TOWER + 1, support_start + 1)
-            append_bar(END_NODE_JIB, support_start + 1)
-            append_bar(END_NODE_JIB + 1, support_start + 1)
+            append_beam(END_NODE_TOWER, support_start + 1)
+            append_beam(END_NODE_TOWER + 1, support_start + 1)
+            append_beam(END_NODE_JIB, support_start + 1)
+            append_beam(END_NODE_JIB + 1, support_start + 1)
             # top section
-            append_bar(support_start, support_start + 1)
+            append_beam(support_start, support_start + 1)
         # the rest
         else:
             if i == 0:
                 start_node = END_NODE_TOWER
-                append_bar(END_NODE_TOWER + 4, support_start)
+                append_beam(END_NODE_TOWER + 4, support_start)
             else:
                 start_node = END_NODE_JIB
-                append_bar(support_start + (i - 1), support_start + i)
+                append_beam(support_start + (i - 1), support_start + i)
             # diagonal sections
             val_to_add = max(3 * (i - 2), 0)
-            append_bar(0 + start_node + val_to_add, support_start + i)
-            append_bar(1 + start_node + val_to_add, support_start + i)
-            append_bar(2 + start_node + val_to_add, support_start + i)
-            append_bar(3 + start_node + val_to_add, support_start + i)
+            append_beam(0 + start_node + val_to_add, support_start + i)
+            append_beam(1 + start_node + val_to_add, support_start + i)
+            append_beam(2 + start_node + val_to_add, support_start + i)
+            append_beam(3 + start_node + val_to_add, support_start + i)
+
+
+def create_cable_support(one_node):
+    cable_start = len(nodes)
+    if one_node:
+        nodes.append([TOWER_WIDTH / 2, TOWER_WIDTH / 2, START_HEIGHT + TOWER_WIDTH])
+        # tower to new top
+        for i in range(4):
+            print('Connecting ', END_NODE_TOWER + i, ' and ', cable_start)
+            append_beam(END_NODE_TOWER + i, cable_start)
+        # jib to new top
+        append_beam(END_NODE_TOWER + 4, cable_start)
+        # new top to end counterjib
+        append_beam(cable_start, cable_start - 1)
+        append_beam(cable_start, cable_start - 2)
+    else:
+        nodes.append([TOWER_WIDTH / 2, 0, START_HEIGHT + TOWER_WIDTH])
+        nodes.append([TOWER_WIDTH / 2, TOWER_WIDTH, START_HEIGHT + TOWER_WIDTH])
+        # tower to new tops
+        for i in range(2):
+            append_beam(END_NODE_TOWER + i, cable_start + i)
+            append_beam(END_NODE_TOWER + i + 2, cable_start + i)
+        # between new tops
+        append_beam(cable_start, cable_start + 1)
+        # jib to new tops
+        append_beam(END_NODE_TOWER + 4, cable_start)
+        append_beam(END_NODE_TOWER + 4, cable_start + 1)
+        # new tops to end counterjib
+        append_beam(cable_start, cable_start - 2)
+        append_beam(cable_start + 1, cable_start - 1)
 
 
 def get_nodes():
     """Return the nodes of the tower as numpy array of type float64"""
-    return numpy.array(nodes).astype(float)
+    return np.array(nodes).astype(float)
 
 
 def get_nodes_raw():
@@ -160,7 +191,7 @@ def get_nodes_raw():
 
 def get_beams():
     """Return the beams of the tower as numpy array"""
-    return numpy.array(beams)
+    return np.array(beams)
 
 
 def get_beams_raw():
@@ -173,7 +204,7 @@ def get_length():
     return TOTAL_LENGTH
 
 
-def append_bar(start_node, end_node):
+def append_beam(start_node, end_node):
     """
     Creates a beam between 2 given points and adds the length to a running total
     
@@ -183,4 +214,6 @@ def append_bar(start_node, end_node):
     """
     beams.append([start_node, end_node])
     global TOTAL_LENGTH
-    TOTAL_LENGTH += numpy.linalg.norm(NODES_FLOAT[end_node] - NODES_FLOAT[start_node])
+    start_float = np.array(nodes[start_node]).astype(float)
+    end_float = np.array(nodes[end_node]).astype(float)
+    TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
