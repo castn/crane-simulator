@@ -15,3 +15,7 @@ Um manuell installierte Pakete zu der environment.yml hinzuzufügen führe folge
 Befehl ``conda env export --from-history > environment.yml`` in einer Konsole aus, mit der aktivierten Conda
 Umgebung ``ce-project``. Schaue in der ``environment.yml`` Datei nach, diese sollte aktualisiert worden sein, entferne
 die unterste Zeile mit dem ``prefix:`` und committe die Änderungen.
+
+## Oder
+
+Nutz die Python-Installation die schon auf deinem Rechner ist solange diese Numpy hat
