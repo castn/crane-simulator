@@ -9,8 +9,8 @@ import numpy as np
 nodes = []
 beams = []
 
-SEGMENT_WIDTH = 2000
-SEGMENT_HEIGHT = 2000
+SEGMENT_WIDTH = 0
+SEGMENT_HEIGHT = 0
 TOTAL_LENGTH = 0
 
 
@@ -24,7 +24,7 @@ class Style(Enum):
     DIAGONAL = 3
 
 
-def create(height, seg_height, width, has_horizontal, is_hollow, style_of_face):
+def create(segs, seg_height, width, has_horizontal, is_hollow, style_of_face):
     """
     Create a tower
 
@@ -38,8 +38,8 @@ def create(height, seg_height, width, has_horizontal, is_hollow, style_of_face):
     SEGMENT_WIDTH = width
     global SEGMENT_HEIGHT
     SEGMENT_HEIGHT = seg_height
-    number_of_segments = int(height / seg_height)
-    create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face)
+    
+    create_segments(segs, has_horizontal, is_hollow, style_of_face)
 
 
 def create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style_of_face):

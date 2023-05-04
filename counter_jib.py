@@ -7,18 +7,18 @@ import numpy as np
 nodes = []
 beams = []
 
-SEGMENT_LENGTH = 2000
+SEGMENT_LENGTH = 0
 START_HEIGHT = 0
 TOWER_WIDTH = 0
 SEGMENTS = 0
-NODES_FLOAT = []
 IS_CONNECTED = False
 END_NODE_TOWER = 0
 END_NODE_JIB = 2
 TOTAL_LENGTH = 0
+END_CJ = 0
 
 
-def create(tower_width, length):
+def create(tower_width, segs, seg_length):
     """
     Creates a counterjib separatley from the other components of the crane
     
@@ -29,13 +29,15 @@ def create(tower_width, length):
     global TOWER_WIDTH
     TOWER_WIDTH = tower_width
     global SEGMENTS
-    SEGMENTS = int(length / SEGMENT_LENGTH)
+    SEGMENTS = segs
+    global SEGMENT_LENGTH
+    SEGMENT_LENGTH = seg_length
     
     create_segments()
     create_beams()
 
 
-def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes, length):
+def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes, segs, seg_length):
     """
     Creates a counterjib with desired dimensions connected to the rest of the crane
     
@@ -56,7 +58,9 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
     global TOWER_WIDTH
     TOWER_WIDTH = tower_width
     global SEGMENTS
-    SEGMENTS = int(length / SEGMENT_LENGTH)
+    SEGMENTS = segs
+    global SEGMENT_LENGTH
+    SEGMENT_LENGTH = seg_length
     global IS_CONNECTED
     IS_CONNECTED = True
     global END_NODE_TOWER
@@ -64,11 +68,7 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
     global END_NODE_JIB
     END_NODE_JIB = len(crane_nodes)
     
-    create_segments()
-    
-    global NODES_FLOAT
-    NODES_FLOAT = np.array(nodes).astype(float)
-    
+    create_segments()    
     create_beams()
     # create_support()
     create_cable_support(False)
@@ -80,6 +80,8 @@ def create_segments():
         if not (i == 0 and IS_CONNECTED):  # skips the first run-through if nodes already exist
             nodes.append([- SEGMENT_LENGTH * i, 0, START_HEIGHT])
             nodes.append([- SEGMENT_LENGTH * i, TOWER_WIDTH, START_HEIGHT])
+    global END_CJ 
+    END_CJ = len(nodes)
 
 
 def create_beams():
@@ -119,9 +121,9 @@ def create_support():
     for i in range(SEGMENTS + 1):
         # create required nodes
         if i == 0:
-            nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + 3/4 * SEGMENT_LENGTH])
+            nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + (2/3 * SEGMENT_LENGTH)])
         else:
-            nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + 1/2 * SEGMENT_LENGTH])
+            nodes.append([1/2 * TOWER_WIDTH - i * TOWER_WIDTH, 1/2 * TOWER_WIDTH, START_HEIGHT + (1/2 * SEGMENT_LENGTH)])
         global NODES_FLOAT
         NODES_FLOAT = np.array(nodes).astype(float)
         # second batch

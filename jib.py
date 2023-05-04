@@ -81,7 +81,7 @@ def create_segments():
             nodes.append([TOWER_WIDTH + SEGMENT_LENGTH * i, TOWER_WIDTH, START_HEIGHT])
         if i < SEGMENTS:
             nodes.append([TOWER_WIDTH + SEGMENT_LENGTH * i + SEGMENT_LENGTH / 2, SEGMENT_LENGTH / 2,
-                          START_HEIGHT + SEGMENT_LENGTH])
+                          START_HEIGHT + (SEGMENT_LENGTH * 3/4)])
 
 
 def create_beams():

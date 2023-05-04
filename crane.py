@@ -14,16 +14,16 @@ TOWER_WIDTH = 0
 TOWER_NUM_NODES = 0
 
 
-def create_crane(tower_height, tower_seg_height, tower_width):
+def create_crane(tower_height, tower_segs, tower_seg_height, tower_width):
     """Creates all elements of the crane connected to each other"""
-    create_tower(tower_height, tower_seg_height, tower_width)
+    create_tower(tower_height, tower_segs, tower_seg_height, tower_width)
     create_jib()
     create_counter_jib()
 
 
-def create_tower(tower_height, tower_seg_height, tower_width):
+def create_tower(tower_height, tower_segs, tower_seg_height, tower_width):
     """Creates a tower"""
-    tower.create(tower_height, tower_seg_height, tower_width, True, True, tower.Style.DIAGONAL)
+    tower.create(tower_segs, tower_seg_height, tower_width, True, True, tower.Style.DIAGONAL)
     global TOWER_HEIGHT
     TOWER_HEIGHT = tower_height
     global TOWER_WIDTH
@@ -48,7 +48,7 @@ def get_tower_length():
 
 def create_jib():
     """Creates a jib connected to the other elements of the crane"""
-    jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(), TOWER_HEIGHT, TOWER_WIDTH, 4000, 2)
+    jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(), TOWER_HEIGHT, TOWER_WIDTH, TOWER_HEIGHT, 2)
     # print(len(jib.get_nodes()))
     # global nodes
     # nodes = jib.get_nodes_raw()
@@ -68,7 +68,7 @@ def get_jib_length():
 
 def create_counter_jib():
     """Creates a counterjib connected to the other elements of the crane"""
-    counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(), TOWER_HEIGHT, TOWER_WIDTH, TOWER_NUM_NODES, 4000)
+    counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(), TOWER_HEIGHT, TOWER_WIDTH, TOWER_NUM_NODES, 2, TOWER_HEIGHT)
     # print(len(counter_jib.get_nodes()))
     # global nodes
     # nodes = counter_jib.get_nodes_raw()

@@ -16,19 +16,21 @@ DENSITY = 7850
 
 if __name__ == '__main__':
     # Create crane
-    tower_height = 4000
-    # while tower_height < 5000 or tower_height > 10000:
-    #     tower_height = float(input('Enter the height of the tower in mm: '))
-    tower_seg_height = 2000
-    # while tower_seg_height < 500 or tower_seg_height > 2000:
-    #     tower_seg_height = float(input('Enter the height of each segment of the tower in mm: '))
-    tower_width = 2000
-    # while width < 500 or width > 2000:
-    #     width = float(input('Enter the width of the crane in mm: '))
+    tower_height = 0
+    while tower_height < 500 or tower_height > 10000: #5000-10000
+        tower_height = float(input('Enter the height of the tower in mm: '))
+    tower_seg_height = 0
+    tower_segs = 0
+    while tower_seg_height < 500 or tower_seg_height > 2000:
+        tower_segs = int(input('Enter the how many segments you would like to: '))
+        tower_seg_height = tower_height / tower_segs
+    tower_width = 0
+    while tower_width < 500 or tower_width > 2000:
+        tower_width = float(input('Enter the width of the crane in mm: '))
     if np.sqrt(tower_seg_height ** 2 + tower_width ** 2) > 2000:
         print(f'Warning! The diagonal elements will have a length of {np.sqrt(tower_seg_height ** 2 + tower_width ** 2):.3f}mm which is greater than the 2000mm allowed!')
     
-    crane.create_crane(tower_height, tower_seg_height, tower_width)
+    crane.create_crane(tower_height, tower_segs, tower_seg_height, tower_width)
     total_length = crane.get_length()
     print(f'Total length: {(total_length / 1000):.5f} m')
     print(f'Total volume: {(total_length / 1000 * A):.5f} m^3')
