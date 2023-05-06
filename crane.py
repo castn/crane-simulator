@@ -19,8 +19,13 @@ class Dims:
 
 def create_crane():
     """Creates all elements of the crane connected to each other"""
+    tower.get_dims()
     create_tower()
+    
+    jib.get_dims()
     create_jib()
+    
+    counter_jib.get_dims()
     create_counter_jib()
 
 

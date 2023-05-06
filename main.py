@@ -16,9 +16,8 @@ DENSITY = 7850
 
 if __name__ == '__main__':
     # Create crane
-    tower_height, tower_segs, tower_seg_height, tower_width = crane.tower.get_dims()
+    crane.create_crane()
     
-    crane.create_crane(tower_height, tower_segs, tower_seg_height, tower_width)
     total_length = crane.get_length()
     print(f'Total length: {(total_length / 1000):.5f} m')
     print(f'Total volume: {(total_length / 1000 * A):.5f} m^3')
