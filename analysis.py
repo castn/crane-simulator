@@ -8,7 +8,7 @@ Ur = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
 def analyze(nodes, beams, dof_condition, p, E, A):
-    """Performe truss structural analysis"""
+    """Perform truss structural analysis"""
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
     # Degree of freedom

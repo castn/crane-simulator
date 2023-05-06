@@ -9,9 +9,13 @@ import numpy as np
 nodes = []
 beams = []
 
-SEGMENT_WIDTH = 0
-SEGMENT_HEIGHT = 0
-TOTAL_LENGTH = 0
+
+class Dims:
+    """Class that contains all dimensions of the tower for global control"""
+    SEGMENT_WIDTH = 0
+    SEGMENT_HEIGHT = 0
+    SEGMENTS = 0
+    TOTAL_LENGTH = 0
 
 
 class Style(Enum):
@@ -24,22 +28,17 @@ class Style(Enum):
     DIAGONAL = 3
 
 
-def create(segs, seg_height, width, has_horizontal, is_hollow, style_of_face):
+def create(has_horizontal, is_hollow, style_of_face):
     """
     Create a tower
 
     Args:
-    :param number_of_segments: Define how many segments the tower should have
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
     :param style_of_face: Define the style of diagonal beams of each face. Using the Style Enum
-    """ # need to adjust
-    global SEGMENT_WIDTH
-    SEGMENT_WIDTH = width
-    global SEGMENT_HEIGHT
-    SEGMENT_HEIGHT = seg_height
-    
-    create_segments(segs, has_horizontal, is_hollow, style_of_face)
+    """
+
+    create_segments(has_horizontal, is_hollow, style_of_face)
 
 
 def create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style_of_face):
@@ -137,7 +136,7 @@ def create_horizontal_beams(val_to_add):
     append_bar(2 + val_to_add, 0 + val_to_add)  # left horizontal beam
 
 
-def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face):
+def create_segments(has_horizontal, is_hollow, style_of_face):
     """
     Create all the different segment the tower is made of
 
@@ -148,24 +147,24 @@ def create_segments(number_of_segments, has_horizontal, is_hollow, style_of_face
     :param style_of_face: Define the style of diagonal beams of each face. Using the Style Enum
     """
     logging.debug("Initialize segment nodes")
-    for i in range(number_of_segments + 1):
+    for i in range(Dims.SEGMENTS + 1):
         logging.debug("Create nodes for segment: %s", i)
-        elevation = SEGMENT_HEIGHT * i
+        elevation = Dims.SEGMENT_HEIGHT * i
         create_segment_nodes(elevation)
 
 
     logging.debug("Initialize segment beams")
-    for i in range(number_of_segments + 1):
+    for i in range(Dims.SEGMENTS + 1):
         logging.debug("Create beams for segment: %s", i)
-        create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style_of_face)
+        create_segment_beams(i, Dims.SEGMENTS, has_horizontal, is_hollow, style_of_face)
 
 
 def create_segment_nodes(elevation):
     """Create all nodes so the beams of a segment can connect to them"""
     nodes.append([0, 0, elevation])
-    nodes.append([0, SEGMENT_WIDTH, elevation])
-    nodes.append([SEGMENT_WIDTH, 0, elevation])
-    nodes.append([SEGMENT_WIDTH, SEGMENT_WIDTH, elevation])
+    nodes.append([0, Dims.SEGMENT_WIDTH, elevation])
+    nodes.append([Dims.SEGMENT_WIDTH, 0, elevation])
+    nodes.append([Dims.SEGMENT_WIDTH, Dims.SEGMENT_WIDTH, elevation])
 
 
 def get_nodes():
@@ -197,12 +196,36 @@ def append_bar(start_node, end_node):
     :param end_node: end node of the beam
     """
     beams.append([start_node, end_node])
-    global TOTAL_LENGTH
     start_float = np.array(nodes[start_node]).astype(float)
     end_float = np.array(nodes[end_node]).astype(float)
-    TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
+    Dims.TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
 
 
 def get_length():
     """Returns total length of material used in tower"""
-    return TOTAL_LENGTH
+    return Dims.TOTAL_LENGTH
+
+
+def get_dims():
+    """Prompts to enter custom measurements for the tower"""
+    height = 0
+    while height < 500 or height > 10000: # 5000-10000
+        height = float(input('Enter the height of the tower in mm: '))
+    seg_height = 0
+    segs = 0
+    while seg_height < 500 or seg_height > 2000: # 500-2000
+        segs = int(input('Enter the how many segments you would like: '))
+        seg_height = height / segs
+    width = 0
+    while width < 500 or width > 2000: # 500-2000
+        width = float(input('Enter the width of the crane in mm: '))
+    if np.sqrt(seg_height ** 2 + width ** 2) > 2000:
+        print(f'Warning! The diagonal elements will have a length of {np.sqrt(seg_height ** 2 + width ** 2):.3f}mm which is greater than the 2000mm allowed!')
+        print('Please adjust the measurements and reenter them.')
+        return get_dims()
+
+    Dims.SEGMENT_HEIGHT = seg_height
+    Dims.SEGMENT_WIDTH = width
+    Dims.SEGMENTS = segs
+    
+    return height, segs, seg_height, width
