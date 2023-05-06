@@ -9,27 +9,26 @@ import counter_jib
 
 nodes = []
 beams = []
-TOWER_HEIGHT = 0
-TOWER_WIDTH = 0
-TOWER_NUM_NODES = 0
 
 
-def create_crane(tower_height, tower_segs, tower_seg_height, tower_width):
+class Dims:
+    TOWER_HEIGHT = 0
+    TOWER_WIDTH = 0
+    TOWER_NUM_NODES = 0
+
+
+def create_crane():
     """Creates all elements of the crane connected to each other"""
-    create_tower(tower_height, tower_segs, tower_seg_height, tower_width)
+    create_tower()
     create_jib()
     create_counter_jib()
 
 
-def create_tower(tower_height, tower_segs, tower_seg_height, tower_width):
+def create_tower():
     """Creates a tower"""
-    tower.create(tower_segs, tower_seg_height, tower_width, True, True, tower.Style.DIAGONAL)
-    global TOWER_HEIGHT
-    TOWER_HEIGHT = tower_height
-    global TOWER_WIDTH
-    TOWER_WIDTH = tower_width
-    global TOWER_NUM_NODES
-    TOWER_NUM_NODES = len(tower.get_nodes())
+    tower.create(True, True, tower.Style.DIAGONAL)
+    Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH = tower.get_height_width()
+    Dims.TOWER_NUM_NODES = len(tower.get_nodes())
     # global nodes
     # nodes = tower.get_nodes_raw()
     # global beams
@@ -48,7 +47,7 @@ def get_tower_length():
 
 def create_jib():
     """Creates a jib connected to the other elements of the crane"""
-    jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(), TOWER_HEIGHT, TOWER_WIDTH, TOWER_HEIGHT, 2)
+    jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(), Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH)
     # print(len(jib.get_nodes()))
     # global nodes
     # nodes = jib.get_nodes_raw()
@@ -68,7 +67,7 @@ def get_jib_length():
 
 def create_counter_jib():
     """Creates a counterjib connected to the other elements of the crane"""
-    counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(), TOWER_HEIGHT, TOWER_WIDTH, TOWER_NUM_NODES, 2, TOWER_HEIGHT)
+    counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(), Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES)
     # print(len(counter_jib.get_nodes()))
     # global nodes
     # nodes = counter_jib.get_nodes_raw()

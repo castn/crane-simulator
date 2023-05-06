@@ -43,7 +43,7 @@ def create(tower_height, tower_width, length, segments):
     create_beams()
 
 
-def create_connected(tower_nodes, tower_beams, tower_height, tower_width, length, segments):
+def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
     """
     Creates jib attached to the tower as to have the entire crane in one block
 
@@ -57,10 +57,9 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width, length
     nodes = tower_nodes
     global beams
     beams = tower_beams
+    
     Dims.START_HEIGHT = tower_height #(np.asarray(nodes).astype(float))[len(nodes) - 1, 2]
     Dims.TOWER_WIDTH = tower_width
-    Dims.SEGMENT_LENGTH = length / segments
-    Dims.SEGMENTS = segments
     Dims.IS_CONNECTED = True
     Dims.INIT_BAR = max(np.asarray(beams).astype(int).max() - 1, 0) # wrapped in max just in case
 

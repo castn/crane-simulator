@@ -39,7 +39,7 @@ class Dims:
     TOTAL_LENGTH = 0
 
 
-def create(tower_width, segs, seg_length):
+def create():
     """
     Creates a counterjib separatley from the other components of the crane
     
@@ -47,15 +47,11 @@ def create(tower_width, segs, seg_length):
     :pram tower_width: width of the tower of the crane
     :param length: desired length of the counterjib
     """
-    Dims.TOWER_WIDTH = tower_width
-    Dims.SEGMENTS = segs
-    Dims.SEGMENT_LENGTH = seg_length
-    
     create_segments()
     create_beams()
 
 
-def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes, segs, seg_length):
+def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes):
     """
     Creates a counterjib with desired dimensions connected to the rest of the crane
     
@@ -71,10 +67,9 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
     nodes = crane_nodes
     global beams
     beams = crane_beams
+    
     Dims.START_HEIGHT = tower_height
     Dims.TOWER_WIDTH = tower_width
-    Dims.SEGMENTS = segs
-    Dims.SEGMENT_LENGTH = seg_length
     Dims.IS_CONNECTED = True
     Dims.END_NODE_TOWER = tower_num_nodes - 4
     Dims.END_NODE_JIB = len(crane_nodes)

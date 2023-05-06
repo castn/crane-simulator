@@ -222,10 +222,12 @@ def get_dims():
     if np.sqrt(seg_height ** 2 + width ** 2) > 2000:
         print(f'Warning! The diagonal elements will have a length of {np.sqrt(seg_height ** 2 + width ** 2):.3f}mm which is greater than the 2000mm allowed!')
         print('Please adjust the measurements and reenter them.')
-        return get_dims()
+        get_dims()
 
     Dims.SEGMENT_HEIGHT = seg_height
     Dims.SEGMENT_WIDTH = width
     Dims.SEGMENTS = segs
-    
-    return height, segs, seg_height, width
+
+
+def get_height_width():
+    return Dims.SEGMENT_HEIGHT, Dims.SEGMENT_WIDTH
