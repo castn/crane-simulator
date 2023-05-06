@@ -27,22 +27,22 @@ class Dims:
     SEGMENTS = 0
     HEIGHT = 0
     SUPPORT_TYPE = Style.NOT_CHOSEN
-    
+
     START_HEIGHT = 0
     TOWER_WIDTH = 0
     END_NODE_TOWER = 0
     END_NODE_JIB = 2
     END_CJ = 0
-    
+
     IS_CONNECTED = False
-    
+
     TOTAL_LENGTH = 0
 
 
 def create():
     """
     Creates a counterjib separatley from the other components of the crane
-    
+
     Args:
     :pram tower_width: width of the tower of the crane
     :param length: desired length of the counterjib
@@ -54,7 +54,7 @@ def create():
 def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes):
     """
     Creates a counterjib with desired dimensions connected to the rest of the crane
-    
+
     Args:
     :param crane_nodes: array of nodes used by the crane
     :param crane_beams: array of beams used by the crane
@@ -67,14 +67,14 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
     nodes = crane_nodes
     global beams
     beams = crane_beams
-    
+
     Dims.START_HEIGHT = tower_height
     Dims.TOWER_WIDTH = tower_width
     Dims.IS_CONNECTED = True
     Dims.END_NODE_TOWER = tower_num_nodes - 4
     Dims.END_NODE_JIB = len(crane_nodes)
-    
-    create_segments()    
+
+    create_segments()
     create_beams()
     create_support()
 
@@ -82,23 +82,25 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
 def create_segments():
     """Creates all beams needed for the counterjib"""
     for i in range(Dims.SEGMENTS + 1):
-        if not (i == 0 and Dims.IS_CONNECTED):  # skips the first run-through if nodes already exist
+        # skips the first run-through if nodes already exist
+        if not (i == 0 and Dims.IS_CONNECTED):
             nodes.append([- Dims.SEGMENT_LENGTH * i, 0, Dims.START_HEIGHT])
-            nodes.append([- Dims.SEGMENT_LENGTH * i, Dims.TOWER_WIDTH, Dims.START_HEIGHT])
-    global END_CJ 
+            nodes.append([- Dims.SEGMENT_LENGTH * i,
+                         Dims.TOWER_WIDTH, Dims.START_HEIGHT])
+    global END_CJ
     END_CJ = len(nodes)
 
 
 def create_beams():
     """Creates all beams needed for the counterjib"""
-    start_node_cj = Dims.END_NODE_JIB #len(nodes)
+    start_node_cj = Dims.END_NODE_JIB  # len(nodes)
     if not Dims.IS_CONNECTED:
         append_beam(0, 1)
     for i in range(Dims.SEGMENTS):
         val_to_add = 2 * (i - 1)
         create_frame_beams(i, start_node_cj, val_to_add)
         create_diag_beams(i, start_node_cj, val_to_add)
-        
+
 
 def create_frame_beams(i, start_node_cj, val_to_add):
     """Creates the outer frame of the counterjib"""
@@ -107,8 +109,10 @@ def create_frame_beams(i, start_node_cj, val_to_add):
         append_beam(Dims.END_NODE_TOWER + 1, start_node_cj + 1)
     else:
         append_beam(start_node_cj + val_to_add, start_node_cj + 2 + val_to_add)
-        append_beam(start_node_cj + 1 + val_to_add, start_node_cj + 3 + val_to_add)
-    append_beam(start_node_cj + val_to_add + 2, start_node_cj + 1 + val_to_add + 2)
+        append_beam(start_node_cj + 1 + val_to_add,
+                    start_node_cj + 3 + val_to_add)
+    append_beam(start_node_cj + val_to_add + 2,
+                start_node_cj + 1 + val_to_add + 2)
 
 
 def create_diag_beams(i, start_node_cj, val_to_add):
@@ -118,7 +122,8 @@ def create_diag_beams(i, start_node_cj, val_to_add):
         append_beam(Dims.END_NODE_TOWER + 1, start_node_cj)
     else:
         append_beam(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add)
-        append_beam(start_node_cj + 1 + val_to_add, start_node_cj + 2 + val_to_add)
+        append_beam(start_node_cj + 1 + val_to_add,
+                    start_node_cj + 2 + val_to_add)
 
 
 def create_support():
@@ -138,9 +143,11 @@ def create_truss_support():
     for i in range(Dims.SEGMENTS + 1):
         # create required nodes
         if i == 0:
-            nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 * Dims.TOWER_WIDTH, Dims.START_HEIGHT + (2/3 * Dims.SEGMENT_LENGTH)])
+            nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 *
+                         Dims.TOWER_WIDTH, Dims.START_HEIGHT + (2/3 * Dims.SEGMENT_LENGTH)])
         else:
-            nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 * Dims.TOWER_WIDTH, Dims.START_HEIGHT + (1/2 * Dims.SEGMENT_LENGTH)])
+            nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 *
+                         Dims.TOWER_WIDTH, Dims.START_HEIGHT + (1/2 * Dims.SEGMENT_LENGTH)])
         global NODES_FLOAT
         NODES_FLOAT = np.array(nodes).astype(float)
         # second batch
@@ -172,7 +179,8 @@ def create_cable_support(one_node):
     """Creates a cable style support for the counterjib"""
     cable_start = len(nodes)
     if one_node:
-        nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH / 2, Dims.START_HEIGHT + Dims.TOWER_WIDTH])
+        nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH /
+                     2, Dims.START_HEIGHT + Dims.TOWER_WIDTH])
         # tower to new top
         for i in range(4):
             append_beam(Dims.END_NODE_TOWER + i, cable_start)
@@ -182,8 +190,10 @@ def create_cable_support(one_node):
         append_beam(cable_start, cable_start - 1)
         append_beam(cable_start, cable_start - 2)
     else:
-        nodes.append([Dims.TOWER_WIDTH / 2, 0, Dims.START_HEIGHT + Dims.TOWER_WIDTH])
-        nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH, Dims.START_HEIGHT + Dims.TOWER_WIDTH])
+        nodes.append([Dims.TOWER_WIDTH / 2, 0,
+                     Dims.START_HEIGHT + Dims.TOWER_WIDTH])
+        nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH,
+                     Dims.START_HEIGHT + Dims.TOWER_WIDTH])
         # tower to new tops
         for i in range(2):
             append_beam(Dims.END_NODE_TOWER + i, cable_start + i)
@@ -226,7 +236,7 @@ def get_length():
 def append_beam(start_node, end_node):
     """
     Creates a beam between 2 given points and adds the length to a running total
-    
+
     Args:
     :param start_node: start node of the beam
     :param end_node: end node of the beam
@@ -239,27 +249,29 @@ def append_beam(start_node, end_node):
 
 def get_dims():
     length = 0
-    while length < 500 or length > 10000: # 5000-10000
+    while length < 500 or length > 10000:  # 5000-10000
         length = float(input('Enter the length of the jib in mm: '))
     seg_length = 0
     segs = 0
-    while seg_length < 500 or seg_length > 2000: # 500-2000
+    while seg_length < 500 or seg_length > 2000:  # 500-2000
         segs = int(input('Enter the how many segments you would like: '))
         seg_length = length / segs
     height = 0
     while height < 500 or height > 2000:
         height = float(input('Enter the height of the truss in mm: '))
     if np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2) > 2000:
-        print(f'Warning! The diagonal elements will have a length of {np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2):.3f}mm which is greater than the 2000mm allowed!')
+        print(
+            f'Warning! The diagonal elements will have a length of {np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2):.3f}mm which is greater than the 2000mm allowed!')
         print('Please adjust the measurements and reenter them.')
         get_dims()
-    
+
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = seg_length
     Dims.HEIGHT = height
-    
+
     while Dims.SUPPORT_TYPE == Style.NOT_CHOSEN:
-        sup_style = str(input('What type of support would you like? Options include \'none\', \'truss\', \'single tower\', and \'twin tower\': ')).lower()
+        sup_style = str(input(
+            'What type of support would you like? Options include \'none\', \'truss\', \'single tower\', and \'twin tower\': ')).lower()
         if sup_style == 'none':
             Dims.SUPPORT_TYPE = Style.NONE
         elif sup_style == 'truss':

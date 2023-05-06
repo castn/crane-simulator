@@ -17,23 +17,24 @@ DENSITY = 7850
 if __name__ == '__main__':
     # Create crane
     crane.create_crane()
-    
+
     total_length = crane.get_length()
     print(f'Total length: {(total_length / 1000):.5f} m')
     print(f'Total volume: {(total_length / 1000 * A):.5f} m^3')
     print(f'Total mass: {(total_length / 1000 * A * DENSITY):.5f} kg')
-    print(f'Total cost: {(total_length / 1000 * A * DENSITY / 1000 * 1000):.2f} euros')
+    print(
+        f'Total cost: {(total_length / 1000 * A * DENSITY / 1000 * 1000):.2f} euros')
 
     # Override Python arrays with Numpy arrays, nodes are of type float64
     nodes, beams = crane.get_crane()
-    
+
     # Condition of DOF (0 = fixed, 1 = free)
     dof_condition = np.ones_like(nodes).astype(int)
     dof_condition[0, :] = 0
     dof_condition[1, :] = 0
     dof_condition[2, :] = 0
     dof_condition[3, :] = 0
-    
+
     # Applied forces
     p = np.zeros_like(nodes)
     p[16, 2] = -500
@@ -54,4 +55,3 @@ if __name__ == '__main__':
     # Dnodes = U * scale + nodes
     # plotter.plot(Dnodes, 'red', '-', 'Deformed')
     plotter.display()
- 

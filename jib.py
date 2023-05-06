@@ -13,13 +13,13 @@ class Dims:
     SEGMENT_LENGTH = 0
     SEGMENTS = 0
     HEIGHT = 0
-    
+
     START_HEIGHT = 0
     TOWER_WIDTH = 0
     INIT_BAR = 0
-    
+
     IS_CONNECTED = False
-    
+
     TOTAL_LENGTH = 0
 
 
@@ -57,11 +57,13 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
     nodes = tower_nodes
     global beams
     beams = tower_beams
-    
-    Dims.START_HEIGHT = tower_height #(np.asarray(nodes).astype(float))[len(nodes) - 1, 2]
+
+    # (np.asarray(nodes).astype(float))[len(nodes) - 1, 2]
+    Dims.START_HEIGHT = tower_height
     Dims.TOWER_WIDTH = tower_width
     Dims.IS_CONNECTED = True
-    Dims.INIT_BAR = max(np.asarray(beams).astype(int).max() - 1, 0) # wrapped in max just in case
+    Dims.INIT_BAR = max(np.asarray(beams).astype(
+        int).max() - 1, 0)  # wrapped in max just in case
 
     create_segments()
     create_beams()
@@ -70,9 +72,12 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
 def create_segments():
     """Create the segments of a jib"""
     for i in range(Dims.SEGMENTS + 1):
-        if not (i == 0 and Dims.IS_CONNECTED):  # skips the first run-through if nodes already exist
-            nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i, 0, Dims.START_HEIGHT])
-            nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i, Dims.TOWER_WIDTH, Dims.START_HEIGHT])
+        # skips the first run-through if nodes already exist
+        if not (i == 0 and Dims.IS_CONNECTED):
+            nodes.append(
+                [Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i, 0, Dims.START_HEIGHT])
+            nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH *
+                         i, Dims.TOWER_WIDTH, Dims.START_HEIGHT])
         if i < Dims.SEGMENTS:
             nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2, Dims.SEGMENT_LENGTH / 2,
                           Dims.START_HEIGHT + Dims.HEIGHT])
@@ -129,7 +134,7 @@ def get_beams_raw():
 def append_beam(start_node, end_node):
     """
     Creates a beam between 2 given points and adds the length to a running total
-    
+
     Args:
     :param start_node: start node of the beam
     :param end_node: end node of the beam
@@ -147,21 +152,22 @@ def get_length():
 
 def get_dims():
     length = 0
-    while length < 500 or length > 10000: # 5000-10000
+    while length < 500 or length > 10000:  # 5000-10000
         length = float(input('Enter the length of the jib in mm: '))
     seg_length = 0
     segs = 0
-    while seg_length < 500 or seg_length > 2000: # 500-2000
+    while seg_length < 500 or seg_length > 2000:  # 500-2000
         segs = int(input('Enter the how many segments you would like: '))
         seg_length = length / segs
     height = 0
     while height < 500 or height > 2000:
         height = float(input('Enter the height of the truss in mm: '))
     if np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2) > 2000:
-        print(f'Warning! The diagonal elements will have a length of {np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2):.3f}mm which is greater than the 2000mm allowed!')
+        print(
+            f'Warning! The diagonal elements will have a length of {np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2):.3f}mm which is greater than the 2000mm allowed!')
         print('Please adjust the measurements and reenter them.')
         get_dims()
-    
+
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = seg_length
     Dims.HEIGHT = height
