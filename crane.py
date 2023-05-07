@@ -6,6 +6,7 @@ Provides all functions to build a crane
 import tower
 import jib
 import counter_jib
+import analysis
 
 nodes = []
 beams = []
@@ -20,13 +21,23 @@ class Dims:
 
 def create_crane():
     """Creates all elements of the crane connected to each other"""
-    tower.get_dims()
+    custom_dims = ''
+    while custom_dims != 'yes' and custom_dims != 'no':
+        custom_dims = str(
+            input('Would you like to enter custom dimensions? ')).lower()
+    if custom_dims == 'yes':
+        tower.get_dims()
+        jib.get_dims()
+        counter_jib.get_dims()
+        print('Now generating custom crane')
+    else:
+        tower.default_dims()
+        jib.default_dims()
+        counter_jib.default_dims()
+        print('Now generating default crane')
+
     create_tower()
-
-    jib.get_dims()
     create_jib()
-
-    counter_jib.get_dims()
     create_counter_jib()
 
 
@@ -53,8 +64,8 @@ def get_tower_length():
 
 def create_jib():
     """Creates a jib connected to the other elements of the crane"""
-    jib.create_connected(tower.get_nodes_raw().copy(
-    ), tower.get_beams_raw().copy(), Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH)
+    jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(),
+                         Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH)
     # print(len(jib.get_nodes()))
     # global nodes
     # nodes = jib.get_nodes_raw()
@@ -74,8 +85,8 @@ def get_jib_length():
 
 def create_counter_jib():
     """Creates a counterjib connected to the other elements of the crane"""
-    counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw(
-    ).copy(), Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES)
+    counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(),
+                                 Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES)
     # print(len(counter_jib.get_nodes()))
     # global nodes
     # nodes = counter_jib.get_nodes_raw()

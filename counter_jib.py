@@ -282,3 +282,11 @@ def get_dims():
             Dims.SUPPORT_TYPE = Style.TWO_TOWER
         else:
             print('Sorry, that was not a valid input. Try again.')
+
+
+def default_dims():
+    """Sets default parameters for the dimensions of the counterjib"""
+    Dims.SEGMENTS = 2
+    Dims.SEGMENT_LENGTH = 1000
+    Dims.HEIGHT = 800
+    Dims.SUPPORT_TYPE = Style.TRUSS

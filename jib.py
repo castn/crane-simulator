@@ -171,3 +171,10 @@ def get_dims():
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = seg_length
     Dims.HEIGHT = height
+
+
+def default_dims():
+    """Sets default parameters for the dimensions of the jib"""
+    Dims.SEGMENTS = 2
+    Dims.SEGMENT_LENGTH = 1000
+    Dims.HEIGHT = 1000

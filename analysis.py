@@ -11,22 +11,24 @@ def analyze(nodes, beams, dof_condition, p, E, A):
     """Perform truss structural analysis"""
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
-    # Degree of freedom
+    
+    # Degrees of freedom
     dof = 3
     total_number_of_dof = dof * number_of_nodes
+    
     # structural analysis
     distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]                                                                # Distance between joints of the beam
     L = np.sqrt((distance ** 2).sum(axis=1))                                                                                # Length of each beam
     angle = distance.transpose() / L                                                                                        # Angle matrix
-    transformation_vector = np.concatenate((-angle.transpose(), angle.transpose()), axis=1)                                 # Transformation vector
+    transformation_vector = np.concatenate((- angle.transpose(), angle.transpose()), axis=1)                                # Transformation vector
     K = np.zeros([total_number_of_dof, total_number_of_dof])                                                                # Global stiffness matrix
     for k in range(number_of_elements):
         aux = dof * beams[k, :]
         index = np.r_[aux[0]:aux[0] + dof, aux[1]:aux[1] + dof]  # Save dof at each node
         ES = np.dot(transformation_vector[k][np.newaxis].transpose() * E * A, transformation_vector[k][np.newaxis]) / L[k]  # Stiffness for each element (Local stiffness for each element)
         K[np.ix_(index, index)] = K[np.ix_(index, index)] + ES
-    free_dof = dof_condition.flatten().nonzero()[0]                                                                         # Get all DOF that are not defined as Zero (They can move)
-    support_dof = (dof_condition.flatten() == 0).nonzero()[0]                                                               # Get all DOF that are defined as Zero (Can not move, are manully defined above)
+    free_dof = dof_condition.flatten().nonzero()[0]                                                                         # Get all DOF that are NOT defined as zero (can move)
+    support_dof = (dof_condition.flatten() == 0).nonzero()[0]                                                               # Get all DOF that are defined as zero (can't move; manully defined above)
     Kff = K[np.ix_(free_dof, free_dof)]                                                                                     # Teil der Globalen Steifigkeitsmatrix https://youtu.be/Y-ILnLMZYMw?t=2381
     Kfr = K[np.ix_(free_dof, support_dof)]                                                                                  # Siehe Kff
     Krf = Kfr.transpose()                                                                                                   # Siehe Kff

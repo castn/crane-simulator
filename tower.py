@@ -229,5 +229,13 @@ def get_dims():
     Dims.SEGMENTS = segs
 
 
+def default_dims():
+    """Sets default parameters for the dimensions of the tower"""
+    Dims.SEGMENT_HEIGHT = 1000
+    Dims.SEGMENT_WIDTH = 1000
+    Dims.SEGMENTS = 2
+
+
 def get_height_width():
-    return Dims.SEGMENT_HEIGHT, Dims.SEGMENT_WIDTH
+    """Gets the height and width of the tower"""
+    return Dims.SEGMENT_HEIGHT * Dims.SEGMENTS, Dims.SEGMENT_WIDTH

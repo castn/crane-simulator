@@ -43,7 +43,7 @@ if __name__ == '__main__':
     p[21, 2] = -100
 
     # Run analysis
-    # N, R, U = analysis.analyze(nodes, beams, dof_condition, p, E, A)
+    N, R, U = analysis.analyze(nodes, beams, dof_condition, p, E, A)
     # print('Axial Forces (positive = tension, negative = compression)')
     # print(N[np.newaxis].T)
     # print('Reaction Forces (positive = upward, negative = downward)')
