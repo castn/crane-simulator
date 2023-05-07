@@ -21,7 +21,7 @@ class Dims:
 
 def create_crane():
     """Creates all elements of the crane connected to each other"""
-    custom_dims = ''
+    custom_dims = 'no' # should be ''
     while custom_dims != 'yes' and custom_dims != 'no':
         custom_dims = str(
             input('Would you like to enter custom dimensions? ')).lower()

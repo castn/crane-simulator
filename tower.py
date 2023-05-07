@@ -74,12 +74,12 @@ def create_diagonal_beams(val_to_add, style_of_face):
     elif style_of_face == Style.CROSS:
         create_cross_face_beam(val_to_add)
     elif style_of_face == Style.ZIGZAG:
-        create_zigzag_face_beams(i, val_to_add)
+        create_zigzag_face_beams(val_to_add)
 
 
-def create_zigzag_face_beams(i, val_to_add):
+def create_zigzag_face_beams(val_to_add):
     """All sides of the segments the tower is made of have zigzag beams to the top"""
-    if i % 2 == 0:
+    if (val_to_add / 4) % 2 == 0:
         # For even numbers create diagonal from left to right
         create_parallel_face_beams_LR(val_to_add)
     else:

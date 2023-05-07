@@ -28,22 +28,9 @@ if __name__ == '__main__':
     # Override Python arrays with Numpy arrays, nodes are of type float64
     nodes, beams = crane.get_crane()
 
-    # Condition of DOF (0 = fixed, 1 = free)
-    dof_condition = np.ones_like(nodes).astype(int)
-    dof_condition[0, :] = 0
-    dof_condition[1, :] = 0
-    dof_condition[2, :] = 0
-    dof_condition[3, :] = 0
-
-    # Applied forces
-    p = np.zeros_like(nodes)
-    p[16, 2] = -500
-    p[17, 2] = -500
-    p[20, 2] = -100
-    p[21, 2] = -100
-
     # Run analysis
-    N, R, U = analysis.analyze(nodes, beams, dof_condition, p, E, A)
+    analysis.generate_conditions(nodes)
+    N, R, U = analysis.analyze(nodes, beams, E, A)
     # print('Axial Forces (positive = tension, negative = compression)')
     # print(N[np.newaxis].T)
     # print('Reaction Forces (positive = upward, negative = downward)')
