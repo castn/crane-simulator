@@ -10,6 +10,8 @@ class Conditions:
     p = np.zeros_like(0)
 
 
+kN = 1e3
+
 def generate_conditions(nodes):
     """Generates conditions for the crane"""
     # Support Displacement
@@ -28,10 +30,10 @@ def generate_conditions(nodes):
 
     # Applied forces
     p = np.zeros_like(nodes)
-    p[16, 2] = -500
-    p[17, 2] = -500
-    p[20, 2] = -100
-    p[21, 2] = -100
+    p[16, 2] = -500 * kN
+    p[17, 2] = -500 * kN
+    p[20, 2] = -100 * kN
+    p[21, 2] = -100 * kN
     Conditions.p = p
 
 
@@ -65,11 +67,8 @@ def analyze(nodes, beams, E, A):
     K_bottomright = K[np.ix_(support_dof, support_dof)]                                                                     # Siehe K_topleft
     
     p_flatten = Conditions.p.flatten()[free_dof]                                                                            # Flatten only free_dof
-    Uf = np.linalg.lstsq(K_topleft, p_flatten)[0]                                                                              # Deformation at all nodes with free DOF
+    Uf = np.linalg.lstsq(K_topleft, p_flatten, rcond=None)[0]                                                               # Deformation at all nodes with free DOF
     U = Conditions.dof_condition.astype(float).flatten()                                                                    # Contains all the deformation data
-    print(U)
-    print(U[free_dof])
-    print(Uf)
     U[free_dof] = Uf
     U[support_dof] = Conditions.Ur
     U = U.reshape(number_of_nodes, dof)                                                                                     # Deformation vector for each node

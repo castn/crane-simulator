@@ -2,7 +2,6 @@
 Main Script
 """
 
-import numpy as np
 import crane
 import plotter
 import analysis
@@ -35,10 +34,10 @@ if __name__ == '__main__':
     # print(N[np.newaxis].T)
     # print('Reaction Forces (positive = upward, negative = downward)')
     # print(R)
-    # print('Deformation at nodes')
-    # print(U)
+    print('Deformation at nodes')
+    print(U)
     plotter.plot(nodes, beams, 'gray', '--', 'Undeformed')
-    # scale = 1 #increase to make more evident in plot
-    # Dnodes = U * scale + nodes
-    # plotter.plot(Dnodes, 'red', '-', 'Deformed')
+    scale = 10 # increase to make more evident in plot
+    deformed_nodes = U * scale + nodes
+    plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed')
     plotter.display()
