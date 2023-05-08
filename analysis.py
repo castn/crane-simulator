@@ -30,8 +30,8 @@ def generate_conditions(nodes):
 
     # Applied forces
     p = np.zeros_like(nodes)
-    p[16, 2] = -500 * kN
-    p[17, 2] = -500 * kN
+    p[16, 2] = -250 * kN
+    p[17, 2] = -250 * kN
     p[20, 2] = -100 * kN
     p[21, 2] = -100 * kN
     Conditions.p = p
