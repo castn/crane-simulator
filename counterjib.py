@@ -2,8 +2,8 @@
 Provides all functions to build the counterjib of a crane
 """
 
-import numpy as np
 from enum import Enum
+import numpy as np
 
 nodes = []
 beams = []
@@ -248,6 +248,7 @@ def append_beam(start_node, end_node):
 
 
 def get_dims():
+    """Prompts user to enter custom measurements for the counterjib in the console"""
     length = 0
     while length < 500 or length > 10000:  # 5000-10000
         length = float(input('Enter the length of the jib in mm: '))
@@ -282,6 +283,21 @@ def get_dims():
             Dims.SUPPORT_TYPE = Style.TWO_TOWER
         else:
             print('Sorry, that was not a valid input. Try again.')
+
+
+def set_dims(length, height, segs, sup_style):
+    """Sets dimensions of the counterjib to passed-through values"""
+    Dims.SEGMENTS = segs
+    Dims.SEGMENT_LENGTH = length / segs
+    Dims.HEIGHT = height
+    if sup_style == 'None':
+        Dims.SUPPORT_TYPE = Style.NONE
+    elif sup_style == 'Truss':
+        Dims.SUPPORT_TYPE = Style.TRUSS
+    elif sup_style == 'Single tower':
+        Dims.SUPPORT_TYPE = Style.ONE_TOWER
+    elif sup_style == 'Twin towers':
+        Dims.SUPPORT_TYPE = Style.TWO_TOWER
 
 
 def default_dims():

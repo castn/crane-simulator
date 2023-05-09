@@ -6,6 +6,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationTool
 from matplotlib.figure import Figure
 
 from MainWindow import Ui_MainWindow
+import crane
 
 
 class matplotlib_canvas(FigureCanvasQTAgg):
@@ -35,11 +36,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def apply_configuration(self):
         self.output.appendPlainText(f"Tower values: [{self.towerHeight_spinbox.value()},{self.towerWidth_spinbox.value()},{self.towerSegment_spinbox.value()},{self.towerSupportType_comboBox.currentText()}]")
-        self.output.appendPlainText(f"Jib values: [{self.jibLength_spinBox.value()},{self.jibHeight_spinBox.value()},{self.jibSegment_spinBox.value()},{self.jibSupportType_comboBox.currentText()}]")
+        self.output.appendPlainText(f"Jib values: [{self.jibLength_spinBox.value()},{self.jibLength_spinBox.value()},{self.jibLength_spinBox.value()},{self.jibSupportType_comboBox.currentText()}]")
         self.output.appendPlainText(f"CounterJib values: [{self.counterJibLength_spinBox.value()},{self.counterJibHeight_spinBox.value()},{self.counterJibSegments_spinBox.value()},{self.counterJibSupportType_comboBox.currentText()}]")
         self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
         self.output.appendPlainText("------")
         self.progressBar.setValue(100)
+        
+        if self.towerBox.isChecked():
+            crane.set_tower_dims(self.towerHeight_spinbox.value(), self.towerWidth_spinbox.value(),
+                             self.towerSegment_spinbox.value(), self.towerSupportType_comboBox.currentText())
+        if self.jibBox.isChecked():
+            crane.set_jib_dims(self.jibLength_spinBox.value(), self.jibLength_spinBox.value(), self.jibLength_spinBox.value())
+        if self.counterJibBox.isChecked():
+            crane.set_counterjib_dims(self.counterJibLength_spinBox.value(), self.counterJibHeight_spinBox.value(),
+                                  self.counterJibSegments_spinBox.value(), self.counterJibSupportType_comboBox.currentText())
 
 
 

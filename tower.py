@@ -10,22 +10,24 @@ nodes = []
 beams = []
 
 
+class Style(Enum):
+    """
+    Enum to define a style how the beams of the tower are placed.
+    Can be PARALLEL, CROSS or ZIGZAG
+    """
+    NONE = 0
+    CROSS = 1
+    ZIGZAG = 2
+    DIAGONAL = 3
+
+
 class Dims:
     """Class that contains all dimensions of the tower for global control"""
     SEGMENT_WIDTH = 0
     SEGMENT_HEIGHT = 0
     SEGMENTS = 0
     TOTAL_LENGTH = 0
-
-
-class Style(Enum):
-    """
-    Enum to define a style how the beams of the tower are placed.
-    Can be PARALLEL, CROSS or ZIGZAG
-    """
-    CROSS = 1
-    ZIGZAG = 2
-    DIAGONAL = 3
+    SUPPORT_TYPE = Style.NONE
 
 
 def create(has_horizontal, is_hollow, style_of_face):
@@ -207,7 +209,7 @@ def get_length():
 
 
 def get_dims():
-    """Prompts to enter custom measurements for the tower"""
+    """Prompts user to enter custom measurements for the tower in the console"""
     height = 0
     while height < 500 or height > 10000: # 5000-10000
         height = float(input('Enter the height of the tower in mm: '))
@@ -227,6 +229,21 @@ def get_dims():
     Dims.SEGMENT_HEIGHT = seg_height
     Dims.SEGMENT_WIDTH = width
     Dims.SEGMENTS = segs
+
+
+def set_dims(height, width, segs, sup_style):
+    """Sets dimensions of the tower to passed-through values"""
+    Dims.SEGMENT_HEIGHT = height / segs
+    Dims.SEGMENT_WIDTH = width
+    Dims.SEGMENTS = segs
+    if sup_style == 'None':
+        Dims.SUPPORT_TYPE = Style.NONE
+    elif sup_style == 'Cross':
+        Dims.SUPPORT_TYPE = Style.CROSS
+    elif sup_style == 'Zigzag':
+        Dims.SUPPORT_TYPE = Style.ZIGZAG
+    elif sup_style == 'Diagonal':
+        Dims.SUPPORT_TYPE = Style.DIAGONAL
 
 
 def default_dims():
