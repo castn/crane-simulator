@@ -1,7 +1,7 @@
 import sys
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QMessageBox
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
@@ -29,19 +29,24 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Add toolbar and canvas to window
         self.plot_layout.addWidget(plot_toolbar)
         self.plot_layout.addWidget(sc)
+        # self.w = None
+        # self.w = MyPopup()
+        # self.w.setGeometry(QRect(100, 100, 400, 200))
+        # self.w.show()
 
         self.apply_button.clicked.connect(self.apply_configuration)
 
-
     def apply_configuration(self):
-        self.output.appendPlainText(f"Tower values: [{self.towerHeight_spinbox.value()},{self.towerWidth_spinbox.value()},{self.towerSegment_spinbox.value()},{self.towerSupportType_comboBox.currentText()}]")
-        self.output.appendPlainText(f"Jib values: [{self.jibLength_spinBox.value()},{self.jibHeight_spinBox.value()},{self.jibSegment_spinBox.value()},{self.jibSupportType_comboBox.currentText()}]")
-        self.output.appendPlainText(f"CounterJib values: [{self.counterJibLength_spinBox.value()},{self.counterJibHeight_spinBox.value()},{self.counterJibSegments_spinBox.value()},{self.counterJibSupportType_comboBox.currentText()}]")
+        self.output.appendPlainText(
+            f"Tower values: [{self.towerHeight_spinbox.value()},{self.towerWidth_spinbox.value()},{self.towerSegment_spinbox.value()},{self.towerSupportType_comboBox.currentText()}]")
+        self.output.appendPlainText(
+            f"Jib values: [{self.jibLength_spinBox.value()},{self.jibHeight_spinBox.value()},{self.jibSegment_spinBox.value()},{self.jibSupportType_comboBox.currentText()}]")
+        self.output.appendPlainText(
+            f"CounterJib values: [{self.counterJibLength_spinBox.value()},{self.counterJibHeight_spinBox.value()},{self.counterJibSegments_spinBox.value()},{self.counterJibSupportType_comboBox.currentText()}]")
         self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
         self.output.appendPlainText("------")
         self.progressBar.setValue(100)
-
-
+        QMessageBox.about(self, "Title", "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.")
 
 
 # You need one (and only one) QApplication instance per application.
