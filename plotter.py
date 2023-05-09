@@ -6,11 +6,9 @@ from matplotlib import pyplot as plt
 LINE_WIDTH = 1
 
 # Create 3d environment
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
 
 
-def plot(nodes, beams, color, line_style, label):
+def plot(nodes, beams, color, line_style, label, ax):
     """
     Plot nodes using matplotlib
     :param nodes: Numpy array containing the coordinates of each node in three-dimensional space
