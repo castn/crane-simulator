@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>976</width>
-    <height>915</height>
+    <width>988</width>
+    <height>781</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout_6">
     <item>
      <widget class="QSplitter" name="splitter_2">
       <property name="orientation">
@@ -435,7 +435,10 @@
       </widget>
       <widget class="QSplitter" name="splitter">
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
        </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -513,7 +516,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>976</width>
+     <width>988</width>
      <height>22</height>
     </rect>
    </property>
@@ -533,5 +536,22 @@
   <tabstop>clear_button</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>clear_button</sender>
+   <signal>clicked()</signal>
+   <receiver>output</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>906</x>
+     <y>723</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>774</x>
+     <y>674</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
