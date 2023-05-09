@@ -27,8 +27,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Create toolbar, passing canvas as first parament, parent (self, the MainWindow) as second.
         plot_toolbar = NavigationToolbar(sc, self)
         # Add toolbar and canvas to window
-        self.plotVertical_layout.addWidget(plot_toolbar)
-        self.plotVertical_layout.addWidget(sc)
+        self.plot_layout.addWidget(plot_toolbar)
+        self.plot_layout.addWidget(sc)
 
         self.apply_button.clicked.connect(self.apply_configuration)
 
