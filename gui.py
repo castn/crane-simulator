@@ -11,7 +11,7 @@ from MainWindow import Ui_MainWindow
 class matplotlib_canvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
+        self.axes = fig.add_subplot(111, projection='3d')
         super(matplotlib_canvas, self).__init__(fig)
 
 
