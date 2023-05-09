@@ -5,9 +5,13 @@ Provides all functions to build a crane
 import tower
 import jib
 import counterjib
+import analysis
 
-nodes = []
-beams = []
+# Youngs Module
+E = 210e9  # 210GPa
+# Cross section of each beam
+A = 0.01  # 0.01m^2
+DENSITY = 7850
 
 
 class Dims:
@@ -15,6 +19,11 @@ class Dims:
     TOWER_HEIGHT = 0
     TOWER_WIDTH = 0
     TOWER_NUM_NODES = 0
+
+
+class Comps:
+    nodes = []
+    beams = []
 
 
 def set_tower_dims(tower_height, tower_width, tower_segs, tower_sup_style):
@@ -69,10 +78,8 @@ def create_tower():
     tower.create(True, True, tower.Style.DIAGONAL)
     Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH = tower.get_height_width()
     Dims.TOWER_NUM_NODES = len(tower.get_nodes())
-    # global nodes
-    # nodes = tower.get_nodes_raw()
-    # global beams
-    # beams = tower.get_beams_raw()
+    Comps.nodes = tower.get_nodes_raw().copy()
+    Comps.beams = tower.get_beams_raw().copy()
 
 
 def get_tower():
@@ -90,10 +97,8 @@ def create_jib():
     jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(),
                          Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH)
     # print(len(jib.get_nodes()))
-    # global nodes
-    # nodes = jib.get_nodes_raw()
-    # global beams
-    # beams = jib.get_beams_raw()
+    Comps.nodes = jib.get_nodes_raw().copy()
+    Comps.beams = jib.get_beams_raw().copy()
 
 
 def get_jib():
@@ -111,10 +116,8 @@ def create_counterjib():
     counterjib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(),
                                  Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES)
     # print(len(counterjib.get_nodes()))
-    # global nodes
-    # nodes = counterjib.get_nodes_raw()
-    # global beams
-    # beams = counterjib.get_beams_raw()
+    Comps.nodes = counterjib.get_nodes_raw().copy()
+    Comps.beams = counterjib.get_beams_raw().copy()
     # counterjib.create(2000, 4000)
 
 
@@ -130,9 +133,14 @@ def get_counterjib_length():
 
 def get_crane():
     """Returns the nodes and beams of the crane in converted formats"""
-    return get_counterjib()
+    return Comps.nodes, Comps.beams
 
 
 def get_length():
     """Returns the length of all beams used in the crane"""
     return tower.get_length() + jib.get_length() + counterjib.get_length()
+
+
+def analyze():
+    analysis.generate_conditions(Comps.nodes)
+    return analysis.analyze(Comps.nodes, Comps.beams, E, A)
