@@ -7,13 +7,14 @@ from matplotlib.figure import Figure
 
 from MainWindow import Ui_MainWindow
 import crane
+import numpy as np
 
 
 class matplotlib_canvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(matplotlib_canvas, self).__init__(fig)
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111)
+        super(matplotlib_canvas, self).__init__(self.fig)
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -40,9 +41,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.output.appendPlainText(f"Tower values: [{self.towerHeight_spinbox.value()},{self.towerWidth_spinbox.value()},{self.towerSegment_spinbox.value()},{self.towerSupportType_comboBox.currentText()}]")
         self.output.appendPlainText(f"Jib values: [{self.jibLength_spinBox.value()},{self.jibLength_spinBox.value()},{self.jibLength_spinBox.value()},{self.jibSupportType_comboBox.currentText()}]")
         self.output.appendPlainText(f"CounterJib values: [{self.counterJibLength_spinBox.value()},{self.counterJibHeight_spinBox.value()},{self.counterJibSegments_spinBox.value()},{self.counterJibSupportType_comboBox.currentText()}]")
-        self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
-        self.output.appendPlainText("------")
-        self.progressBar.setValue(100)
         
         if self.towerBox.isChecked():
             crane.set_tower_dims(self.towerHeight_spinbox.value(), self.towerWidth_spinbox.value(),
@@ -52,32 +50,30 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.counterJibBox.isChecked():
             crane.set_counterjib_dims(self.counterJibLength_spinBox.value(), self.counterJibHeight_spinBox.value(),
                                   self.counterJibSegments_spinBox.value(), self.counterJibSupportType_comboBox.currentText())
-    
-    
-    def create_plot(self):
-        N, R, U = crane.analyze()
-        # print('Axial Forces (positive = tension, negative = compression)')
-        # print(N[np.newaxis].T)
-        # print('Reaction Forces (positive = upward, negative = downward)')
-        # print(R)
-        print('Deformation at nodes')
-        print(U)
         
+        self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
+        if self.enableFEM_checkbox.isChecked():
+            N, R, U = crane.analyze()
+            self.analysis.appendPlainText('Axial Forces (positive = tension, negative = compression)')
+            self.analysis.appendPlainText(N[np.newaxis].T)
+            self.analysis.appendPlainText('Reaction Forces (positive = upward, negative = downward)')
+            self.analysis.appendPlainText(R)
+            self.analysis.appendPlainText('Deformation at nodes')
+            self.analysis.appendPlainText(U)
+        self.output.appendPlainText("------")
+        self.progressBar.setValue(100)
+    
+    
+    def create_plot(self, U):
         nodes, beams = crane.get_crane()
         
-        fig = Figure()
-        canvas = FigureCanvasQTAgg(fig)
-        axes = fig.add_subplot(111, projection='3d')
-        
-        self.plot(axes, fig, nodes, beams, 'gray', '--', 'Undeformed')
+        self.plot(nodes, beams, 'gray', '--', 'Undeformed')
         scale = 10 # increase to make more evident in plot
         deformed_nodes = U * scale + nodes
-        self.plot(axes, fig, deformed_nodes, beams, 'red', '-', 'Deformed')
-        
-        return canvas
+        self.plot(deformed_nodes, beams, 'red', '-', 'Deformed')
 
 
-    def plot(self, axes, fig, nodes, beams, color, line_style, label):
+    def plot(self, nodes, beams, color, line_style, label):
         """
         Plot nodes using matplotlib
         :param nodes: Numpy array containing the coordinates of each node in three-dimensional space
@@ -94,11 +90,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             yi, yf = nodes[beams[i, 0], 1], nodes[beams[i, 1], 1]
             zi, zf = nodes[beams[i, 0], 2], nodes[beams[i, 1], 2]
             # Create a Line3D object in list
-            line = axes.plot([xi, xf], [yi, yf], [zi, zf], color=color, linestyle=line_style, linewidth=1)
+            line = self.axes.plot([xi, xf], [yi, yf], [zi, zf], color=color, linestyle=line_style, linewidth=1)
             # Override list with first element in list, always the Line3D object.
             line = line[0]
         line.set_label(label)
-        fig.legend(prop={'size': 10})
+        self.fig.legend(prop={'size': 10})
 
 
 
