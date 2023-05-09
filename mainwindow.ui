@@ -398,21 +398,26 @@
                  <item row="0" column="1">
                   <widget class="QComboBox" name="counterJibSupportType_comboBox">
                    <property name="currentText">
-                    <string>Cross</string>
+                    <string>None</string>
                    </property>
                    <item>
                     <property name="text">
-                     <string>Cross</string>
+                     <string>None</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>Zigzag</string>
+                     <string>Truss</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>Diagonal</string>
+                     <string>One tower</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Two towers</string>
                     </property>
                    </item>
                   </widget>
@@ -517,7 +522,7 @@
      <x>0</x>
      <y>0</y>
      <width>988</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
