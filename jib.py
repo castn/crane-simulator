@@ -151,6 +151,7 @@ def get_length():
 
 
 def get_dims():
+    """Prompts user to enter custom measurements for the jib in the console"""
     length = 0
     while length < 500 or length > 10000:  # 5000-10000
         length = float(input('Enter the length of the jib in mm: '))
@@ -170,6 +171,13 @@ def get_dims():
 
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = seg_length
+    Dims.HEIGHT = height
+
+
+def set_dims(length, height, segs):
+    """Sets dimensions of the jib to passed-through values"""
+    Dims.SEGMENTS = segs
+    Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height
 
 
