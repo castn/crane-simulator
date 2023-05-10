@@ -29,7 +29,7 @@ def plot(nodes, beams, color, line_style, label, ax, fig):
         # Override list with first element in list, always the Line3D object.
         line = line[0]
     line.set_label(label)
-    plt.legend(prop={'size': 10})
+    fig.legend(prop={'size': 10})
     fig.gca().set_aspect('equal')
 
 

@@ -57,7 +57,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                       self.counterJibSupportType_comboBox.currentText())
 
         nodes, beams = crane.get_crane()
-        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.sc.axes)
+        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.sc.axes, self.sc.fig)
         self.plot_layout.replaceWidget(self.sc, self.sc)
         
         self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
