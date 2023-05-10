@@ -30,19 +30,16 @@ class Comps:
 
 def set_tower_dims(tower_height, tower_width, tower_segs, tower_sup_style):
     """Sets dimensions of the tower"""
-    print('Setting tower')
     tower.set_dims(tower_height, tower_width, tower_segs, tower_sup_style)
 
 
 def set_jib_dims(jib_length, jib_height, jib_segs):
     """Sets dimensions of the jib"""
-    print('Setting jib')
     jib.set_dims(jib_length, jib_height, jib_segs)
 
 
 def set_counterjib_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style):
     """Sets dimensions of the counterjib"""
-    print('Setting counterjib')
     counterjib.set_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style)
 
 
