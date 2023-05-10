@@ -98,7 +98,6 @@ def create_jib():
     """Creates a jib connected to the other elements of the crane"""
     jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(),
                          Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH)
-    # print(len(jib.get_nodes()))
     Comps.nodes = jib.get_nodes_raw().copy()
     Comps.beams = jib.get_beams_raw().copy()
 
@@ -117,10 +116,8 @@ def create_counterjib():
     """Creates a counterjib connected to the other elements of the crane"""
     counterjib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(),
                                  Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES)
-    # print(len(counterjib.get_nodes()))
     Comps.nodes = counterjib.get_nodes_raw().copy()
     Comps.beams = counterjib.get_beams_raw().copy()
-    # counterjib.create(2000, 4000)
 
 
 def get_counterjib():
@@ -139,7 +136,7 @@ def get_crane():
 
 
 def get_crane_raw():
-    """Returns the nodes and beams of the crane in converted formats"""
+    """Returns the raw nodes and beams of the crane"""
     return Comps.nodes, Comps.beams
 
 
@@ -149,5 +146,6 @@ def get_length():
 
 
 def analyze():
+    """Performs the analysis of the crane"""
     analysis.generate_conditions(Comps.nodes)
     return analysis.analyze(Comps.nodes, Comps.beams, E, A)

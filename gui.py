@@ -1,6 +1,5 @@
 import sys
 
-import numpy as np
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QApplication, QMessageBox
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
@@ -13,9 +12,11 @@ from MainWindow import Ui_MainWindow
 
 class matplotlib_canvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111, projection='3d')
-        super(matplotlib_canvas, self).__init__(fig)
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111, projection='3d')
+        # self.fig.gca().set_aspect('auto')
+        # fig.gca().autoscale()
+        super(matplotlib_canvas, self).__init__(self.fig)
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -28,8 +29,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         toolbar = NavigationToolbar(self.sc, self)
         crane.create_crane()
         nodes, beams = crane.get_crane()
-        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.sc.axes)
-
+        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.sc.axes, self.sc.fig)
 
         # Add toolbar and canvas to window
         self.plot_layout.addWidget(toolbar)

@@ -8,7 +8,7 @@ LINE_WIDTH = 1
 # Create 3d environment
 
 
-def plot(nodes, beams, color, line_style, label, ax):
+def plot(nodes, beams, color, line_style, label, ax, fig):
     """
     Plot nodes using matplotlib
     :param nodes: Numpy array containing the coordinates of each node in three-dimensional space
@@ -30,6 +30,7 @@ def plot(nodes, beams, color, line_style, label, ax):
         line = line[0]
     line.set_label(label)
     plt.legend(prop={'size': 10})
+    fig.gca().set_aspect('equal')
 
 
 def display():
