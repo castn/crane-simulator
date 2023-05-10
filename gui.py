@@ -35,6 +35,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(toolbar)
         self.plot_layout.addWidget(self.sc)
 
+        # Set default size of plotBox, otherwise will shrink to minimal and needs manual adjustment
+        self.plotBox.setGeometry(0, 0, 716, 544)
+        
         self.apply_button.clicked.connect(self.apply_configuration)
 
     def apply_configuration(self):
@@ -59,7 +62,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         nodes, beams = crane.get_crane()
         plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.sc.axes, self.sc.fig)
         self.plot_layout.replaceWidget(self.sc, self.sc)
-        
+
         self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
         if self.enableFEM_checkbox.isChecked():
             # N, R, U = crane.analyze()
@@ -69,7 +72,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             # self.analysis.appendPlainText(R)
             self.analysis.appendPlainText('Deformation at nodes')
             # self.analysis.appendPlainText(U)
-        
+
         self.output.appendPlainText("------")
         self.progressBar.setValue(100)
         QMessageBox.about(self, "Title", "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.")

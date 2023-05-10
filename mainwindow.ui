@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>988</width>
-    <height>889</height>
+    <width>1022</width>
+    <height>968</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,15 +17,12 @@
    <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_6">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QSplitter" name="splitter_2">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="QWidget" name="layoutWidget">
+     <layout class="QFormLayout" name="formLayout_4">
+      <item row="0" column="0">
        <layout class="QGridLayout" name="gridLayout">
-        <item row="1" column="0">
+        <item row="2" column="0">
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
            <string>GroupBox</string>
@@ -66,8 +63,14 @@
         </item>
         <item row="0" column="0">
          <widget class="QTabWidget" name="tabWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="crane">
            <attribute name="title">
@@ -82,119 +85,103 @@
               <property name="checkable">
                <bool>true</bool>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout">
-               <item>
-                <layout class="QFormLayout" name="formLayout">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="towerHeight_label">
-                   <property name="text">
-                    <string>Height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="towerHeight_spinbox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>10000</number>
-                   </property>
-                   <property name="value">
-                    <number>2000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+              <layout class="QFormLayout" name="formLayout">
+               <item row="0" column="0">
+                <widget class="QLabel" name="towerHeight_label">
+                 <property name="text">
+                  <string>Height</string>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_2">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="towerWidth_label">
-                   <property name="text">
-                    <string>Width</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="towerWidth_spinbox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>2000</number>
-                   </property>
-                   <property name="value">
-                    <number>1000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="towerHeight_spinbox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>10000</number>
+                 </property>
+                 <property name="value">
+                  <number>2000</number>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_3">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="towerSegment_label">
-                   <property name="text">
-                    <string>Segments</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="towerSegment_spinbox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="value">
-                    <number>2</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <item row="3" column="0">
+                <widget class="QLabel" name="towerWidth_label">
+                 <property name="text">
+                  <string>Width</string>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_4">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="towerSupportType_label">
-                   <property name="text">
-                    <string>Support Type</string>
-                   </property>
-                  </widget>
+               <item row="3" column="1">
+                <widget class="QSpinBox" name="towerWidth_spinbox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>2000</number>
+                 </property>
+                 <property name="value">
+                  <number>1000</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="towerSegment_label">
+                 <property name="text">
+                  <string>Segments</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="towerSupportType_label">
+                 <property name="text">
+                  <string>Support Type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QComboBox" name="towerSupportType_comboBox">
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
+                 <property name="currentText">
+                  <string>None</string>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>None</string>
+                  </property>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QComboBox" name="towerSupportType_comboBox">
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="currentText">
-                    <string>None</string>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>None</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Cross</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Zigzag</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Diagonal</string>
-                    </property>
-                   </item>
-                  </widget>
+                 <item>
+                  <property name="text">
+                   <string>Cross</string>
+                  </property>
                  </item>
-                </layout>
+                 <item>
+                  <property name="text">
+                   <string>Zigzag</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Diagonal</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QSpinBox" name="towerSegment_spinbox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                 <property name="value">
+                  <number>2</number>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -207,111 +194,95 @@
               <property name="checkable">
                <bool>true</bool>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
-               <item>
-                <layout class="QFormLayout" name="formLayout_5">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="jibLength_label">
-                   <property name="text">
-                    <string>Length</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="jibLength_spinBox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>10000</number>
-                   </property>
-                   <property name="value">
-                    <number>2000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+              <layout class="QFormLayout" name="formLayout_2">
+               <item row="0" column="0">
+                <widget class="QLabel" name="jibLength_label">
+                 <property name="text">
+                  <string>Length</string>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_6">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="jibHeight_label">
-                   <property name="text">
-                    <string>Height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="jibHeight_spinBox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>2000</number>
-                   </property>
-                   <property name="value">
-                    <number>1000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="jibLength_spinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>10000</number>
+                 </property>
+                 <property name="value">
+                  <number>2000</number>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_7">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="jibSegment_label">
-                   <property name="text">
-                    <string>Segments</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="jibSegment_spinBox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="value">
-                    <number>2</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <item row="3" column="0">
+                <widget class="QLabel" name="jibHeight_label">
+                 <property name="text">
+                  <string>Height</string>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_8">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="jibSupportType_label">
-                   <property name="text">
-                    <string>Support Type</string>
-                   </property>
-                  </widget>
+               <item row="3" column="1">
+                <widget class="QSpinBox" name="jibHeight_spinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>2000</number>
+                 </property>
+                 <property name="value">
+                  <number>1000</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="jibSegment_label">
+                 <property name="text">
+                  <string>Segments</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QSpinBox" name="jibSegment_spinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                 <property name="value">
+                  <number>2</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="jibSupportType_label">
+                 <property name="text">
+                  <string>Support Type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QComboBox" name="jibSupportType_comboBox">
+                 <property name="currentText">
+                  <string>Cross</string>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>Cross</string>
+                  </property>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QComboBox" name="jibSupportType_comboBox">
-                   <property name="currentText">
-                    <string>Cross</string>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>Cross</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ZigZag</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Diagonal</string>
-                    </property>
-                   </item>
-                  </widget>
+                 <item>
+                  <property name="text">
+                   <string>ZigZag</string>
+                  </property>
                  </item>
-                </layout>
+                 <item>
+                  <property name="text">
+                   <string>Diagonal</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -324,116 +295,100 @@
               <property name="checkable">
                <bool>true</bool>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_3">
-               <item>
-                <layout class="QFormLayout" name="formLayout_10">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="counterJibLength_label">
-                   <property name="text">
-                    <string>Length</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="counterJibLength_spinBox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>10000</number>
-                   </property>
-                   <property name="value">
-                    <number>1000</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+              <layout class="QFormLayout" name="formLayout_3">
+               <item row="0" column="0">
+                <widget class="QLabel" name="counterJibLength_label">
+                 <property name="text">
+                  <string>Length</string>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_9">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="counterJibHeight_label">
-                   <property name="text">
-                    <string>Height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="counterJibHeight_spinBox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>2000</number>
-                   </property>
-                   <property name="value">
-                    <number>800</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="counterJibLength_spinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>10000</number>
+                 </property>
+                 <property name="value">
+                  <number>1000</number>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_12">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="counterJibSegments_label">
-                   <property name="text">
-                    <string>Segments</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="counterJibSegments_spinBox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="value">
-                    <number>2</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <item row="3" column="0">
+                <widget class="QLabel" name="counterJibHeight_label">
+                 <property name="text">
+                  <string>Height</string>
+                 </property>
+                </widget>
                </item>
-               <item>
-                <layout class="QFormLayout" name="formLayout_11">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="counterJibSupportType_label">
-                   <property name="text">
-                    <string>Support Type</string>
-                   </property>
-                  </widget>
+               <item row="3" column="1">
+                <widget class="QSpinBox" name="counterJibHeight_spinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>2000</number>
+                 </property>
+                 <property name="value">
+                  <number>800</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="counterJibSupportType_label">
+                 <property name="text">
+                  <string>Support Type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="counterJibSegments_label">
+                 <property name="text">
+                  <string>Segments</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QSpinBox" name="counterJibSegments_spinBox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                 <property name="value">
+                  <number>2</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QComboBox" name="counterJibSupportType_comboBox">
+                 <property name="currentText">
+                  <string>None</string>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>None</string>
+                  </property>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QComboBox" name="counterJibSupportType_comboBox">
-                   <property name="currentText">
-                    <string>None</string>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>None</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Truss</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>One tower</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Two towers</string>
-                    </property>
-                   </item>
-                  </widget>
+                 <item>
+                  <property name="text">
+                   <string>Truss</string>
+                  </property>
                  </item>
-                </layout>
+                 <item>
+                  <property name="text">
+                   <string>One tower</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Two towers</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -444,96 +399,115 @@
            <attribute name="title">
             <string>FEM</string>
            </attribute>
-           <widget class="QPlainTextEdit" name="analysis">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>10</y>
-              <width>431</width>
-              <height>601</height>
-             </rect>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QPlainTextEdit" name="analysis"/>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
+        <item row="1" column="0">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
-      </widget>
-      <widget class="QSplitter" name="splitter">
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
-       </property>
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="opaqueResize">
-        <bool>true</bool>
-       </property>
-       <property name="childrenCollapsible">
-        <bool>false</bool>
-       </property>
-       <widget class="QGroupBox" name="plotBox">
-        <property name="title">
-         <string>Plot</string>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSplitter" name="splitter">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <property name="checkable">
-         <bool>false</bool>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_10">
-         <item>
-          <layout class="QVBoxLayout" name="plot_layout"/>
-         </item>
-        </layout>
+        <widget class="QGroupBox" name="plotBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Plot</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_10">
+          <item>
+           <layout class="QVBoxLayout" name="plot_layout"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QGroupBox" name="outputBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>7</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Output</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QPlainTextEdit" name="output">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="clear_button">
+              <property name="text">
+               <string>Clear</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
        </widget>
-       <widget class="QGroupBox" name="outputBox">
-        <property name="minimumSize">
-         <size>
-          <width>7</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="title">
-         <string>Output</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_8">
-         <item>
-          <widget class="QPlainTextEdit" name="output">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="clear_button">
-             <property name="text">
-              <string>Clear</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-     </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -542,8 +516,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>988</width>
-     <height>25</height>
+     <width>1022</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -552,12 +526,8 @@
  <tabstops>
   <tabstop>jibLength_spinBox</tabstop>
   <tabstop>jibHeight_spinBox</tabstop>
-  <tabstop>jibSegment_spinBox</tabstop>
-  <tabstop>jibSupportType_comboBox</tabstop>
   <tabstop>counterJibLength_spinBox</tabstop>
   <tabstop>counterJibHeight_spinBox</tabstop>
-  <tabstop>counterJibSegments_spinBox</tabstop>
-  <tabstop>counterJibSupportType_comboBox</tabstop>
   <tabstop>output</tabstop>
   <tabstop>clear_button</tabstop>
  </tabstops>
