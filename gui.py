@@ -56,15 +56,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                       self.counterJibSegments_spinBox.value(),
                                       self.counterJibSupportType_comboBox.currentText())
 
+        nodes, beams = crane.get_crane()
+        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.sc.axes)
+        self.plot_layout.replaceWidget(self.sc, self.sc)
+        
         self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
         if self.enableFEM_checkbox.isChecked():
-            N, R, U = crane.analyze()
+            # N, R, U = crane.analyze()
             self.analysis.appendPlainText('Axial Forces (positive = tension, negative = compression)')
-            self.analysis.appendPlainText(N[np.newaxis].T)
+            # self.analysis.appendPlainText(N[np.newaxis].T)
             self.analysis.appendPlainText('Reaction Forces (positive = upward, negative = downward)')
-            self.analysis.appendPlainText(R)
+            # self.analysis.appendPlainText(R)
             self.analysis.appendPlainText('Deformation at nodes')
-            self.analysis.appendPlainText(U)
+            # self.analysis.appendPlainText(U)
+        
         self.output.appendPlainText("------")
         self.progressBar.setValue(100)
         QMessageBox.about(self, "Title", "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.")

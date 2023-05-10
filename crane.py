@@ -7,6 +7,8 @@ import jib
 import counterjib
 import analysis
 
+import numpy as np
+
 # Youngs Module
 E = 210e9  # 210GPa
 # Cross section of each beam
@@ -132,6 +134,11 @@ def get_counterjib_length():
 
 
 def get_crane():
+    """Returns the nodes and beams of the crane in converted formats"""
+    return np.array(Comps.nodes).astype(float), np.array(Comps.beams)
+
+
+def get_crane_raw():
     """Returns the nodes and beams of the crane in converted formats"""
     return Comps.nodes, Comps.beams
 
