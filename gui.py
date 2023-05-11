@@ -60,23 +60,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.apply_button.clicked.connect(self.apply_configuration)
 
 
-    def gen_plot(self):
+    def update_plot(self):
         print('Generating plot')
         self.plot_layout.removeWidget(self.toolbar)
         self.plot_layout.removeWidget(self.canvas)
         
-        sc_new = matplotlib_canvas(self, width=5, height=4, dpi=100)
-        toolbar_new = NavigationToolbar(sc_new, self)
+        updated_canvas = matplotlib_canvas(self, width=5, height=4, dpi=100)
+        toolbar_new = NavigationToolbar(updated_canvas, self)
         
         crane.create_crane()
         nodes, beams = crane.get_crane()
         plotter.plot(nodes, beams, 'gray', '--',
-                     'Undeformed', sc_new.axes, sc_new.fig)
-        self.canvas = sc_new
+                     'Undeformed', updated_canvas.axes, updated_canvas.fig)
+        self.canvas = updated_canvas
         self.toolbar = toolbar_new
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
-        self.plotBox.setGeometry(0, 0, 716, 544)
+        #self.plotBox.setGeometry(0, 0, 716, 544)
         
         return 'Made new plot'
 
@@ -113,7 +113,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 crane.set_counterjib_dims(Dims.COUNTERJIB_LENGTH, Dims.COUNTERJIB_HEIGHT, 
                                           Dims.COUNTERJIB_SEGMENTS, Dims.COUNTERJIB_SUP_TYPE)
 
-            new_plot = self.gen_plot()
+            new_plot = self.update_plot()
             print(new_plot)
 
             self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
