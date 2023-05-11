@@ -25,13 +25,27 @@
         <item row="2" column="0">
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
-           <string>GroupBox</string>
+           <string>Settings</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
+            <widget class="QCheckBox" name="enable_gravity">
+             <property name="text">
+              <string>Gravity</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="enable_wind">
+             <property name="text">
+              <string>Wind</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QCheckBox" name="enableFEM_checkbox">
              <property name="text">
-              <string>Enable FEM</string>
+              <string>FEM</string>
              </property>
             </widget>
            </item>
@@ -146,8 +160,13 @@
                   <bool>false</bool>
                  </property>
                  <property name="currentText">
-                  <string>None</string>
+                  <string>Zigzag</string>
                  </property>
+                 <item>
+                  <property name="text">
+                   <string>Zigzag</string>
+                  </property>
+                 </item>
                  <item>
                   <property name="text">
                    <string>None</string>
@@ -156,11 +175,6 @@
                  <item>
                   <property name="text">
                    <string>Cross</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Zigzag</string>
                   </property>
                  </item>
                  <item>
@@ -366,16 +380,16 @@
                <item row="9" column="1">
                 <widget class="QComboBox" name="counterJibSupportType_comboBox">
                  <property name="currentText">
-                  <string>None</string>
+                  <string>Truss</string>
                  </property>
                  <item>
                   <property name="text">
-                   <string>None</string>
+                   <string>Truss</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>Truss</string>
+                   <string>None</string>
                   </property>
                  </item>
                  <item>
@@ -517,9 +531,15 @@
      <x>0</x>
      <y>0</y>
      <width>1022</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuCS24">
+    <property name="title">
+     <string>Crane Simulator 2024</string>
+    </property>
+   </widget>
+   <addaction name="menuCS24"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

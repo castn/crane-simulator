@@ -18,7 +18,6 @@ def plot(nodes, beams, color, line_style, label, ax, fig):
     :param pen_width: Width of the edge
     :param label: Name of the edge and what it should represent
     """
-    ax.cla()
 
     for i in range(len(beams)):
         # Create initial and final coordinates
