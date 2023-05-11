@@ -2,14 +2,18 @@
 Provides all functions to build a crane
 """
 
-
 import tower
 import jib
-import counter_jib
+import counterjib
 import analysis
 
-nodes = []
-beams = []
+import numpy as np
+
+# Youngs Module
+E = 210e9  # 210GPa
+# Cross section of each beam
+A = 0.01  # 0.01m^2
+DENSITY = 7850
 
 
 class Dims:
@@ -17,6 +21,33 @@ class Dims:
     TOWER_HEIGHT = 0
     TOWER_WIDTH = 0
     TOWER_NUM_NODES = 0
+
+
+class Comps:
+    nodes = []
+    beams = []
+
+
+def set_tower_dims(tower_height, tower_width, tower_segs, tower_sup_style):
+    """Sets dimensions of the tower"""
+    tower.set_dims(tower_height, tower_width, tower_segs, tower_sup_style)
+
+
+def set_jib_dims(jib_length, jib_height, jib_segs):
+    """Sets dimensions of the jib"""
+    jib.set_dims(jib_length, jib_height, jib_segs)
+
+
+def set_counterjib_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style):
+    """Sets dimensions of the counterjib"""
+    counterjib.set_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style)
+
+
+def build_crane():
+    """Builds crane from previosuly inputted parameters"""
+    create_tower()
+    create_jib()
+    create_counterjib()
 
 
 def create_crane():
@@ -28,17 +59,17 @@ def create_crane():
     if custom_dims == 'yes':
         tower.get_dims()
         jib.get_dims()
-        counter_jib.get_dims()
+        counterjib.get_dims()
         print('Now generating custom crane')
     else:
         tower.default_dims()
         jib.default_dims()
-        counter_jib.default_dims()
+        counterjib.default_dims()
         print('Now generating default crane')
 
     create_tower()
     create_jib()
-    create_counter_jib()
+    create_counterjib()
 
 
 def create_tower():
@@ -46,10 +77,8 @@ def create_tower():
     tower.create(True, True, tower.Style.DIAGONAL)
     Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH = tower.get_height_width()
     Dims.TOWER_NUM_NODES = len(tower.get_nodes())
-    # global nodes
-    # nodes = tower.get_nodes_raw()
-    # global beams
-    # beams = tower.get_beams_raw()
+    Comps.nodes = tower.get_nodes_raw().copy()
+    Comps.beams = tower.get_beams_raw().copy()
 
 
 def get_tower():
@@ -66,11 +95,8 @@ def create_jib():
     """Creates a jib connected to the other elements of the crane"""
     jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(),
                          Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH)
-    # print(len(jib.get_nodes()))
-    # global nodes
-    # nodes = jib.get_nodes_raw()
-    # global beams
-    # beams = jib.get_beams_raw()
+    Comps.nodes = jib.get_nodes_raw().copy()
+    Comps.beams = jib.get_beams_raw().copy()
 
 
 def get_jib():
@@ -83,33 +109,40 @@ def get_jib_length():
     return jib.get_length()
 
 
-def create_counter_jib():
+def create_counterjib():
     """Creates a counterjib connected to the other elements of the crane"""
-    counter_jib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(),
+    counterjib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(),
                                  Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES)
-    # print(len(counter_jib.get_nodes()))
-    # global nodes
-    # nodes = counter_jib.get_nodes_raw()
-    # global beams
-    # beams = counter_jib.get_beams_raw()
-    # counter_jib.create(2000, 4000)
+    Comps.nodes = counterjib.get_nodes_raw().copy()
+    Comps.beams = counterjib.get_beams_raw().copy()
 
 
-def get_counter_jib():
+def get_counterjib():
     """Returns the nodes and beams of the counterjib in converted formats"""
-    return counter_jib.get_nodes(), counter_jib.get_beams()
+    return counterjib.get_nodes(), counterjib.get_beams()
 
 
-def get_counter_jib_length():
+def get_counterjib_length():
     """Returns the length of all beams used in the counterjib"""
-    return counter_jib.get_length()
+    return counterjib.get_length()
 
 
 def get_crane():
     """Returns the nodes and beams of the crane in converted formats"""
-    return get_counter_jib()
+    return np.array(Comps.nodes).astype(float), np.array(Comps.beams)
+
+
+def get_crane_raw():
+    """Returns the raw nodes and beams of the crane"""
+    return Comps.nodes, Comps.beams
 
 
 def get_length():
     """Returns the length of all beams used in the crane"""
-    return tower.get_length() + jib.get_length() + counter_jib.get_length()
+    return tower.get_length() + jib.get_length() + counterjib.get_length()
+
+
+def analyze():
+    """Performs the analysis of the crane"""
+    analysis.generate_conditions(Comps.nodes)
+    return analysis.analyze(Comps.nodes, Comps.beams, E, A)
