@@ -45,19 +45,41 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.sc = matplotlib_canvas(self, width=5, height=4, dpi=100)
-        toolbar = NavigationToolbar(self.sc, self)
+        self.toolbar = NavigationToolbar(self.sc, self)
         crane.create_crane()
         nodes, beams = crane.get_crane()
         plotter.plot(nodes, beams, 'gray', '--',
                      'Undeformed', self.sc.axes, self.sc.fig)
 
         # Add toolbar and canvas to window
-        self.plot_layout.addWidget(toolbar)
+        self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.sc)
         # Set default size of plotBox, otherwise will shrink to minimal and needs manual adjustment
         self.plotBox.setGeometry(0, 0, 716, 544)
         
         self.apply_button.clicked.connect(self.apply_configuration)
+
+
+    def gen_plot(self):
+        print('Generating plot')
+        self.plot_layout.removeWidget(self.toolbar)
+        self.plot_layout.removeWidget(self.sc)
+        
+        sc_new = matplotlib_canvas(self, width=5, height=4, dpi=100)
+        toolbar_new = NavigationToolbar(sc_new, self)
+        
+        crane.create_crane()
+        nodes, beams = crane.get_crane()
+        plotter.plot(nodes, beams, 'gray', '--',
+                     'Undeformed', sc_new.axes, sc_new.fig)
+        self.sc = sc_new
+        self.toolbar = toolbar_new
+        self.plot_layout.addWidget(self.toolbar)
+        self.plot_layout.addWidget(self.sc)
+        self.plotBox.setGeometry(0, 0, 716, 544)
+        
+        return 'Made new plot'
+
 
     def apply_configuration(self):
         Dims.TOWER_HEIGHT = self.towerHeight_spinbox.value()
@@ -91,9 +113,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 crane.set_counterjib_dims(Dims.COUNTERJIB_LENGTH, Dims.COUNTERJIB_HEIGHT, 
                                           Dims.COUNTERJIB_SEGMENTS, Dims.COUNTERJIB_SUP_TYPE)
 
-            nodes, beams = crane.get_crane()
-            plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.sc.axes, self.sc.fig)
-            self.plot_layout.replaceWidget(self.sc, self.sc)
+            new_plot = self.gen_plot()
+            print(new_plot)
 
             self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
             if self.enableFEM_checkbox.isChecked():
