@@ -66,7 +66,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def set_dims(self):
         """Sets dimensions from what is currently in the input fields"""
-        print('Setting dims')
         Dims.TOWER_HEIGHT = self.towerHeight_spinbox.value()
         Dims.TOWER_WIDTH = self.towerWidth_spinbox.value()
         Dims.TOWER_SEGMENTS = self.towerSegment_spinbox.value()
@@ -95,7 +94,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def update_plot(self):
-        print('Generating plot')
         self.plot_layout.removeWidget(self.toolbar)
         self.plot_layout.removeWidget(self.canvas)
 
@@ -111,8 +109,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
         #self.plotBox.setGeometry(0, 0, 716, 544)
-
-        return 'Made new plot'
 
 
     def apply_configuration(self):
@@ -131,8 +127,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 crane.set_counterjib_dims(Dims.COUNTERJIB_LENGTH, Dims.COUNTERJIB_HEIGHT,
                                           Dims.COUNTERJIB_SEGMENTS, Dims.COUNTERJIB_SUP_TYPE)
 
-            new_plot = self.update_plot()
-            print(new_plot)
+            self.update_plot()
 
             self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
             if self.enableFEM_checkbox.isChecked():

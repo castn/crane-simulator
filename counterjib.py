@@ -142,7 +142,7 @@ def create_truss_support():
                                 1/2 * Dims.TOWER_WIDTH,
                                 Dims.START_HEIGHT + Dims.HEIGHT])
         else:
-            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.SEGMENT_LENGTH,
+            Comps.nodes.append([- Dims.SEGMENT_LENGTH * ((i * 2) - 1) / 2,
                                 1/2 * Dims.TOWER_WIDTH,
                                 Dims.START_HEIGHT + Dims.HEIGHT])
         # second batch
