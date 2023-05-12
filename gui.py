@@ -45,9 +45,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("Crane Simulator 2024")
 
+        self.set_dims()
+        # crane.set_default_dims()
+
         self.canvas = matplotlib_canvas(self, width=5, height=4, dpi=100)
         self.toolbar = NavigationToolbar(self.canvas, self)
-        crane.create_crane()
+        crane.build_crane()
         nodes, beams = crane.get_crane()
         plotter.plot(nodes, beams, 'gray', '--',
                      'Undeformed', self.canvas.axes, self.canvas.fig)
@@ -57,32 +60,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.canvas)
         # Set default size of plotBox, otherwise will shrink to minimal and needs manual adjustment
         self.plotBox.setGeometry(0, 0, 716, 544)
-        
+
         self.apply_button.clicked.connect(self.apply_configuration)
 
 
-    def update_plot(self):
-        print('Generating plot')
-        self.plot_layout.removeWidget(self.toolbar)
-        self.plot_layout.removeWidget(self.canvas)
-        
-        updated_canvas = matplotlib_canvas(self, width=5, height=4, dpi=100)
-        toolbar_new = NavigationToolbar(updated_canvas, self)
-        
-        crane.create_crane()
-        nodes, beams = crane.get_crane()
-        plotter.plot(nodes, beams, 'gray', '--',
-                     'Undeformed', updated_canvas.axes, updated_canvas.fig)
-        self.canvas = updated_canvas
-        self.toolbar = toolbar_new
-        self.plot_layout.addWidget(self.toolbar)
-        self.plot_layout.addWidget(self.canvas)
-        #self.plotBox.setGeometry(0, 0, 716, 544)
-        
-        return 'Made new plot'
-
-
-    def apply_configuration(self):
+    def set_dims(self):
+        """Sets dimensions from what is currently in the input fields"""
+        print('Setting dims')
         Dims.TOWER_HEIGHT = self.towerHeight_spinbox.value()
         Dims.TOWER_WIDTH = self.towerWidth_spinbox.value()
         Dims.TOWER_SEGMENTS = self.towerSegment_spinbox.value()
@@ -101,9 +85,42 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Dims.COUNTERJIB_SEG_LENGTH = Dims.COUNTERJIB_LENGTH / Dims.COUNTERJIB_SEGMENTS
         Dims.COUNTERJIB_SUP_TYPE = self.counterJibSupportType_comboBox.currentText()
         
-        self.output.appendPlainText(f"Tower values: [{Dims.TOWER_HEIGHT},{Dims.TOWER_WIDTH},{Dims.TOWER_SEGMENTS},{Dims.TOWER_SUP_TYPE}]")
-        self.output.appendPlainText(f"Jib values: [{Dims.JIB_LENGTH},{Dims.JIB_HEIGHT},{Dims.JIB_SEGMENTS},{Dims.JIB_SUP_TYPE}]")
-        self.output.appendPlainText(f"CounterJib values: [{Dims.COUNTERJIB_LENGTH},{Dims.COUNTERJIB_HEIGHT},{Dims.COUNTERJIB_SEGMENTS},{Dims.COUNTERJIB_SUP_TYPE}]")
+        if self.towerBox.isChecked():
+            crane.set_tower_dims(Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_SEGMENTS, Dims.TOWER_SUP_TYPE)
+        if self.jibBox.isChecked():
+            crane.set_jib_dims(Dims.JIB_LENGTH, Dims.JIB_HEIGHT, Dims.JIB_SEGMENTS)
+        if self.counterJibBox.isChecked():
+            crane.set_counterjib_dims(Dims.COUNTERJIB_LENGTH, Dims.COUNTERJIB_HEIGHT,
+                                      Dims.COUNTERJIB_SEGMENTS, Dims.COUNTERJIB_SUP_TYPE)
+
+
+    def update_plot(self):
+        print('Generating plot')
+        self.plot_layout.removeWidget(self.toolbar)
+        self.plot_layout.removeWidget(self.canvas)
+
+        updated_canvas = matplotlib_canvas(self, width=5, height=4, dpi=100)
+        toolbar_new = NavigationToolbar(updated_canvas, self)
+
+        crane.build_crane()
+        nodes, beams = crane.get_crane()
+        plotter.plot(nodes, beams, 'gray', '--',
+                     'Undeformed', updated_canvas.axes, updated_canvas.fig)
+        self.canvas = updated_canvas
+        self.toolbar = toolbar_new
+        self.plot_layout.addWidget(self.toolbar)
+        self.plot_layout.addWidget(self.canvas)
+        #self.plotBox.setGeometry(0, 0, 716, 544)
+
+        return 'Made new plot'
+
+
+    def apply_configuration(self):
+        self.set_dims()
+
+        self.output.appendPlainText(f"Tower values: [{Dims.TOWER_HEIGHT}, {Dims.TOWER_WIDTH}, {Dims.TOWER_SEGMENTS}, {Dims.TOWER_SUP_TYPE}]")
+        self.output.appendPlainText(f"Jib values: [{Dims.JIB_LENGTH}, {Dims.JIB_HEIGHT}, {Dims.JIB_SEGMENTS}, {Dims.JIB_SUP_TYPE}]")
+        self.output.appendPlainText(f"CounterJib values: [{Dims.COUNTERJIB_LENGTH}, {Dims.COUNTERJIB_HEIGHT}, {Dims.COUNTERJIB_SEGMENTS}, {Dims.COUNTERJIB_SUP_TYPE}]")
 
         if self.check_config():
             if self.towerBox.isChecked():
@@ -111,7 +128,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.jibBox.isChecked():
                 crane.set_jib_dims(Dims.JIB_LENGTH, Dims.JIB_HEIGHT, Dims.JIB_SEGMENTS)
             if self.counterJibBox.isChecked():
-                crane.set_counterjib_dims(Dims.COUNTERJIB_LENGTH, Dims.COUNTERJIB_HEIGHT, 
+                crane.set_counterjib_dims(Dims.COUNTERJIB_LENGTH, Dims.COUNTERJIB_HEIGHT,
                                           Dims.COUNTERJIB_SEGMENTS, Dims.COUNTERJIB_SUP_TYPE)
 
             new_plot = self.update_plot()

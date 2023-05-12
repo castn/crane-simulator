@@ -5,8 +5,11 @@ Provides all functions to build the counterjib of a crane
 from enum import Enum
 import numpy as np
 
-nodes = []
-beams = []
+
+class Comps:
+    """Component arrays for the counterjib"""
+    nodes = []
+    beams = []
 
 
 class Style(Enum):
@@ -40,15 +43,10 @@ class Dims:
 
 
 def create():
-    """
-    Creates a counterjib separatley from the other components of the crane
-
-    Args:
-    :pram tower_width: width of the tower of the crane
-    :param length: desired length of the counterjib
-    """
+    """Creates a counterjib separatley from the other components of the crane"""
     create_segments()
     create_beams()
+    create_support()
 
 
 def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes):
@@ -61,12 +59,9 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
     :param tower_height: height of the tower of the crane
     :param tower_width: width of the tower of the crane
     :param tower_num_nodes: number of nodes used to construct the tower
-    :param length: desired length of the counterjib
     """
-    global nodes
-    nodes = crane_nodes
-    global beams
-    beams = crane_beams
+    Comps.nodes = crane_nodes
+    Comps.beams = crane_beams
 
     Dims.START_HEIGHT = tower_height
     Dims.TOWER_WIDTH = tower_width
@@ -84,11 +79,10 @@ def create_segments():
     for i in range(Dims.SEGMENTS + 1):
         # skips the first run-through if nodes already exist
         if not (i == 0 and Dims.IS_CONNECTED):
-            nodes.append([- Dims.SEGMENT_LENGTH * i, 0, Dims.START_HEIGHT])
-            nodes.append([- Dims.SEGMENT_LENGTH * i,
+            Comps.nodes.append([- Dims.SEGMENT_LENGTH * i, 0, Dims.START_HEIGHT])
+            Comps.nodes.append([- Dims.SEGMENT_LENGTH * i,
                          Dims.TOWER_WIDTH, Dims.START_HEIGHT])
-    global END_CJ
-    END_CJ = len(nodes)
+    Dims.END_CJ = len(Comps.nodes)
 
 
 def create_beams():
@@ -127,6 +121,7 @@ def create_diag_beams(i, start_node_cj, val_to_add):
 
 
 def create_support():
+    """Creates appropriate support structure for the counterjib"""
     if Dims.SUPPORT_TYPE == Style.NONE:
         return
     elif Dims.SUPPORT_TYPE == Style.TRUSS:
@@ -139,17 +134,15 @@ def create_support():
 
 def create_truss_support():
     """Creates truss style support structure for the counterjib"""
-    support_start = len(nodes)
+    support_start = len(Comps.nodes)
     for i in range(Dims.SEGMENTS + 1):
         # create required nodes
         if i == 0:
-            nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 *
+            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 *
                          Dims.TOWER_WIDTH, Dims.START_HEIGHT + (2/3 * Dims.SEGMENT_LENGTH)])
         else:
-            nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 *
+            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 *
                          Dims.TOWER_WIDTH, Dims.START_HEIGHT + (1/2 * Dims.SEGMENT_LENGTH)])
-        global NODES_FLOAT
-        NODES_FLOAT = np.array(nodes).astype(float)
         # second batch
         if i == 1:
             # diagonal sections
@@ -177,9 +170,9 @@ def create_truss_support():
 
 def create_cable_support(one_node):
     """Creates a cable style support for the counterjib"""
-    cable_start = len(nodes)
+    cable_start = len(Comps.nodes)
     if one_node:
-        nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH /
+        Comps.nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH /
                      2, Dims.START_HEIGHT + Dims.TOWER_WIDTH])
         # tower to new top
         for i in range(4):
@@ -190,9 +183,9 @@ def create_cable_support(one_node):
         append_beam(cable_start, cable_start - 1)
         append_beam(cable_start, cable_start - 2)
     else:
-        nodes.append([Dims.TOWER_WIDTH / 2, 0,
+        Comps.nodes.append([Dims.TOWER_WIDTH / 2, 0,
                      Dims.START_HEIGHT + Dims.TOWER_WIDTH])
-        nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH,
+        Comps.nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH,
                      Dims.START_HEIGHT + Dims.TOWER_WIDTH])
         # tower to new tops
         for i in range(2):
@@ -210,22 +203,22 @@ def create_cable_support(one_node):
 
 def get_nodes():
     """Return the nodes of the tower as numpy array of type float64"""
-    return np.array(nodes).astype(float)
+    return np.array(Comps.nodes).astype(float)
 
 
 def get_nodes_raw():
     """Returns the nodes of the tower in original format"""
-    return nodes
+    return Comps.nodes
 
 
 def get_beams():
     """Return the beams of the tower as numpy array"""
-    return np.array(beams)
+    return np.array(Comps.beams)
 
 
 def get_beams_raw():
     """Retuns the beams of the tower in original format"""
-    return beams
+    return Comps.beams
 
 
 def get_length():
@@ -241,9 +234,9 @@ def append_beam(start_node, end_node):
     :param start_node: start node of the beam
     :param end_node: end node of the beam
     """
-    beams.append([start_node, end_node])
-    start_float = np.array(nodes[start_node]).astype(float)
-    end_float = np.array(nodes[end_node]).astype(float)
+    Comps.beams.append([start_node, end_node])
+    start_float = np.array(Comps.nodes[start_node]).astype(float)
+    end_float = np.array(Comps.nodes[end_node]).astype(float)
     Dims.TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
 
 

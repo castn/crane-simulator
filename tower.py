@@ -6,8 +6,11 @@ import logging
 from enum import Enum
 import numpy as np
 
-nodes = []
-beams = []
+
+class Comps:
+    """Component arrays for the tower"""
+    nodes = []
+    beams = []
 
 
 class Style(Enum):
@@ -30,17 +33,16 @@ class Dims:
     SUPPORT_TYPE = Style.NONE
 
 
-def create(has_horizontal, is_hollow, style_of_face):
+def create(has_horizontal, is_hollow):
     """
     Create a tower
 
     Args:
     :param has_horizontal: (Boolean) Should there be a horizontal between each segment
     :param is_hollow: (Boolean) Should the tower be empty or have beams in side
-    :param style_of_face: Define the style of diagonal beams of each face. Using the Style Enum
     """
 
-    create_segments(has_horizontal, is_hollow, style_of_face)
+    create_segments(has_horizontal, is_hollow)
 
 
 def create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style_of_face):
@@ -138,7 +140,7 @@ def create_horizontal_beams(val_to_add):
     append_bar(2 + val_to_add, 0 + val_to_add)  # left horizontal beam
 
 
-def create_segments(has_horizontal, is_hollow, style_of_face):
+def create_segments(has_horizontal, is_hollow):
     """
     Create all the different segment the tower is made of
 
@@ -158,35 +160,35 @@ def create_segments(has_horizontal, is_hollow, style_of_face):
     logging.debug("Initialize segment beams")
     for i in range(Dims.SEGMENTS + 1):
         logging.debug("Create beams for segment: %s", i)
-        create_segment_beams(i, Dims.SEGMENTS, has_horizontal, is_hollow, style_of_face)
+        create_segment_beams(i, Dims.SEGMENTS, has_horizontal, is_hollow, Dims.SUPPORT_TYPE)
 
 
 def create_segment_nodes(elevation):
     """Create all nodes so the beams of a segment can connect to them"""
-    nodes.append([0, 0, elevation])
-    nodes.append([0, Dims.SEGMENT_WIDTH, elevation])
-    nodes.append([Dims.SEGMENT_WIDTH, 0, elevation])
-    nodes.append([Dims.SEGMENT_WIDTH, Dims.SEGMENT_WIDTH, elevation])
+    Comps.nodes.append([0, 0, elevation])
+    Comps.nodes.append([0, Dims.SEGMENT_WIDTH, elevation])
+    Comps.nodes.append([Dims.SEGMENT_WIDTH, 0, elevation])
+    Comps.nodes.append([Dims.SEGMENT_WIDTH, Dims.SEGMENT_WIDTH, elevation])
 
 
 def get_nodes():
     """Return the nodes of tower as numpy array of type float64"""
-    return np.array(nodes).astype(float)
+    return np.array(Comps.nodes).astype(float)
 
 
 def get_nodes_raw():
     """Return nodes from internal array"""
-    return nodes
+    return Comps.nodes
 
 
 def get_beams():
     """Return the beams of tower as numpy array"""
-    return np.array(beams)
+    return np.array(Comps.beams)
 
 
 def get_beams_raw():
     """Return the beams of tower from internal array"""
-    return beams
+    return Comps.beams
 
 
 def append_bar(start_node, end_node):
@@ -197,9 +199,9 @@ def append_bar(start_node, end_node):
     :param start_node: start node of the beam
     :param end_node: end node of the beam
     """
-    beams.append([start_node, end_node])
-    start_float = np.array(nodes[start_node]).astype(float)
-    end_float = np.array(nodes[end_node]).astype(float)
+    Comps.beams.append([start_node, end_node])
+    start_float = np.array(Comps.nodes[start_node]).astype(float)
+    end_float = np.array(Comps.nodes[end_node]).astype(float)
     Dims.TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
 
 
@@ -233,6 +235,9 @@ def get_dims():
 
 def set_dims(height, width, segs, sup_style):
     """Sets dimensions of the tower to passed-through values"""
+    Comps.nodes = []
+    Comps.beams = []
+    
     Dims.SEGMENT_HEIGHT = height / segs
     Dims.SEGMENT_WIDTH = width
     Dims.SEGMENTS = segs

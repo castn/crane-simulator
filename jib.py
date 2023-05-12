@@ -4,8 +4,11 @@ Provides all functions to build the jib of a crane
 
 import numpy as np
 
-nodes = []
-beams = []
+
+class Comps:
+    """Component arrays for the jib"""
+    nodes = []
+    beams = []
 
 
 class Dims:
@@ -23,7 +26,7 @@ class Dims:
     TOTAL_LENGTH = 0
 
 
-def create(tower_height, tower_width, length, segments):
+def create_sep(tower_height, tower_width, length, segments):
     """
     Creates jib separately from the tower but with the ability to connect to it
 
@@ -53,16 +56,13 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
     :param length: length of the jib to be created  (float)
     :param segments: number of segments the jib should consist of (int)
     """
-    global nodes
-    nodes = tower_nodes
-    global beams
-    beams = tower_beams
+    Comps.nodes = tower_nodes
+    Comps.beams = tower_beams
 
-    # (np.asarray(nodes).astype(float))[len(nodes) - 1, 2]
     Dims.START_HEIGHT = tower_height
     Dims.TOWER_WIDTH = tower_width
     Dims.IS_CONNECTED = True
-    Dims.INIT_BAR = max(np.asarray(beams).astype(
+    Dims.INIT_BAR = max(np.asarray(Comps.beams).astype(
         int).max() - 1, 0)  # wrapped in max just in case
 
     create_segments()
@@ -74,13 +74,16 @@ def create_segments():
     for i in range(Dims.SEGMENTS + 1):
         # skips the first run-through if nodes already exist
         if not (i == 0 and Dims.IS_CONNECTED):
-            nodes.append(
-                [Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i, 0, Dims.START_HEIGHT])
-            nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH *
-                         i, Dims.TOWER_WIDTH, Dims.START_HEIGHT])
+            Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
+                                0,
+                                Dims.START_HEIGHT])
+            Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
+                                Dims.TOWER_WIDTH,
+                                Dims.START_HEIGHT])
         if i < Dims.SEGMENTS:
-            nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2, Dims.SEGMENT_LENGTH / 2,
-                          Dims.START_HEIGHT + Dims.HEIGHT])
+            Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2,
+                                Dims.SEGMENT_LENGTH / 2,
+                                Dims.START_HEIGHT + Dims.HEIGHT])
 
 
 def create_beams():
@@ -113,22 +116,22 @@ def create_diagonal_beams(val_to_add):
 
 def get_nodes():
     """Return the nodes of jib as numpy array of type float64"""
-    return np.array(nodes).astype(float)
+    return np.array(Comps.nodes).astype(float)
 
 
 def get_nodes_raw():
     """Returns the nodes of the tower in original format"""
-    return nodes
+    return Comps.nodes
 
 
 def get_beams():
     """Return the beams of jib as numpy array"""
-    return np.array(beams)
+    return np.array(Comps.beams)
 
 
 def get_beams_raw():
     """Returns the beams of the tower in original format"""
-    return beams
+    return Comps.beams
 
 
 def append_beam(start_node, end_node):
@@ -139,9 +142,9 @@ def append_beam(start_node, end_node):
     :param start_node: start node of the beam
     :param end_node: end node of the beam
     """
-    beams.append([start_node, end_node])
-    start_float = np.array(nodes[start_node]).astype(float)
-    end_float = np.array(nodes[end_node]).astype(float)
+    Comps.beams.append([start_node, end_node])
+    start_float = np.array(Comps.nodes[start_node]).astype(float)
+    end_float = np.array(Comps.nodes[end_node]).astype(float)
     Dims.TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
 
 

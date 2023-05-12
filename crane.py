@@ -24,6 +24,7 @@ class Dims:
 
 
 class Comps:
+    """Component arrays for the crane"""
     nodes = []
     beams = []
 
@@ -42,6 +43,12 @@ def set_counterjib_dims(counterjib_length, counterjib_height, counterjib_segs, c
     """Sets dimensions of the counterjib"""
     counterjib.set_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style)
 
+
+def set_default_dims():
+    """Sets default dimensions for all components"""
+    tower.default_dims()
+    jib.default_dims()
+    counterjib.default_dims()
 
 def build_crane():
     """Builds crane from previosuly inputted parameters"""
@@ -74,7 +81,7 @@ def create_crane():
 
 def create_tower():
     """Creates a tower"""
-    tower.create(True, True, tower.Style.DIAGONAL)
+    tower.create(True, True)
     Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH = tower.get_height_width()
     Dims.TOWER_NUM_NODES = len(tower.get_nodes())
     Comps.nodes = tower.get_nodes_raw().copy()
