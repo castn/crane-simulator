@@ -138,11 +138,13 @@ def create_truss_support():
     for i in range(Dims.SEGMENTS + 1):
         # create required nodes
         if i == 0:
-            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 *
-                         Dims.TOWER_WIDTH, Dims.START_HEIGHT + (2/3 * Dims.SEGMENT_LENGTH)])
+            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH,
+                                1/2 * Dims.TOWER_WIDTH,
+                                Dims.START_HEIGHT + Dims.HEIGHT])
         else:
-            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH, 1/2 *
-                         Dims.TOWER_WIDTH, Dims.START_HEIGHT + (1/2 * Dims.SEGMENT_LENGTH)])
+            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.SEGMENT_LENGTH,
+                                1/2 * Dims.TOWER_WIDTH,
+                                Dims.START_HEIGHT + Dims.HEIGHT])
         # second batch
         if i == 1:
             # diagonal sections
