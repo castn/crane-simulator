@@ -65,22 +65,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
 
-        # Create Crane with default values
-        self.set_dims()
-        crane.build_crane()
-        nodes, beams = crane.get_crane()
-        plotter.plot(nodes, beams, 'gray', '--',
-                     'Undeformed', self.canvas.axes, self.canvas.fig)
-
-        self.update_tree_widget(beams, nodes)
-
+        # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
 
     def update_tree_widget(self, beams, nodes):
         self.treeWidget.clear()
-        tree_items = []
-        tree_items.append(create_tree_item(nodes, "Nodes"))
-        tree_items.append(create_tree_item(beams, "Beams"))
+        tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams")]
         self.treeWidget.insertTopLevelItems(0, tree_items)
 
     def set_dims(self):
@@ -112,20 +102,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                       Dims.COUNTERJIB_SEGMENTS, Dims.COUNTERJIB_SUP_TYPE)
 
     def update_plot(self):
+        # Remove existing toolbar and canvas otherwise only the old one will be displayed instead of the new one
+        # Maybe there is another way to do this
         self.plot_layout.removeWidget(self.toolbar)
         self.plot_layout.removeWidget(self.canvas)
 
+        # Create new canvas and toolbar we will use for plotting
         updated_canvas = matplotlib_canvas(self, width=5, height=4, dpi=100)
-        toolbar_new = NavigationToolbar(updated_canvas, self)
-
-        crane.build_crane()
-        nodes, beams = crane.get_crane()
-        plotter.plot(nodes, beams, 'gray', '--',
-                     'Undeformed', updated_canvas.axes, updated_canvas.fig)
+        self.toolbar = NavigationToolbar(updated_canvas, self)
         self.canvas = updated_canvas
-        self.toolbar = toolbar_new
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
+
+        # Build crane with updated values
+        crane.build_crane()
+        nodes, beams = crane.get_crane()
+        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', updated_canvas.axes, updated_canvas.fig)
 
     def apply_configuration(self):
         self.set_dims()
