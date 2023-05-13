@@ -122,13 +122,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def apply_configuration(self):
         self.set_dims()
 
-        self.output.appendPlainText(
-            f"Tower values: [{Dims.TOWER_HEIGHT}, {Dims.TOWER_WIDTH}, {Dims.TOWER_SEGMENTS}, {Dims.TOWER_SUP_TYPE}]")
-        self.output.appendPlainText(
-            f"Jib values: [{Dims.JIB_LENGTH}, {Dims.JIB_HEIGHT}, {Dims.JIB_SEGMENTS}, {Dims.JIB_SUP_TYPE}]")
-        self.output.appendPlainText(
-            f"CounterJib values: [{Dims.COUNTERJIB_LENGTH}, {Dims.COUNTERJIB_HEIGHT}, {Dims.COUNTERJIB_SEGMENTS}, {Dims.COUNTERJIB_SUP_TYPE}]")
-
         if self.check_config():
             if self.towerBox.isChecked():
                 crane.set_tower_dims(Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_SEGMENTS, Dims.TOWER_SUP_TYPE)
