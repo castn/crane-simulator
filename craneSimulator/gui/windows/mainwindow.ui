@@ -417,7 +417,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox">
+                <widget class="QCheckBox" name="ignore_specification">
                  <property name="text">
                   <string>Ignore specifications of the project task</string>
                  </property>

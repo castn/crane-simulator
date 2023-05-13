@@ -2,17 +2,21 @@
 Provides all functions to build a crane
 """
 
-from craneSimulator.truss.tower import tower
-from craneSimulator.truss.jibs import jib, counterjib
-from craneSimulator.simulation import analysis
-
 import numpy as np
+
+from craneSimulator.simulation import analysis
+from craneSimulator.truss.jibs import jib, counterjib
+from craneSimulator.truss.tower import tower
 
 # Youngs Module
 E = 210e9  # 210GPa
 # Cross section of each beam
 A = 0.01  # 0.01m^2
 DENSITY = 7850
+
+has_tower = True
+has_jib = True
+has_counter_jib = True
 
 
 class Dims:
@@ -49,30 +53,19 @@ def set_default_dims():
     jib.default_dims()
     counterjib.default_dims()
 
+
 def build_crane():
     """Builds crane from previosuly inputted parameters"""
-    create_tower()
-    create_jib()
-    create_counterjib()
+    if has_tower:
+        create_tower()
+    if has_jib:
+        create_jib()
+    if has_counter_jib:
+        create_counterjib()
 
 
 def create_crane():
     """Creates all elements of the crane connected to each other"""
-    custom_dims = 'no' # should be ''
-    while custom_dims != 'yes' and custom_dims != 'no':
-        custom_dims = str(
-            input('Would you like to enter custom dimensions? ')).lower()
-    if custom_dims == 'yes':
-        tower.get_dims()
-        jib.get_dims()
-        counterjib.get_dims()
-        print('Now generating custom crane')
-    else:
-        tower.default_dims()
-        jib.default_dims()
-        counterjib.default_dims()
-        print('Now generating default crane')
-
     create_tower()
     create_jib()
     create_counterjib()
@@ -146,6 +139,18 @@ def get_crane_raw():
 def get_length():
     """Returns the length of all beams used in the crane"""
     return tower.get_length() + jib.get_length() + counterjib.get_length()
+
+
+def should_have_tower(boolean):
+    has_tower = boolean
+
+
+def should_have_jib(boolean):
+    has_jib = boolean
+
+
+def should_have_counter_jib(boolean):
+    has_counter_jib = boolean
 
 
 def analyze():
