@@ -62,11 +62,14 @@
                   </item>
                   <item row="0" column="1">
                    <widget class="QSpinBox" name="towerHeight_spinbox">
+                    <property name="suffix">
+                     <string> mm</string>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>10000</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>2000</number>
@@ -82,11 +85,14 @@
                   </item>
                   <item row="3" column="1">
                    <widget class="QSpinBox" name="towerWidth_spinbox">
+                    <property name="suffix">
+                     <string> mm</string>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>2000</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>1000</number>
@@ -143,7 +149,7 @@
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>100</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>2</number>
@@ -171,11 +177,14 @@
                   </item>
                   <item row="0" column="1">
                    <widget class="QSpinBox" name="jibLength_spinBox">
+                    <property name="suffix">
+                     <string> mm</string>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>10000</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>2000</number>
@@ -191,11 +200,14 @@
                   </item>
                   <item row="3" column="1">
                    <widget class="QSpinBox" name="jibHeight_spinBox">
+                    <property name="suffix">
+                     <string> mm</string>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>2000</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>1000</number>
@@ -215,7 +227,7 @@
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>100</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>2</number>
@@ -272,11 +284,14 @@
                   </item>
                   <item row="0" column="1">
                    <widget class="QSpinBox" name="counterJibLength_spinBox">
+                    <property name="suffix">
+                     <string> mm</string>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>10000</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>1000</number>
@@ -292,11 +307,14 @@
                   </item>
                   <item row="3" column="1">
                    <widget class="QSpinBox" name="counterJibHeight_spinBox">
+                    <property name="suffix">
+                     <string> mm</string>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>2000</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>800</number>
@@ -323,7 +341,7 @@
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>100</number>
+                     <number>1000000</number>
                     </property>
                     <property name="value">
                      <number>2</number>
@@ -395,6 +413,13 @@
                 <widget class="QCheckBox" name="enableFEM_checkbox">
                  <property name="text">
                   <string>FEM</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="checkBox">
+                 <property name="text">
+                  <string>Ignore specifications of the project task</string>
                  </property>
                 </widget>
                </item>
