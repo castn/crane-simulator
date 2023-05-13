@@ -1,14 +1,14 @@
 import sys
 
+import numpy as np
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QApplication, QMessageBox
+from PyQt6.QtWidgets import QApplication, QMessageBox, QTreeWidgetItem
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
-import numpy as np
 
-from craneSimulator.truss import crane
 from craneSimulator.gui.plotting import plotter
 from craneSimulator.gui.windows.MainWindow import Ui_MainWindow
+from craneSimulator.truss import crane
 
 
 class matplotlib_canvas(FigureCanvasQTAgg):
@@ -55,6 +55,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         plotter.plot(nodes, beams, 'gray', '--',
                      'Undeformed', self.canvas.axes, self.canvas.fig)
 
+        self.treeWidget.setColumnCount(1)
+        self.treeWidget.setHeaderLabel("View Points of Nodes/Beams")
+
+        self.update_tree_widget(beams, nodes)
+
         # Add toolbar and canvas to window
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
@@ -63,6 +68,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.apply_button.clicked.connect(self.apply_configuration)
 
+    def update_tree_widget(self, beams, nodes):
+        self.treeWidget.clear()
+        tree_items = []
+        tree_items.append(self.create_tree_item(nodes, "Nodes"))
+        tree_items.append(self.create_tree_item(beams, "Beams"))
+        self.treeWidget.insertTopLevelItems(0, tree_items)
+
+    def create_tree_item(self, beams, name):
+        tree_item = QTreeWidgetItem([name])
+        for beam in beams:
+            child = QTreeWidgetItem([str(beam)])
+            tree_item.addChild(child)
+        return tree_item
 
     def set_dims(self):
         """Sets dimensions from what is currently in the input fields"""
@@ -83,7 +101,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Dims.COUNTERJIB_SEGMENTS = self.counterJibSegments_spinBox.value()
         Dims.COUNTERJIB_SEG_LENGTH = Dims.COUNTERJIB_LENGTH / Dims.COUNTERJIB_SEGMENTS
         Dims.COUNTERJIB_SUP_TYPE = self.counterJibSupportType_comboBox.currentText()
-        
+
         if self.towerBox.isChecked():
             crane.set_tower_dims(Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_SEGMENTS, Dims.TOWER_SUP_TYPE)
         if self.jibBox.isChecked():
@@ -91,7 +109,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.counterJibBox.isChecked():
             crane.set_counterjib_dims(Dims.COUNTERJIB_LENGTH, Dims.COUNTERJIB_HEIGHT,
                                       Dims.COUNTERJIB_SEGMENTS, Dims.COUNTERJIB_SUP_TYPE)
-
 
     def update_plot(self):
         self.plot_layout.removeWidget(self.toolbar)
@@ -108,15 +125,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.toolbar = toolbar_new
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
-        #self.plotBox.setGeometry(0, 0, 716, 544)
-
+        # self.plotBox.setGeometry(0, 0, 716, 544)
 
     def apply_configuration(self):
         self.set_dims()
 
-        self.output.appendPlainText(f"Tower values: [{Dims.TOWER_HEIGHT}, {Dims.TOWER_WIDTH}, {Dims.TOWER_SEGMENTS}, {Dims.TOWER_SUP_TYPE}]")
-        self.output.appendPlainText(f"Jib values: [{Dims.JIB_LENGTH}, {Dims.JIB_HEIGHT}, {Dims.JIB_SEGMENTS}, {Dims.JIB_SUP_TYPE}]")
-        self.output.appendPlainText(f"CounterJib values: [{Dims.COUNTERJIB_LENGTH}, {Dims.COUNTERJIB_HEIGHT}, {Dims.COUNTERJIB_SEGMENTS}, {Dims.COUNTERJIB_SUP_TYPE}]")
+        self.output.appendPlainText(
+            f"Tower values: [{Dims.TOWER_HEIGHT}, {Dims.TOWER_WIDTH}, {Dims.TOWER_SEGMENTS}, {Dims.TOWER_SUP_TYPE}]")
+        self.output.appendPlainText(
+            f"Jib values: [{Dims.JIB_LENGTH}, {Dims.JIB_HEIGHT}, {Dims.JIB_SEGMENTS}, {Dims.JIB_SUP_TYPE}]")
+        self.output.appendPlainText(
+            f"CounterJib values: [{Dims.COUNTERJIB_LENGTH}, {Dims.COUNTERJIB_HEIGHT}, {Dims.COUNTERJIB_SEGMENTS}, {Dims.COUNTERJIB_SUP_TYPE}]")
 
         if self.check_config():
             if self.towerBox.isChecked():
@@ -129,10 +148,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             self.update_plot()
             nodes, beams = crane.get_crane()
-            self.nodes.appendPlainText('Nodes')
-            self.nodes.appendPlainText(str(nodes))
-            self.beams.appendPlainText('Beams')
-            self.beams.appendPlainText(str(beams))
+            self.update_tree_widget(beams, nodes)
 
             self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
             if self.enableFEM_checkbox.isChecked():
@@ -157,8 +173,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                               f'Your inputted tower parameters violate the length requirements for a beam with a length of {tower_diag:.4f}mm which falls outside the allows range of 500-2000mm')
             return False
         jib_diag = np.sqrt(Dims.JIB_HEIGHT ** 2 +
-                           (1/2 * np.sqrt(Dims.JIB_SEG_LENGTH ** 2 +
-                                          Dims.TOWER_WIDTH ** 2)) ** 2)
+                           (1 / 2 * np.sqrt(Dims.JIB_SEG_LENGTH ** 2 +
+                                            Dims.TOWER_WIDTH ** 2)) ** 2)
         if jib_diag < 500 or jib_diag > 2000:
             QMessageBox.about(self, 'Error',
                               f'Your inputted jib parameters violate the length requirements for a beam with a length of {jib_diag:.4f}mm which falls outside the allows range of 500-2000mm')

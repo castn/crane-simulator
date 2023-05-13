@@ -413,16 +413,19 @@
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="nodes_beams">
+             <widget class="QWidget" name="debug">
               <attribute name="title">
-               <string>Nodes and Beams</string>
+               <string>Debug</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <item>
-                <widget class="QPlainTextEdit" name="nodes"/>
-               </item>
-               <item>
-                <widget class="QPlainTextEdit" name="beams"/>
+                <widget class="QTreeWidget" name="treeWidget">
+                 <column>
+                  <property name="text">
+                   <string notr="true">1</string>
+                  </property>
+                 </column>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -573,7 +576,7 @@
      <x>0</x>
      <y>0</y>
      <width>1022</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
