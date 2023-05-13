@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1022</width>
-    <height>968</height>
+    <height>1018</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -372,7 +372,7 @@
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="tab">
+             <widget class="QWidget" name="settings">
               <attribute name="title">
                <string>Settings</string>
               </attribute>
@@ -410,6 +410,19 @@
                   </size>
                  </property>
                 </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="nodes_beams">
+              <attribute name="title">
+               <string>Nodes and Beams</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <item>
+                <widget class="QPlainTextEdit" name="nodes"/>
+               </item>
+               <item>
+                <widget class="QPlainTextEdit" name="beams"/>
                </item>
               </layout>
              </widget>
@@ -560,7 +573,7 @@
      <x>0</x>
      <y>0</y>
      <width>1022</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

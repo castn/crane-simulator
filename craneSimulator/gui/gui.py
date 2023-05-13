@@ -128,6 +128,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                           Dims.COUNTERJIB_SEGMENTS, Dims.COUNTERJIB_SUP_TYPE)
 
             self.update_plot()
+            nodes, beams = crane.get_crane()
+            self.nodes.appendPlainText('Nodes')
+            self.nodes.appendPlainText(nodes)
+            self.beams.appendPlainText('Beams')
+            self.beams.appendPlainText(beams)
 
             self.output.appendPlainText(f"Enable FEM: [{self.enableFEM_checkbox.isChecked()}]")
             if self.enableFEM_checkbox.isChecked():
