@@ -2,9 +2,9 @@
 Main Script
 """
 
-import crane
-import plotter
-import analysis
+from craneSimulator.truss import crane
+from craneSimulator.gui.plotting import plotter
+from craneSimulator.simulation import analysis
 
 # Youngs Module
 E = 210e9  # 210GPa

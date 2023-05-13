@@ -6,9 +6,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationTool
 from matplotlib.figure import Figure
 import numpy as np
 
-import crane
-import plotter
-from MainWindow import Ui_MainWindow
+from craneSimulator.truss import crane
+from craneSimulator.gui.plotting import plotter
+from craneSimulator.gui.windows.MainWindow import Ui_MainWindow
 
 
 class matplotlib_canvas(FigureCanvasQTAgg):

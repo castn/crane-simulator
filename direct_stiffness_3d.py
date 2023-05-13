@@ -5,7 +5,7 @@ Provides all functions to build a crane plot the crane and deform it
 import matplotlib.pyplot as plt
 import numpy as np
 
-import crane
+from craneSimulator.truss import crane
 
 # Constants
 E = 210e6 # 210GPa?

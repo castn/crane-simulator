@@ -2,10 +2,9 @@
 Provides all functions to build a crane
 """
 
-import tower
-import jib
-import counterjib
-import analysis
+from craneSimulator.truss.tower import tower
+from craneSimulator.truss.jibs import jib, counterjib
+from craneSimulator.simulation import analysis
 
 import numpy as np
 
@@ -119,7 +118,7 @@ def get_jib_length():
 def create_counterjib():
     """Creates a counterjib connected to the other elements of the crane"""
     counterjib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(),
-                                 Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES)
+                                Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES)
     Comps.nodes = counterjib.get_nodes_raw().copy()
     Comps.beams = counterjib.get_beams_raw().copy()
 
