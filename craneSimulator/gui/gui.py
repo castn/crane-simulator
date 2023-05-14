@@ -23,14 +23,12 @@ class matplotlib_canvas(FigureCanvasQTAgg):
         super(matplotlib_canvas, self).__init__(self.fig)
 
 
-def create_tree_item(beams, name):
+def create_tree_item(arr, name):
     """Creates tree for 'Debug' tab"""
     tree_item = QTreeWidgetItem([name])
-    i = 0
-    for beam in beams:
-        child = QTreeWidgetItem([f"{i}. {beam}"])
+    for ind, comp in enumerate(arr):
+        child = QTreeWidgetItem([f"{ind}. {comp}"])
         tree_item.addChild(child)
-        i = i + 1
     return tree_item
 
 
