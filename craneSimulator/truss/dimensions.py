@@ -16,27 +16,32 @@ class Dims:
     COUNTERJIB_SUP_TYPE = 0
 
     def clear_all(self):
+        """Resets all dimensions"""
         self.clear_tower()
         self.clear_jib()
         self.clear_counter_jib()
 
     def clear_counter_jib(self):
+        """Resets counterjib dimensions"""
         self.COUNTERJIB_HEIGHT = 0
         self.COUNTERJIB_LENGTH = 0
         self.COUNTERJIB_SEGMENTS = 0
         self.COUNTERJIB_SUP_TYPE = 0
 
     def clear_jib(self):
+        """Resets jib dimensions"""
         self.JIB_HEIGHT = 0
         self.JIB_LENGTH = 0
         self.JIB_SEGMENTS = 0
         self.JIB_SUP_TYPE = 0
 
     def clear_tower(self):
+        """Resets tower dimensions"""
         self.TOWER_HEIGHT = 0
         self.TOWER_WIDTH = 0
         self.TOWER_SEGMENTS = 0
         self.TOWER_SUP_TYPE = 0
+
 
     # Tower
     def get_tower_height(self):
@@ -49,10 +54,7 @@ class Dims:
         return self.TOWER_SEGMENTS
 
     def get_tower_segment_length(self):
-        if self.TOWER_SEGMENTS == 0:
-            return 0
-        else:
-            return self.TOWER_HEIGHT / self.TOWER_SEGMENTS
+        return 0 if self.TOWER_SEGMENTS == 0 else self.TOWER_HEIGHT / self.TOWER_SEGMENTS
 
     def get_tower_support_type(self):
         return self.TOWER_SUP_TYPE
@@ -69,6 +71,7 @@ class Dims:
     def set_tower_support_type(self, support_type):
         self.TOWER_SUP_TYPE = support_type
 
+
     # Jib
     def get_jib_height(self):
         return self.JIB_HEIGHT
@@ -80,10 +83,7 @@ class Dims:
         return self.JIB_SEGMENTS
 
     def get_jib_segment_length(self):
-        if self.JIB_SEGMENTS == 0:
-            return 0
-        else:
-            return self.JIB_LENGTH / self.JIB_SEGMENTS
+        return 0 if self.JIB_SEGMENTS == 0 else self.JIB_LENGTH / self.JIB_SEGMENTS
 
     def get_jib_support_type(self):
         return self.JIB_SUP_TYPE
@@ -100,6 +100,7 @@ class Dims:
     def set_jib_support_type(self, support_type):
         self.JIB_SUP_TYPE = support_type
 
+
     # Counter Jib
     def get_counter_jib_height(self):
         return self.COUNTERJIB_HEIGHT
@@ -111,10 +112,7 @@ class Dims:
         return self.COUNTERJIB_SEGMENTS
 
     def get_counter_jib_segment_length(self):
-        if self.COUNTERJIB_LENGTH == 0:
-            return 0
-        else:
-            return self.COUNTERJIB_LENGTH / self.COUNTERJIB_LENGTH
+        return 0 if self.COUNTERJIB_SEGMENTS == 0 else self.COUNTERJIB_LENGTH / self.COUNTERJIB_SEGMENTS
 
     def get_counter_jib_support_type(self):
         return self.COUNTERJIB_SUP_TYPE
