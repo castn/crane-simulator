@@ -30,6 +30,34 @@ def generate_conditions(nodes):
 
     # Applied forces
     p = np.zeros_like(nodes)
+    # TODO change indices
+    p[16, 2] = -250 * kN
+    p[17, 2] = -250 * kN
+    p[20, 2] = -100 * kN
+    p[21, 2] = -100 * kN
+    Conditions.p = p
+
+
+def apply_gravity(nodes, beams, A, density):
+    # iterate over all nodes
+    # find every beam containing node
+    # get lengths of all those beams and div by 2
+    # mult by g and append to p
+    for i in range(len(nodes)):
+        beams_copy = beams.copy()
+        fitting_beams = beams_copy[np.where((beams[:, 0] == i) or beams[0, :] == i)[0]]
+        length = 0
+        for j in range(len(fitting_beams)):
+            start_float = np.array(nodes[fitting_beams[j, 0]]).astype(float)
+            end_float = np.array(nodes[fitting_beams[j, 1]]).astype(float)
+            length += np.linalg.norm(end_float - start_float)
+        Conditions.p[i, 2] += - ((length / 2) * A * density * 9.81) * kN
+
+
+def remove_gravity(nodes):
+    """Resets nodes"""
+    p = np.zeros_like(nodes)
+    # TODO change indices
     p[16, 2] = -250 * kN
     p[17, 2] = -250 * kN
     p[20, 2] = -100 * kN

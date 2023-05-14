@@ -153,8 +153,17 @@ def should_have_counter_jib(boolean):
     has_counter_jib = boolean
 
 
+def enable_gravity():
+    """Applies gravity to nodes"""
+    analysis.apply_gravity(Comps.nodes, Comps.beams, A, DENSITY)
+
+
+def disable_gravity():
+    """Removes gravity from nodes"""
+    analysis.remove_gravity(Comps.nodes)
+
+
 def analyze():
     """Performs the analysis of the crane"""
-    nodes, beams = get_crane()
-    analysis.generate_conditions(nodes)
-    return analysis.analyze(nodes, beams, E, A)
+    analysis.generate_conditions(Comps.nodes)
+    return analysis.analyze(Comps.nodes, Comps.beams, E, A)

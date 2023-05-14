@@ -153,6 +153,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.analysis.appendPlainText('Deformation at nodes')
                 self.analysis.appendPlainText(str(self.U))
 
+        if self.enable_gravity.isChecked():
+            crane.enable_gravity()
+        else:
+            crane.disable_gravity()
+
         self.progressBar.setValue(100)
 
     def check_config(self):
