@@ -90,10 +90,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
 
-        # Build crane with updated values
+        # Build undeformed crane with updated values
         crane.build_crane()
         nodes, beams = crane.get_crane()
         plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', updated_canvas.axes, updated_canvas.fig)
+
+        if self.enableFEM_checkbox.isChecked():
+            # Build deformed crane with updated values
+            scale = 10
+            self.N, self.R, self.U = crane.analyze()
+            deformed_nodes = self.U * scale + nodes
+            plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', updated_canvas.axes, updated_canvas.fig)
 
     def apply_configuration(self):
         self.progressBar.reset()
@@ -125,14 +132,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             nodes, beams = crane.get_crane()
             self.update_tree_widget(beams, nodes)
 
-            if self.enableFEM_checkbox.isChecked():
-                # N, R, U = crane.analyze()
-                self.analysis.appendPlainText('Axial Forces (positive = tension, negative = compression)')
-                # self.analysis.appendPlainText(N[np.newaxis].T)
-                self.analysis.appendPlainText('Reaction Forces (positive = upward, negative = downward)')
-                # self.analysis.appendPlainText(R)
-                self.analysis.appendPlainText('Deformation at nodes')
-                # self.analysis.appendPlainText(U)
+            self.analysis.appendPlainText('Axial Forces (positive = tension, negative = compression)')
+            self.analysis.appendPlainText(str(self.N[np.newaxis].T))
+            self.analysis.appendPlainText('Reaction Forces (positive = upward, negative = downward)')
+            self.analysis.appendPlainText(str(self.R))
+            self.analysis.appendPlainText('Deformation at nodes')
+            self.analysis.appendPlainText(str(self.U))
 
         self.progressBar.setValue(100)
 
