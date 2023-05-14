@@ -40,6 +40,7 @@ class Dims:
     IS_CONNECTED = False
 
     TOTAL_LENGTH = 0
+    LONGEST_BEAM = 0
 
 
 def create():
@@ -228,6 +229,11 @@ def get_length():
     return Dims.TOTAL_LENGTH
 
 
+def get_longest_beam():
+    """Returns length of longest beam"""
+    return Dims.LONGEST_BEAM
+
+
 def append_beam(start_node, end_node):
     """
     Creates a beam between 2 given points and adds the length to a running total
@@ -239,7 +245,9 @@ def append_beam(start_node, end_node):
     Comps.beams.append([start_node, end_node])
     start_float = np.array(Comps.nodes[start_node]).astype(float)
     end_float = np.array(Comps.nodes[end_node]).astype(float)
-    Dims.TOTAL_LENGTH += np.linalg.norm(end_float - start_float)
+    length = np.linalg.norm(end_float - start_float)
+    Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
+    Dims.TOTAL_LENGTH += length
 
 
 def get_dims():

@@ -137,22 +137,24 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.progressBar.setValue(100)
 
     def check_config(self):
+        """Checks if all beams are within the required range"""
         if not self.ignore_specification.isChecked():
-            # might have to adjust to account for support type
-            tower_diag = np.sqrt(self.dims.get_tower_width() ** 2 + self.dims.get_tower_segment_length() ** 2)
-            print(tower_diag)
-            if tower_diag < 500 or tower_diag > 2000:
+            tower_longest = crane.tower.get_longest_beam()
+            print(tower_longest)
+            if tower_longest < 500 or tower_longest > 2000:
                 QMessageBox.about(self, 'Error',
-                                  f'Your inputted tower parameters violate the length requirements for a beam with a length of {tower_diag:.4f}mm which falls outside the allows range of 500-2000mm')
+                                  f'Your inputted tower parameters violate the length requirements for a beam with a length of {tower_longest:.4f}mm which falls outside the allows range of 500-2000mm')
                 return False
-            jib_diag = np.sqrt(self.dims.get_jib_height() ** 2 + (1 / 2 * np.sqrt(
-                self.dims.get_jib_segment_length() ** 2 + self.dims.get_tower_width() ** 2)) ** 2)
-            if jib_diag < 500 or jib_diag > 2000:
+            jib_longest = crane.jib.get_longest_beam()
+            if jib_longest < 500 or jib_longest > 2000:
                 QMessageBox.about(self, 'Error',
-                                  f'Your inputted jib parameters violate the length requirements for a beam with a length of {jib_diag:.4f}mm which falls outside the allows range of 500-2000mm')
+                                  f'Your inputted jib parameters violate the length requirements for a beam with a length of {jib_longest:.4f}mm which falls outside the allows range of 500-2000mm')
                 return False
-            # counterjib needs special treatment bc tower
-            logging.warning("Counter Jib is missing config check!")
+            counterjib_longest = crane.counterjib.get_longest_beam()
+            if counterjib_longest < 500 or counterjib_longest > 2000:
+                QMessageBox.about(self, 'Error',
+                                  f'Your inputted counterjib parameters violate the length requirements for a beam with a length of {counterjib_longest:.4f}mm which falls outside the allows range of 500-2000mm')
+                return False
         return True
 
 
