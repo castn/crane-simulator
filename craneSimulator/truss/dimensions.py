@@ -1,4 +1,7 @@
+"""Dimensions for all parts of the crane"""
+
 class Dims:
+    """Dimensions for all parts of the crane"""
     # Variable definition
     TOWER_HEIGHT = 0
     TOWER_WIDTH = 0
