@@ -160,7 +160,7 @@ def create_truss_support():
                 start_node = Dims.END_NODE_TOWER
                 append_beam(Dims.END_NODE_TOWER + 4, support_start)
             else:
-                start_node = Dims.END_NODE_JIB
+                start_node = Dims.END_NODE_JIB - max(i - 2, 0)
                 append_beam(support_start + (i - 1), support_start + i)
             # diagonal sections
             val_to_add = max(3 * (i - 2), 0)
