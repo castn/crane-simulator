@@ -1,5 +1,6 @@
 import logging
 import sys
+
 sys.path.append('./')
 
 import numpy as np
@@ -25,9 +26,11 @@ class matplotlib_canvas(FigureCanvasQTAgg):
 def create_tree_item(beams, name):
     """Creates tree for 'Debug' tab"""
     tree_item = QTreeWidgetItem([name])
+    i = 0
     for beam in beams:
-        child = QTreeWidgetItem([str(beam)])
+        child = QTreeWidgetItem([f"{i}. {beam}"])
         tree_item.addChild(child)
+        i = i + 1
     return tree_item
 
 
