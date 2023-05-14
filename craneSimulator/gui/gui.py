@@ -1,5 +1,6 @@
 import logging
 import sys
+sys.path.append('./')
 
 import numpy as np
 from PyQt6 import QtWidgets
@@ -48,6 +49,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.canvas)
 
         self.dims = Dims()
+        self.set_dims()
+        self.apply_configuration()
+        self.update_plot()
 
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
@@ -91,7 +95,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.canvas)
 
         # Build undeformed crane with updated values
-        crane.build_crane()
         nodes, beams = crane.get_crane()
         plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', updated_canvas.axes, updated_canvas.fig)
 
@@ -108,36 +111,39 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.set_dims()
 
-        if self.check_config():
-            if self.towerBox.isChecked():
-                crane.should_have_tower(True)
-                crane.set_tower_dims(self.dims.get_tower_height(), self.dims.get_tower_width(),
-                                     self.dims.get_tower_segments(), self.dims.get_tower_support_type())
-            else:
-                crane.should_have_tower(False)
-            if self.jibBox.isChecked():
-                crane.should_have_jib(True)
-                crane.set_jib_dims(self.dims.get_jib_length(), self.dims.get_jib_height(), self.dims.get_jib_segments())
-            else:
-                crane.should_have_jib(False)
-            if self.counterJibBox.isChecked():
-                crane.should_have_counter_jib(True)
-                crane.set_counterjib_dims(self.dims.get_counter_jib_length(), self.dims.get_counter_jib_height(),
-                                          self.dims.get_counter_jib_segments(),
-                                          self.dims.get_counter_jib_support_type())
-            else:
-                crane.should_have_counter_jib(False)
+        if self.towerBox.isChecked():
+            crane.should_have_tower(True)
+            crane.set_tower_dims(self.dims.get_tower_height(), self.dims.get_tower_width(),
+                                 self.dims.get_tower_segments(), self.dims.get_tower_support_type())
+        else:
+            crane.should_have_tower(False)
+        if self.jibBox.isChecked():
+            crane.should_have_jib(True)
+            crane.set_jib_dims(self.dims.get_jib_length(), self.dims.get_jib_height(), self.dims.get_jib_segments())
+        else:
+            crane.should_have_jib(False)
+        if self.counterJibBox.isChecked():
+            crane.should_have_counter_jib(True)
+            crane.set_counterjib_dims(self.dims.get_counter_jib_length(), self.dims.get_counter_jib_height(),
+                                      self.dims.get_counter_jib_segments(),
+                                      self.dims.get_counter_jib_support_type())
+        else:
+            crane.should_have_counter_jib(False)
 
+        crane.build_crane()
+
+        if self.check_config():
             self.update_plot()
             nodes, beams = crane.get_crane()
             self.update_tree_widget(beams, nodes)
 
-            self.analysis.appendPlainText('Axial Forces (positive = tension, negative = compression)')
-            self.analysis.appendPlainText(str(self.N[np.newaxis].T))
-            self.analysis.appendPlainText('Reaction Forces (positive = upward, negative = downward)')
-            self.analysis.appendPlainText(str(self.R))
-            self.analysis.appendPlainText('Deformation at nodes')
-            self.analysis.appendPlainText(str(self.U))
+            if self.enableFEM_checkbox.isChecked():
+                self.analysis.appendPlainText('Axial Forces (positive = tension, negative = compression)')
+                self.analysis.appendPlainText(str(self.N[np.newaxis].T))
+                self.analysis.appendPlainText('Reaction Forces (positive = upward, negative = downward)')
+                self.analysis.appendPlainText(str(self.R))
+                self.analysis.appendPlainText('Deformation at nodes')
+                self.analysis.appendPlainText(str(self.U))
 
         self.progressBar.setValue(100)
 
