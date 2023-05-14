@@ -165,5 +165,6 @@ def disable_gravity():
 
 def analyze():
     """Performs the analysis of the crane"""
-    analysis.generate_conditions(Comps.nodes)
-    return analysis.analyze(Comps.nodes, Comps.beams, E, A)
+    nodes, beams = get_crane()
+    analysis.generate_conditions(nodes)
+    return analysis.analyze(nodes, beams, E, A)
