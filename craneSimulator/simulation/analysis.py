@@ -44,8 +44,11 @@ def apply_gravity(nodes, beams, A, density):
     # get lengths of all those beams and div by 2
     # mult by g and append to p
     for i in range(len(nodes)):
+        print(f'Run {i}')
         beams_copy = beams.copy()
+        print('Copied: ')
         fitting_beams = beams_copy[np.where((beams[:, 0] == i) or beams[0, :] == i)[0]]
+        print('Fitting beams: ', fitting_beams)
         length = 0
         for j in range(len(fitting_beams)):
             start_float = np.array(nodes[fitting_beams[j, 0]]).astype(float)

@@ -155,7 +155,7 @@ def should_have_counter_jib(boolean):
 
 def enable_gravity():
     """Applies gravity to nodes"""
-    analysis.apply_gravity(Comps.nodes, Comps.beams, A, DENSITY)
+    analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), A, DENSITY)
 
 
 def disable_gravity():
