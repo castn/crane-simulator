@@ -68,7 +68,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
 
-    def update_debug_tree_widget(self, beams, nodes):
+    def update_debug_tree_widget(self, nodes, beams):
         """Updates node and beam tree in 'Debug' tab"""
         self.debug_treeWidget.clear()
         tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams")]
