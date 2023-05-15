@@ -162,8 +162,8 @@ class Crane:
         """Removes gravity from nodes"""
         analysis.remove_gravity(Comps.nodes)
 
-    def analyze(self):
+    def analyze(self, window):
         """Performs the analysis of the crane"""
         nodes, beams = get_crane()
-        analysis.generate_conditions(nodes)
+        analysis.generate_conditions(window, nodes)
         return analysis.analyze(nodes, beams, self.E, self.A)

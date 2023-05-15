@@ -12,7 +12,7 @@ class Conditions:
 
 kN = 1e3
 
-def generate_conditions(nodes):
+def generate_conditions(window, nodes):
     """Generates conditions for the crane"""
     # Support Displacement
     Conditions.Ur = [0, 0, 0,
@@ -33,11 +33,11 @@ def generate_conditions(nodes):
     p = np.zeros_like(nodes)
     # TODO change indices
     # Force on jib
-    p[16, 2] = -250 * kN
-    p[17, 2] = -250 * kN
+    p[16, 2] = window.jib_left_spinBox.value() * kN
+    p[17, 2] = window.jib_right_spinBox.value() * kN
     # Force on counter jib
-    p[20, 2] = -100 * kN
-    p[21, 2] = -100 * kN
+    p[20, 2] = window.counterjib_left_spinBox.value() * kN
+    p[21, 2] = window.counterjib_left_spinBox.value() * kN
     Conditions.p = p
 
 
