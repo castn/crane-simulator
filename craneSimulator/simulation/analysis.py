@@ -45,16 +45,16 @@ def apply_gravity(nodes, beams, A, density):
     # mult by g and append to p
     for i in range(len(nodes)):
         print(f'Run {i}')
-        beams_copy = beams.copy()
-        print('Copied: ')
-        fitting_beams = beams_copy[np.where((beams[:, 0] == i) or beams[0, :] == i)[0]]
-        print('Fitting beams: ', fitting_beams)
+        fitting_beams_lc = np.where(beams[:, 0] == 0)[0]
+        fitting_beams_rc = np.where(beams[:, 1] == 0)[0]
+        fitting_beams = np.concatenate((fitting_beams_lc, fitting_beams_rc), axis=None)
         length = 0
         for j in range(len(fitting_beams)):
-            start_float = np.array(nodes[fitting_beams[j, 0]]).astype(float)
-            end_float = np.array(nodes[fitting_beams[j, 1]]).astype(float)
+            start_float = np.array(beams[fitting_beams[j], 0]).astype(float)
+            end_float = np.array(beams[fitting_beams[j], 1]).astype(float)
             length += np.linalg.norm(end_float - start_float)
-        Conditions.p[i, 2] += - ((length / 2) * A * density * 9.81) * kN
+        Conditions.p[i, 2] += - ((length / 2) / 1000 * A * density * 9.81) * kN
+    print(Conditions.p)
 
 
 def remove_gravity(nodes):
