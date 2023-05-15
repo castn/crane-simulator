@@ -178,7 +178,7 @@ class Ui_MainWindow(object):
         self.enable_wind.setObjectName("enable_wind")
         self.verticalLayout_6.addWidget(self.enable_wind)
         self.enableFEM_checkbox = QtWidgets.QCheckBox(parent=self.settings)
-        self.enableFEM_checkbox.setChecked(False)
+        self.enableFEM_checkbox.setChecked(True)
         self.enableFEM_checkbox.setObjectName("enableFEM_checkbox")
         self.verticalLayout_6.addWidget(self.enableFEM_checkbox)
         self.formLayout_5 = QtWidgets.QFormLayout()
