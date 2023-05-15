@@ -47,9 +47,10 @@ def apply_forces(window, nodes):
 def apply_gravity(nodes, beams, A, density):
     """Applies gravity to each node"""
     for i in range(len(nodes)):
-        fitting_beams_lc = np.where(beams[:, 0] == 0)[0]
-        fitting_beams_rc = np.where(beams[:, 1] == 0)[0]
+        fitting_beams_lc = np.where(beams[:, 0] == i)[0]
+        fitting_beams_rc = np.where(beams[:, 1] == i)[0]
         fitting_beams = np.concatenate((fitting_beams_lc, fitting_beams_rc), axis=None)
+        print(fitting_beams)
         length = 0
         for j in range(len(fitting_beams)):
             start_float = np.array(beams[fitting_beams[j], 0]).astype(float)
@@ -76,7 +77,6 @@ def apply_wind(dir, force):
 
 def analyze(nodes, beams, E, A):
     """Perform truss structural analysis"""
-    print('Running analysis')
     print(Conditions.p)
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
