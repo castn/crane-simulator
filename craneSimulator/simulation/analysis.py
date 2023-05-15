@@ -42,10 +42,7 @@ def generate_conditions(nodes):
 
 
 def apply_gravity(nodes, beams, A, density):
-    # iterate over all nodes
-    # find every beam containing node
-    # get lengths of all those beams and div by 2
-    # mult by g and append to p
+    """Applies gravity to each node"""
     for i in range(len(nodes)):
         print(f'Run {i}')
         fitting_beams_lc = np.where(beams[:, 0] == 0)[0]
@@ -57,11 +54,10 @@ def apply_gravity(nodes, beams, A, density):
             end_float = np.array(beams[fitting_beams[j], 1]).astype(float)
             length += np.linalg.norm(end_float - start_float)
         Conditions.p[i, 2] += - ((length / 2) / 1000 * A * density * 9.81) * kN
-    print(Conditions.p)
 
 
 def remove_gravity(nodes):
-    """Resets nodes"""
+    """Resets nodes to default applied forces"""
     p = np.zeros_like(nodes)
     # TODO change indices
     # Force on jib
