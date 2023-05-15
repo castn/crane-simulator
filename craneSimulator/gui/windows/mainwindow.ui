@@ -37,7 +37,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>2</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="crane">
               <attribute name="title">
@@ -50,7 +50,7 @@
                   <string>Tower</string>
                  </property>
                  <property name="checkable">
-                  <bool>true</bool>
+                  <bool>false</bool>
                  </property>
                  <layout class="QFormLayout" name="formLayout">
                   <item row="0" column="0">
@@ -165,7 +165,7 @@
                   <string>Jib</string>
                  </property>
                  <property name="checkable">
-                  <bool>true</bool>
+                  <bool>false</bool>
                  </property>
                  <layout class="QFormLayout" name="formLayout_2">
                   <item row="0" column="0">
@@ -272,7 +272,7 @@
                   <string>Counter Jib</string>
                  </property>
                  <property name="checkable">
-                  <bool>true</bool>
+                  <bool>false</bool>
                  </property>
                  <layout class="QFormLayout" name="formLayout_3">
                   <item row="0" column="0">
@@ -380,22 +380,6 @@
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="fem">
-              <attribute name="title">
-               <string>FEM</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout">
-               <item>
-                <widget class="QTreeWidget" name="fem_treeWidget">
-                 <column>
-                  <property name="text">
-                   <string notr="true">1</string>
-                  </property>
-                 </column>
-                </widget>
-               </item>
-              </layout>
-             </widget>
              <widget class="QWidget" name="settings">
               <attribute name="title">
                <string>Settings</string>
@@ -419,6 +403,9 @@
                 <widget class="QCheckBox" name="enableFEM_checkbox">
                  <property name="text">
                   <string>FEM</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -465,6 +452,22 @@
                   </size>
                  </property>
                 </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="fem">
+              <attribute name="title">
+               <string>FEM</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <widget class="QTreeWidget" name="fem_treeWidget">
+                 <column>
+                  <property name="text">
+                   <string notr="true">1</string>
+                  </property>
+                 </column>
+                </widget>
                </item>
               </layout>
              </widget>

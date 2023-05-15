@@ -22,6 +22,7 @@ def generate_conditions(nodes):
 
     # Condition of DOF (0 = fixed, 1 = free)
     dof_condition = np.ones_like(nodes).astype(int)
+    # Anchoring the crane to the ground
     dof_condition[0, :] = 0
     dof_condition[1, :] = 0
     dof_condition[2, :] = 0
@@ -31,8 +32,10 @@ def generate_conditions(nodes):
     # Applied forces
     p = np.zeros_like(nodes)
     # TODO change indices
+    # Force on jib
     p[16, 2] = -250 * kN
     p[17, 2] = -250 * kN
+    # Force on counter jib
     p[20, 2] = -100 * kN
     p[21, 2] = -100 * kN
     Conditions.p = p
@@ -61,8 +64,10 @@ def remove_gravity(nodes):
     """Resets nodes"""
     p = np.zeros_like(nodes)
     # TODO change indices
+    # Force on jib
     p[16, 2] = -250 * kN
     p[17, 2] = -250 * kN
+    # Force on counter jib
     p[20, 2] = -100 * kN
     p[21, 2] = -100 * kN
     Conditions.p = p
