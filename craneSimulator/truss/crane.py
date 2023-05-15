@@ -8,16 +8,6 @@ from craneSimulator.simulation import analysis
 from craneSimulator.truss.jibs import jib, counterjib
 from craneSimulator.truss.tower import tower
 
-# Youngs Module
-E = 210e9  # 210GPa
-# Cross section of each beam
-A = 0.01  # 0.01m^2
-DENSITY = 7850
-
-has_tower = True
-has_jib = True
-has_counter_jib = True
-
 
 class Dims:
     """Class that contains all dimensions of the crane for global control"""
@@ -30,45 +20,6 @@ class Comps:
     """Component arrays for the crane"""
     nodes = []
     beams = []
-
-
-def set_tower_dims(tower_height, tower_width, tower_segs, tower_sup_style):
-    """Sets dimensions of the tower"""
-    tower.set_dims(tower_height, tower_width, tower_segs, tower_sup_style)
-
-
-def set_jib_dims(jib_length, jib_height, jib_segs):
-    """Sets dimensions of the jib"""
-    jib.set_dims(jib_length, jib_height, jib_segs)
-
-
-def set_counterjib_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style):
-    """Sets dimensions of the counterjib"""
-    counterjib.set_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style)
-
-
-def set_default_dims():
-    """Sets default dimensions for all components"""
-    tower.default_dims()
-    jib.default_dims()
-    counterjib.default_dims()
-
-
-def build_crane():
-    """Builds crane from previosuly inputted parameters"""
-    if has_tower:
-        create_tower()
-    if has_jib:
-        create_jib()
-    if has_counter_jib:
-        create_counterjib()
-
-
-def create_crane():
-    """Creates all elements of the crane connected to each other"""
-    create_tower()
-    create_jib()
-    create_counterjib()
 
 
 def create_tower():
@@ -153,18 +104,66 @@ def should_have_counter_jib(boolean):
     has_counter_jib = boolean
 
 
-def enable_gravity():
-    """Applies gravity to nodes"""
-    analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), A, DENSITY)
+def create_crane():
+    """Creates all elements of the crane connected to each other"""
+    create_tower()
+    create_jib()
+    create_counterjib()
 
 
-def disable_gravity():
-    """Removes gravity from nodes"""
-    analysis.remove_gravity(Comps.nodes)
+def set_tower_dims(tower_height, tower_width, tower_segs, tower_sup_style):
+    """Sets dimensions of the tower"""
+    tower.set_dims(tower_height, tower_width, tower_segs, tower_sup_style)
 
 
-def analyze():
-    """Performs the analysis of the crane"""
-    nodes, beams = get_crane()
-    analysis.generate_conditions(nodes)
-    return analysis.analyze(nodes, beams, E, A)
+def set_jib_dims(jib_length, jib_height, jib_segs):
+    """Sets dimensions of the jib"""
+    jib.set_dims(jib_length, jib_height, jib_segs)
+
+
+def set_counterjib_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style):
+    """Sets dimensions of the counterjib"""
+    counterjib.set_dims(counterjib_length, counterjib_height, counterjib_segs, counterjib_sup_style)
+
+
+def set_default_dims():
+    """Sets default dimensions for all components"""
+    tower.default_dims()
+    jib.default_dims()
+    counterjib.default_dims()
+
+
+class Crane:
+    def __init__(self):
+        # Youngs Module
+        self.E = 210e9  # 210GPa
+        # Cross section of each beam
+        self.A = 0.01  # 0.01m^2
+        self.DENSITY = 7850
+
+        self.has_tower = True
+        self.has_jib = True
+        self.has_counter_jib = True
+
+    def build_crane(self):
+        """Builds crane from previosuly inputted parameters"""
+        if self.has_tower:
+            create_tower()
+        if self.has_jib:
+            create_jib()
+        if self.has_counter_jib:
+            create_counterjib()
+
+    def enable_gravity(self):
+        """Applies gravity to nodes"""
+        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY)
+
+    def disable_gravity(self):
+        """Removes gravity from nodes"""
+        analysis.remove_gravity(Comps.nodes)
+
+    def analyze(self):
+        """Performs the analysis of the crane"""
+        nodes, beams = get_crane()
+        analysis.generate_conditions(nodes)
+        return analysis.analyze(nodes, beams, self.E, self.A)

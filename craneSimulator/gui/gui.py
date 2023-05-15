@@ -1,6 +1,8 @@
 import logging
 import sys
 
+from craneSimulator.truss.crane import Crane
+
 sys.path.append('./')
 
 import numpy as np
@@ -57,6 +59,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
 
+        self.crane = Crane()
         self.dims = Dims()
         self.set_dims()
         self.apply_configuration()
@@ -81,23 +84,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def set_dims(self):
         """Sets dimensions from what is currently in the input fields"""
+        # Reset all old dimensions
         self.dims.clear_all()
-
-        if self.towerBox.isChecked():
-            self.dims.set_tower_height(self.towerHeight_spinbox.value())
-            self.dims.set_tower_width(self.towerWidth_spinbox.value())
-            self.dims.set_tower_segments(self.towerSegment_spinbox.value())
-            self.dims.set_tower_support_type(self.towerSupportType_comboBox.currentText())
-        if self.jibBox.isChecked():
-            self.dims.set_jib_height(self.jibHeight_spinBox.value())
-            self.dims.set_jib_length(self.jibLength_spinBox.value())
-            self.dims.set_jib_segments(self.jibSegment_spinBox.value())
-            self.dims.set_jib_support_type(self.jibSupportType_comboBox.currentText())
-        if self.counterJibBox.isChecked():
-            self.dims.set_counter_jib_height(self.counterJibHeight_spinBox.value())
-            self.dims.set_counter_jib_length(self.counterJibLength_spinBox.value())
-            self.dims.set_counter_jib_segments(self.counterJibSegments_spinBox.value())
-            self.dims.set_counter_jib_support_type(self.counterJibSupportType_comboBox.currentText())
+        # Set all tower dimensions
+        self.dims.set_tower_height(self.towerHeight_spinbox.value())
+        self.dims.set_tower_width(self.towerWidth_spinbox.value())
+        self.dims.set_tower_segments(self.towerSegment_spinbox.value())
+        self.dims.set_tower_support_type(self.towerSupportType_comboBox.currentText())
+        # Set all jib dimensions
+        self.dims.set_jib_height(self.jibHeight_spinBox.value())
+        self.dims.set_jib_length(self.jibLength_spinBox.value())
+        self.dims.set_jib_segments(self.jibSegment_spinBox.value())
+        self.dims.set_jib_support_type(self.jibSupportType_comboBox.currentText())
+        # Set all counter jib dimensions
+        self.dims.set_counter_jib_height(self.counterJibHeight_spinBox.value())
+        self.dims.set_counter_jib_length(self.counterJibLength_spinBox.value())
+        self.dims.set_counter_jib_segments(self.counterJibSegments_spinBox.value())
+        self.dims.set_counter_jib_support_type(self.counterJibSupportType_comboBox.currentText())
 
     def update_plot(self):
         """Updates 3D plot"""
@@ -120,7 +123,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.enableFEM_checkbox.isChecked():
             # Build deformed crane with updated values
             scale = self.scaleSpinBox.value()
-            self.N, self.R, self.U = crane.analyze()
+            self.N, self.R, self.U = self.crane.analyze()
             deformed_nodes = self.U * scale + nodes
             plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', updated_canvas.axes, updated_canvas.fig)
 
@@ -130,27 +133,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.progressBar.setValue(0)
 
         self.set_dims()
+        # Will always generate a tower
+        crane.should_have_tower(True)
+        crane.set_tower_dims(self.dims.get_tower_height(), self.dims.get_tower_width(), self.dims.get_tower_segments(),
+                             self.dims.get_tower_support_type())
+        # Will always generate a jib
+        crane.should_have_jib(True)
+        crane.set_jib_dims(self.dims.get_jib_length(), self.dims.get_jib_height(), self.dims.get_jib_segments())
+        # Will always generate a counter jib
+        crane.should_have_counter_jib(True)
+        crane.set_counterjib_dims(self.dims.get_counter_jib_length(), self.dims.get_counter_jib_height(),
+                                  self.dims.get_counter_jib_segments(), self.dims.get_counter_jib_support_type())
 
-        if self.towerBox.isChecked():
-            crane.should_have_tower(True)
-            crane.set_tower_dims(self.dims.get_tower_height(), self.dims.get_tower_width(),
-                                 self.dims.get_tower_segments(), self.dims.get_tower_support_type())
-        else:
-            crane.should_have_tower(False)
-        if self.jibBox.isChecked():
-            crane.should_have_jib(True)
-            crane.set_jib_dims(self.dims.get_jib_length(), self.dims.get_jib_height(), self.dims.get_jib_segments())
-        else:
-            crane.should_have_jib(False)
-        if self.counterJibBox.isChecked():
-            crane.should_have_counter_jib(True)
-            crane.set_counterjib_dims(self.dims.get_counter_jib_length(), self.dims.get_counter_jib_height(),
-                                      self.dims.get_counter_jib_segments(),
-                                      self.dims.get_counter_jib_support_type())
-        else:
-            crane.should_have_counter_jib(False)
-
-        crane.build_crane()
+        self.crane.build_crane()
 
         if self.check_config():
             self.update_plot()
@@ -161,9 +156,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.update_fem_tree_widget(self.N, self.R, self.U)
 
         if self.enable_gravity.isChecked():
-            crane.enable_gravity()
+            self.crane.enable_gravity()
         else:
-            crane.disable_gravity()
+            self.crane.disable_gravity()
 
         self.progressBar.setValue(100)
 
