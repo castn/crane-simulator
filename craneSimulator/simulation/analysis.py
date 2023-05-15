@@ -10,10 +10,21 @@ class Conditions:
     p = np.zeros_like(0)
 
 
+class Comps():
+    nodes = []
+
+
+class Dims():
+    TOWER_END = 0
+    JIB_END = 0
+    COUNTERJIB_END = 0
+
 kN = 1e3
 
 def generate_conditions(nodes):
     """Generates conditions for the crane"""
+    Comps.nodes = nodes
+    
     # Support Displacement
     Conditions.Ur = [0, 0, 0,
                      0, 0, 0,
@@ -30,17 +41,22 @@ def generate_conditions(nodes):
     Conditions.dof_condition = dof_condition
 
 
-def apply_forces(window, nodes):
+def apply_forces(window, nodes, end_tower, end_jib):
     """Applies user-entered forces"""
+    Comps.nodes = nodes
+    Dims.TOWER_END = end_tower
+    Dims.JIB_END = end_jib
+    Dims.COUNTERJIB_END = len(nodes)
+    
     # Applied forces
     p = np.zeros_like(nodes)
     # TODO change indices
     # Force on jib
-    p[16, 2] = window.jib_left_spinBox.value() * kN
-    p[17, 2] = window.jib_right_spinBox.value() * kN
+    p[Dims.JIB_END - 2, 2] = window.jib_left_spinBox.value() * kN
+    p[Dims.JIB_END - 1, 2] = window.jib_right_spinBox.value() * kN
     # Force on counter jib
-    p[20, 2] = window.counterjib_left_spinBox.value() * kN
-    p[21, 2] = window.counterjib_left_spinBox.value() * kN
+    p[Dims.COUNTERJIB_END - 2, 2] = window.counterjib_left_spinBox.value() * kN
+    p[Dims.COUNTERJIB_END - 1, 2] = window.counterjib_left_spinBox.value() * kN
     Conditions.p = p
 
 
@@ -50,7 +66,6 @@ def apply_gravity(nodes, beams, A, density):
         fitting_beams_lc = np.where(beams[:, 0] == i)[0]
         fitting_beams_rc = np.where(beams[:, 1] == i)[0]
         fitting_beams = np.concatenate((fitting_beams_lc, fitting_beams_rc), axis=None)
-        print(fitting_beams)
         length = 0
         for j in range(len(fitting_beams)):
             start_float = np.array(beams[fitting_beams[j], 0]).astype(float)
@@ -59,17 +74,17 @@ def apply_gravity(nodes, beams, A, density):
         Conditions.p[i, 2] += - ((length / 2) / 1000 * A * density * 9.81) * kN
 
 
-def apply_wind(dir, force):
-    if dir == 'north':
+def apply_wind(direc, force):
+    if direc == 'from front':
         # force in north dir
         print()
-    elif dir == 'east':
+    elif direc == 'from right':
         # force in east dir
         print()
-    elif dir == 'south':
+    elif direc == 'from back':
         # force in south dir
         print()
-    elif dir == 'west':
+    elif direc == 'from left':
         # force in west dir
         print()
     print('Hm not a valid direction')
@@ -77,6 +92,7 @@ def apply_wind(dir, force):
 
 def analyze(nodes, beams, E, A):
     """Perform truss structural analysis"""
+    print('Forces')
     print(Conditions.p)
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)

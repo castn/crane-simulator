@@ -14,6 +14,8 @@ class Dims:
     TOWER_HEIGHT = 0
     TOWER_WIDTH = 0
     TOWER_NUM_NODES = 0
+    
+    JIB_NUM_NODES = 0
 
 
 class Comps:
@@ -45,6 +47,7 @@ def create_jib():
     """Creates a jib connected to the other elements of the crane"""
     jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(),
                          Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH)
+    Dims.JIB_NUM_NODES = len(jib.get_nodes())
     Comps.nodes = jib.get_nodes_raw().copy()
     Comps.beams = jib.get_beams_raw().copy()
 
@@ -156,12 +159,16 @@ class Crane:
 
     def enable_gravity(self, window):
         """Applies gravity to nodes"""
-        analysis.apply_forces(window, Comps.nodes)
+        analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES)
         analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY)
 
     def disable_gravity(self, window):
         """Removes gravity from nodes"""
-        analysis.apply_forces(window, Comps.nodes)
+        analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES)
+
+    def enable_wind(self, direc, force):
+        """Applies wind in given direction with given force"""
+        analysis.apply_wind(direc.lower(), force)
 
     def analyze(self):
         """Performs the analysis of the crane"""
