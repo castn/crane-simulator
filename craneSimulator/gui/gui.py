@@ -65,11 +65,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
 
-    def update_debug_tree_widget(self, treewidget, beams, nodes):
+    def update_debug_tree_widget(self, beams, nodes):
         """Updates node and beam tree in 'Debug' tab"""
-        treewidget.clear()
+        self.debug_treeWidget.clear()
         tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams")]
-        treewidget.insertTopLevelItems(0, tree_items)
+        self.debug_treeWidget.insertTopLevelItems(0, tree_items)
 
     def update_fem_tree_widget(self, N, R, U):
         """Updates node and beam tree in 'Debug' tab"""
@@ -119,7 +119,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if self.enableFEM_checkbox.isChecked():
             # Build deformed crane with updated values
-            scale = 10
+            scale = self.scaleSpinBox.value()
             self.N, self.R, self.U = crane.analyze()
             deformed_nodes = self.U * scale + nodes
             plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', updated_canvas.axes, updated_canvas.fig)
@@ -155,6 +155,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.check_config():
             self.update_plot()
             nodes, beams = crane.get_crane()
+            self.update_debug_tree_widget(nodes, beams)
 
             if self.enableFEM_checkbox.isChecked():
                 self.update_fem_tree_widget(self.N, self.R, self.U)
