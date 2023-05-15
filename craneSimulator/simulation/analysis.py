@@ -12,7 +12,7 @@ class Conditions:
 
 kN = 1e3
 
-def generate_conditions(window, nodes):
+def generate_conditions(nodes):
     """Generates conditions for the crane"""
     # Support Displacement
     Conditions.Ur = [0, 0, 0,
@@ -29,6 +29,9 @@ def generate_conditions(window, nodes):
     dof_condition[3, :] = 0
     Conditions.dof_condition = dof_condition
 
+
+def apply_forces(window, nodes):
+    """Applies user-entered forces"""
     # Applied forces
     p = np.zeros_like(nodes)
     # TODO change indices
@@ -44,7 +47,6 @@ def generate_conditions(window, nodes):
 def apply_gravity(nodes, beams, A, density):
     """Applies gravity to each node"""
     for i in range(len(nodes)):
-        print(f'Run {i}')
         fitting_beams_lc = np.where(beams[:, 0] == 0)[0]
         fitting_beams_rc = np.where(beams[:, 1] == 0)[0]
         fitting_beams = np.concatenate((fitting_beams_lc, fitting_beams_rc), axis=None)
@@ -56,21 +58,26 @@ def apply_gravity(nodes, beams, A, density):
         Conditions.p[i, 2] += - ((length / 2) / 1000 * A * density * 9.81) * kN
 
 
-def remove_gravity(nodes):
-    """Resets nodes to default applied forces"""
-    p = np.zeros_like(nodes)
-    # TODO change indices
-    # Force on jib
-    p[16, 2] = -250 * kN
-    p[17, 2] = -250 * kN
-    # Force on counter jib
-    p[20, 2] = -100 * kN
-    p[21, 2] = -100 * kN
-    Conditions.p = p
+def apply_wind(dir, force):
+    if dir == 'north':
+        # force in north dir
+        print()
+    elif dir == 'east':
+        # force in east dir
+        print()
+    elif dir == 'south':
+        # force in south dir
+        print()
+    elif dir == 'west':
+        # force in west dir
+        print()
+    print('Hm not a valid direction')
 
 
 def analyze(nodes, beams, E, A):
     """Perform truss structural analysis"""
+    print('Running analysis')
+    print(Conditions.p)
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
 

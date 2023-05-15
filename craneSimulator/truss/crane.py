@@ -154,16 +154,17 @@ class Crane:
         if self.has_counter_jib:
             create_counterjib()
 
-    def enable_gravity(self):
+    def enable_gravity(self, window):
         """Applies gravity to nodes"""
+        analysis.apply_forces(window, Comps.nodes)
         analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY)
 
-    def disable_gravity(self):
+    def disable_gravity(self, window):
         """Removes gravity from nodes"""
-        analysis.remove_gravity(Comps.nodes)
+        analysis.apply_forces(window, Comps.nodes)
 
-    def analyze(self, window):
+    def analyze(self):
         """Performs the analysis of the crane"""
         nodes, beams = get_crane()
-        analysis.generate_conditions(window, nodes)
+        analysis.generate_conditions(Comps.nodes)
         return analysis.analyze(nodes, beams, self.E, self.A)

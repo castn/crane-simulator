@@ -123,7 +123,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.fem_settings.isChecked():
             # Build deformed crane with updated values
             scale = self.scaleSpinBox.value()
-            self.N, self.R, self.U = self.crane.analyze(self)
+            self.N, self.R, self.U = self.crane.analyze()
             deformed_nodes = self.U * scale + nodes
             plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', updated_canvas.axes, updated_canvas.fig)
 
@@ -148,17 +148,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.crane.build_crane()
 
         if self.check_config():
+            if self.enable_gravity.isChecked():
+                self.crane.enable_gravity(self)
+            else:
+                self.crane.disable_gravity(self)
+            
             self.update_plot()
             nodes, beams = crane.get_crane()
             self.update_debug_tree_widget(nodes, beams)
 
             if self.fem_settings.isChecked():
                 self.update_fem_tree_widget(self.N, self.R, self.U)
-
-        if self.enable_gravity.isChecked():
-            self.crane.enable_gravity()
-        else:
-            self.crane.disable_gravity()
 
         self.progressBar.setValue(100)
 
