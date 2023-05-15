@@ -386,7 +386,13 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
-                <widget class="QPlainTextEdit" name="analysis"/>
+                <widget class="QTreeWidget" name="fem_treeWidget">
+                 <column>
+                  <property name="text">
+                   <string notr="true">1</string>
+                  </property>
+                 </column>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -444,7 +450,7 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <item>
-                <widget class="QTreeWidget" name="treeWidget">
+                <widget class="QTreeWidget" name="debug_treeWidget">
                  <column>
                   <property name="text">
                    <string notr="true">1</string>

@@ -17,6 +17,7 @@ from craneSimulator.truss.dimensions import Dims
 
 class matplotlib_canvas(FigureCanvasQTAgg):
     """Creates plot"""
+
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = self.fig.add_subplot(111, projection='3d')
@@ -34,6 +35,7 @@ def create_tree_item(arr, name):
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     """Main UI window"""
+
     def __init__(self):
         """Initializes main window"""
         super(MainWindow, self).__init__()
@@ -42,8 +44,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Perform initial setups of window
         self.setupUi(self)
         self.setWindowTitle("Crane Simulator 2024")
-        self.treeWidget.setColumnCount(1)
-        self.treeWidget.setHeaderLabel("View Points of Nodes/Beams")
+        self.debug_treeWidget.setColumnCount(1)
+        self.debug_treeWidget.setHeaderLabel("View Points of Nodes/Beams")
+        self.fem_treeWidget.setColumnCount(1)
+        self.fem_treeWidget.setHeaderLabel("FEM stuff")
         # Set default size of plotBox, otherwise will shrink to minimal and needs manual adjustment
         self.plotBox.setGeometry(0, 0, 716, 544)
         # Create matplot canvas and associated toolbar
@@ -61,11 +65,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
 
-    def update_tree_widget(self, beams, nodes):
+    def update_debug_tree_widget(self, treewidget, beams, nodes):
         """Updates node and beam tree in 'Debug' tab"""
-        self.treeWidget.clear()
+        treewidget.clear()
         tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams")]
-        self.treeWidget.insertTopLevelItems(0, tree_items)
+        treewidget.insertTopLevelItems(0, tree_items)
+
+    def update_fem_tree_widget(self, N, R, U):
+        """Updates node and beam tree in 'Debug' tab"""
+        self.fem_treeWidget.clear()
+        tree_items = [create_tree_item(N, "Axial Forces (positive = tension, negative = compression)"),
+                      create_tree_item(R, "Reaction Forces (positive = upward, negative = downward)"),
+                      create_tree_item(U, "Deformation at nodes")]
+        self.fem_treeWidget.insertTopLevelItems(0, tree_items)
 
     def set_dims(self):
         """Sets dimensions from what is currently in the input fields"""
@@ -143,15 +155,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.check_config():
             self.update_plot()
             nodes, beams = crane.get_crane()
-            self.update_tree_widget(beams, nodes)
 
             if self.enableFEM_checkbox.isChecked():
-                self.analysis.appendPlainText('Axial Forces (positive = tension, negative = compression)')
-                self.analysis.appendPlainText(str(self.N[np.newaxis].T))
-                self.analysis.appendPlainText('Reaction Forces (positive = upward, negative = downward)')
-                self.analysis.appendPlainText(str(self.R))
-                self.analysis.appendPlainText('Deformation at nodes')
-                self.analysis.appendPlainText(str(self.U))
+                self.update_fem_tree_widget(self.N, self.R, self.U)
 
         if self.enable_gravity.isChecked():
             crane.enable_gravity()
