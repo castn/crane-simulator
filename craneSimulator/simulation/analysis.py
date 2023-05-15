@@ -32,8 +32,10 @@ def generate_conditions(nodes):
     # Applied forces
     p = np.zeros_like(nodes)
     # TODO change indices
+    # Force on jib
     p[16, 2] = -250 * kN
     p[17, 2] = -250 * kN
+    # Force on counter jib
     p[20, 2] = -100 * kN
     p[21, 2] = -100 * kN
     Conditions.p = p
