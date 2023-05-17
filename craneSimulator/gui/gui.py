@@ -5,12 +5,14 @@ import PySide6.QtWidgets
 from PyQt6.uic.properties import QtGui
 
 from craneSimulator.truss.crane import Crane
+from craneSimulator.util import file_handler
+from craneSimulator.util.file_handler import FileHandler
 
 sys.path.append('./')
 
 import numpy as np
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QApplication, QMessageBox, QTreeWidgetItem
+from PyQt6.QtWidgets import QApplication, QMessageBox, QTreeWidgetItem, QFileDialog
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
@@ -50,6 +52,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("Crane Simulator 2024")
         # Set menu bar actions
+        self.actionSave.triggered.connect(self.save)
         self.actionAbout.triggered.connect(self.about)
         self.actionAbout_Qt.triggered.connect(PySide6.QtWidgets.QApplication.aboutQt)
         # Set tree widgets
@@ -66,6 +69,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
 
+        self.fileHandler = FileHandler()
         self.crane = Crane()
         self.dims = Dims()
         self.set_dims()
@@ -74,6 +78,46 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
+
+    def save(self):
+        file_name, types_of_files = QFileDialog.getSaveFileName(self)
+        if file_name == "":
+            return False
+        else:
+            dictionary = dict()
+            tower = dict()
+            tower["height"] = self.towerHeight_spinbox.value()
+            tower["width"] = self.towerWidth_spinbox.value()
+            tower["segments"] = self.towerSegment_spinbox.value()
+            tower["type"] = self.towerSupportType_comboBox.currentText()
+            dictionary["tower"] = tower
+            jib = dict()
+            jib["length"] = self.jibLength_spinBox.value()
+            jib["height"] = self.jibHeight_spinBox.value()
+            jib["segments"] = self.jibSegment_spinBox.value()
+            jib["type"] = self.jibSupportType_comboBox.currentText()
+            dictionary["jib"] = jib
+            counterjib = dict()
+            counterjib["length"] = self.counterJibLength_spinBox.value()
+            counterjib["height"] = self.counterJibHeight_spinBox.value()
+            counterjib["segments"] = self.counterJibSegments_spinBox.value()
+            counterjib["type"] = self.counterJibSupportType_comboBox.currentText()
+            dictionary["counterjib"] = counterjib
+            fem = dict()
+            fem["jibLeft"] = self.jib_left_spinBox.value()
+            fem["jibRight"] = self.jib_right_spinBox.value()
+            fem["counterJibLeft"] = self.counterjib_left_spinBox.value()
+            fem["counterJibRight"] = self.counterjib_right_spinBox.value()
+            fem["scale"] = self.scaleSpinBox.value()
+            dictionary["fem"] = fem
+            gravity = dict()
+            gravity["enabled"] = self.enable_gravity.isChecked()
+            dictionary["gravity"] = gravity
+            ignorespec = dict()
+            ignorespec["enabled"] = self.ignore_specification.isChecked()
+            dictionary["ignorespec"] = ignorespec
+
+            return file_handler.save_file(file_name, dictionary)
 
     def about(self):
         QMessageBox.about(self, "About Crane Simulator 2024",
