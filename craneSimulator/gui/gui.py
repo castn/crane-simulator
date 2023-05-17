@@ -89,9 +89,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def update_fem_tree_widget(self, N, R, U):
         """Updates node and beam tree in 'Debug' tab"""
         self.fem_treeWidget.clear()
-        tree_items = [create_tree_item(N, "Axial Forces (positive = tension, negative = compression)"),
-                      create_tree_item(R, "Reaction Forces (positive = upward, negative = downward)"),
-                      create_tree_item(U, "Deformation at nodes")]
+        tree_items = [create_tree_item(N.round(decimals=4), "Axial Forces (positive = tension, negative = compression)"),
+                      create_tree_item(R.round(decimals=2), "Reaction Forces (positive = upward, negative = downward)"),
+                      create_tree_item(U.round(decimals=4), "Deformation at nodes")]
         self.fem_treeWidget.insertTopLevelItems(0, tree_items)
 
     def set_dims(self):
@@ -198,7 +198,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 return False
             counterjib_longest = crane.counterjib.get_longest_beam()
             if counterjib_longest < 500 or counterjib_longest > 2000:
-                QMessageBox.about(self, 'Error',
+                QMessageBox.about(self, 'Specification Violation',
                                   f'Your inputted counterjib parameters violate the length requirements for a beam with a length of {counterjib_longest:.4f}mm which falls outside the allows range of 500-2000mm')
                 return False
         return True
