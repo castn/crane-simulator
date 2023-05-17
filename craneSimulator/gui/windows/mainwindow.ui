@@ -604,13 +604,13 @@
         <item row="3" column="0">
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
-           <string>GroupBox</string>
+           <string>Total</string>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
            <item row="0" column="0">
             <widget class="QLabel" name="total_length_label">
              <property name="text">
-              <string>Total Length</string>
+              <string>Length</string>
              </property>
             </widget>
            </item>
@@ -627,7 +627,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="total_volumn_label">
              <property name="text">
-              <string>Total Volumn</string>
+              <string>Volumn</string>
              </property>
             </widget>
            </item>
@@ -654,14 +654,14 @@
            <item row="2" column="0">
             <widget class="QLabel" name="total_mass_volumn">
              <property name="text">
-              <string>Total Mass</string>
+              <string>Mass</string>
              </property>
             </widget>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="total_cost_label">
              <property name="text">
-              <string>Total Cost</string>
+              <string>Cost</string>
              </property>
             </widget>
            </item>
