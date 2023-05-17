@@ -152,7 +152,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.crane.enable_gravity(self)
             else:
                 self.crane.disable_gravity(self)
-            
+
             self.update_plot()
             nodes, beams = crane.get_crane()
             self.update_debug_tree_widget(nodes, beams)
@@ -167,13 +167,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if not self.ignore_specification.isChecked():
             tower_longest = crane.tower.get_longest_beam()
             if tower_longest < 500 or tower_longest > 2000:
-                QMessageBox.about(self, 'Error',
-                                  f'Your inputted tower parameters violate the length requirements for a beam with a length of {tower_longest:.4f}mm which falls outside the allows range of 500-2000mm')
+                QMessageBox.critical(self, 'Specification Violation',
+                                     f'Your inputted tower parameters violate the length requirements for a beam with a length of {tower_longest:.4f}mm which falls outside the allowed range of 500-2000mm')
                 return False
             jib_longest = crane.jib.get_longest_beam()
             if jib_longest < 500 or jib_longest > 2000:
-                QMessageBox.about(self, 'Error',
-                                  f'Your inputted jib parameters violate the length requirements for a beam with a length of {jib_longest:.4f}mm which falls outside the allows range of 500-2000mm')
+                QMessageBox.critical(self, 'Specification Violation',
+                                  f'Your inputted jib parameters violate the length requirements for a beam with a length of {jib_longest:.4f}mm which falls outside the allowed range of 500-2000mm')
                 return False
             counterjib_longest = crane.counterjib.get_longest_beam()
             if counterjib_longest < 500 or counterjib_longest > 2000:
