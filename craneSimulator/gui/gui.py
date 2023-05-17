@@ -1,6 +1,9 @@
 import logging
 import sys
 
+import PySide6.QtWidgets
+from PyQt6.uic.properties import QtGui
+
 from craneSimulator.truss.crane import Crane
 
 sys.path.append('./')
@@ -46,6 +49,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Perform initial setups of window
         self.setupUi(self)
         self.setWindowTitle("Crane Simulator 2024")
+        # Set menu bar actions
+        self.actionAbout.triggered.connect(self.about)
+        self.actionAbout_Qt.triggered.connect(PySide6.QtWidgets.QApplication.aboutQt)
+        # Set tree widgets
         self.debug_treeWidget.setColumnCount(1)
         self.debug_treeWidget.setHeaderLabel("View Points of Nodes/Beams")
         self.fem_treeWidget.setColumnCount(1)
@@ -67,6 +74,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
+
+    def about(self):
+        QMessageBox.about(self, "About Crane Simulator 2024",
+                          "The <b>Application</b> example demonstrates how to write modern GUI applications using Qt,"
+                          " with a menu bar, toolbars, and a status bar.")
 
     def update_debug_tree_widget(self, nodes, beams):
         """Updates node and beam tree in 'Debug' tab"""

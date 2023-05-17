@@ -9,6 +9,9 @@ Solltest du bereits eine eigene Umgebung habe und die willst diese nutzen, stell
 Code neu hinzugefügt hast auch in der ``environment.yml`` enthalten sind. So hat jeder die gleiche Version von den
 Paketen und es kann nicht zu blöden Fehlern kommen, weil wir mit unterschiedlichen Versionen arbeiten.
 
+Des weiteren muss noch ``pip install pyqt6 pyside6`` installiert werden. Bei Problemen kann auch statt ``pip`` conda
+verwendet werden um die Bibliotheken zu installieren.
+
 ## Update environment.yml
 
 Um manuell installierte Pakete zu der environment.yml hinzuzufügen führe folgenden
