@@ -40,7 +40,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="crane">
               <attribute name="title">
@@ -396,10 +396,69 @@
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="enable_wind">
-                 <property name="text">
+                <widget class="QGroupBox" name="wind_settings">
+                 <property name="title">
                   <string>Wind</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout_7">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="direction_label">
+                    <property name="text">
+                     <string>Direction</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="wind_direction">
+                    <item>
+                     <property name="text">
+                      <string>Front</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Left</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Right</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Back</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="wind_force_label">
+                    <property name="text">
+                     <string>Force</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QSpinBox" name="wind_force">
+                    <property name="suffix">
+                     <string> kN</string>
+                    </property>
+                    <property name="maximum">
+                     <number>500</number>
+                    </property>
+                    <property name="value">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
                <item>

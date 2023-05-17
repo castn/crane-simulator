@@ -77,7 +77,7 @@ def apply_gravity(nodes, beams, A, density):
 def apply_wind(direc, force):
     """Applies wind in specified direction with specified force to the crane"""
     print(f'{direc} - {force}')
-    if direc == 'from front':
+    if direc == 'front':
         # force in north dir
         # -y dir
         # tower: all odd nodes
@@ -90,12 +90,12 @@ def apply_wind(direc, force):
             Conditions.p[(0 + 3 * j_n), 1] = - force * kN
             Conditions.p[(2 + 3 * j_n), 1] = - force * kN
         # counterjib: top center for 1-2 towers, rest just for truss
-    elif direc == 'from right':
+    elif direc == 'right':
         # force in east dir
         # -x
         # tower: 2+4n, 3+4n
         print()
-    elif direc == 'from back':
+    elif direc == 'back':
         # force in south dir
         # +y dir
         # tower: all even nodes
@@ -106,11 +106,10 @@ def apply_wind(direc, force):
             Conditions.p[(0 + 3 * j_n), 1] = force * kN
             Conditions.p[(1 + 3 * j_n), 1] = force * kN
         print()
-    elif direc == 'from left':
+    elif direc == 'left':
         # force in west dir
         # +x dir
         print()
-    print('Hm not a valid direction')
 
 
 def analyze(nodes, beams, E, A):

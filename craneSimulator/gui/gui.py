@@ -209,8 +209,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             else:
                 self.crane.reset_forces(self)
             
-            if self.enable_wind.isChecked():
-                self.crane.enable_wind('from front', 10000)
+            if self.wind_settings.isChecked():
+                self.crane.enable_wind(self.wind_direction.currentText(), self.wind_force.value())
             else:
                 self.crane.reset_forces(self)
 
