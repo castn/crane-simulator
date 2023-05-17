@@ -82,6 +82,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def save(self):
         file_name, types_of_files = QFileDialog.getSaveFileName(self)
         if file_name == "":
+            QMessageBox.critical(self, "Error", "File name was empty. Saving configuration is not possible!")
             return False
         else:
             dictionary = dict()
@@ -110,6 +111,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             fem["counterJibRight"] = self.counterjib_right_spinBox.value()
             fem["scale"] = self.scaleSpinBox.value()
             dictionary["fem"] = fem
+            wind = dict()
+            wind["enabled"] = self.wind_settings.isChecked()
+            wind["direction"] = self.wind_direction.currentText()
+            wind["force"] = self.wind_force.value()
+            dictionary["wind"] = wind
             gravity = dict()
             gravity["enabled"] = self.enable_gravity.isChecked()
             dictionary["gravity"] = gravity
