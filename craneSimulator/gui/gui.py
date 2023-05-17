@@ -163,7 +163,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.enable_gravity.isChecked():
                 self.crane.enable_gravity(self)
             else:
-                self.crane.disable_gravity(self)
+                self.crane.reset_forces(self)
+            
+            if self.enable_wind.isChecked():
+                self.crane.enable_wind('from front', 10000)
+            else:
+                self.crane.reset_forces(self)
 
             self.update_plot()
             nodes, beams = crane.get_crane()

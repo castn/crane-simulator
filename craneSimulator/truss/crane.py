@@ -161,9 +161,11 @@ class Crane:
         """Applies gravity to nodes"""
         analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES)
         analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY)
+        # test section
+        analysis.apply_wind('from front', 1)
 
-    def disable_gravity(self, window):
-        """Removes gravity from nodes"""
+    def reset_forces(self, window):
+        """Resets forces on all nodes"""
         analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES)
 
     def enable_wind(self, direc, force):
