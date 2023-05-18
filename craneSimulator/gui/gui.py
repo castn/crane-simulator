@@ -182,8 +182,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def about(self):
         QMessageBox.about(self, "About Crane Simulator 2024",
-                          "The <b>Application</b> example demonstrates how to write modern GUI applications using Qt,"
-                          " with a menu bar, toolbars, and a status bar.")
+                          "<b>Crane Simulator 2024</b> is a software written in Python which was developed in the "
+                          "context of a project course at the TU Darmstadt. The source code is available on Github.")
 
     def update_debug_tree_widget(self, nodes, beams):
         """Updates node and beam tree in 'Debug' tab"""
