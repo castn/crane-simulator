@@ -53,6 +53,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowTitle("Crane Simulator 2024")
         # Set menu bar actions
         self.actionSave.triggered.connect(self.save)
+        self.actionExit.triggered.connect(self.on_exit)
         self.actionAbout.triggered.connect(self.about)
         self.actionAbout_Qt.triggered.connect(PySide6.QtWidgets.QApplication.aboutQt)
         # Set tree widgets
@@ -70,6 +71,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plot_layout.addWidget(self.canvas)
 
         self.fileHandler = FileHandler()
+        self.is_saved = False
         self.crane = Crane()
         self.dims = Dims()
         self.set_dims()
@@ -78,6 +80,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
+
+    def on_exit(self):
+        if self.is_saved:
+            sys.exit()
+        if self.save():
+            sys.exit()
 
     def save(self):
         file_name, types_of_files = QFileDialog.getSaveFileName(self)
@@ -122,6 +130,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             ignorespec = dict()
             ignorespec["enabled"] = self.ignore_specification.isChecked()
             dictionary["ignorespec"] = ignorespec
+
+            self.is_saved = True
 
             return file_handler.save_file(file_name, dictionary)
 
@@ -192,6 +202,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def apply_configuration(self):
         """Updates crane configuration"""
+        self.is_saved = False
         self.progressBar.reset()
         self.progressBar.setValue(0)
 
