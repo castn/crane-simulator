@@ -258,15 +258,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.set_dims()
         # Will always generate a tower
         crane.should_have_tower(True)
-        crane.set_tower_dims(self.dims.get_tower_height(), self.dims.get_tower_width(), self.dims.get_tower_segments(),
+        crane.set_tower_dims(self.dims.get_tower_height(),
+                             self.dims.get_tower_width(),
+                             self.dims.get_tower_segments(),
                              self.dims.get_tower_support_type())
         # Will always generate a jib
         crane.should_have_jib(True)
-        crane.set_jib_dims(self.dims.get_jib_length(), self.dims.get_jib_height(), self.dims.get_jib_segments())
+        crane.set_jib_dims(self.dims.get_jib_length(),
+                           self.dims.get_jib_height(),
+                           self.dims.get_jib_segments())
         # Will always generate a counter jib
         crane.should_have_counter_jib(True)
-        crane.set_counterjib_dims(self.dims.get_counter_jib_length(), self.dims.get_counter_jib_height(),
-                                  self.dims.get_counter_jib_segments(), self.dims.get_counter_jib_support_type())
+        crane.set_counterjib_dims(self.dims.get_counter_jib_length(),
+                                  self.dims.get_counter_jib_height(),
+                                  self.dims.get_counter_jib_segments(),
+                                  self.dims.get_counter_jib_support_type())
 
         self.crane.build_crane()
 
@@ -291,6 +297,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.progressBar.setValue(100)
 
     def update_info(self):
+        """Updates infobox in the bottom left"""
         total_length = crane.get_length()
         total_length = total_length / 1000
         total_volumn = total_length * self.crane.A
