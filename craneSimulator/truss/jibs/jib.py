@@ -187,6 +187,10 @@ def get_dims():
 
 def set_dims(length, height, segs):
     """Sets dimensions of the jib to passed-through values"""
+    Comps.nodes = []
+    Comps.beams = []
+    Dims.TOTAL_LENGTH = 0
+    
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height

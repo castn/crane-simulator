@@ -245,6 +245,7 @@ def set_dims(height, width, segs, sup_style):
     """Sets dimensions of the tower to passed-through values"""
     Comps.nodes = []
     Comps.beams = []
+    Dims.TOTAL_LENGTH = 0
     
     Dims.SEGMENT_HEIGHT = height / segs
     Dims.SEGMENT_WIDTH = width

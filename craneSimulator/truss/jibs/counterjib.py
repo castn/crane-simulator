@@ -290,6 +290,10 @@ def get_dims():
 
 def set_dims(length, height, segs, sup_style):
     """Sets dimensions of the counterjib to passed-through values"""
+    Comps.nodes = []
+    Comps.beams = []
+    Dims.TOTAL_LENGTH = 0
+    
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height
