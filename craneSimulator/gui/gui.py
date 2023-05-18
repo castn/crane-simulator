@@ -52,10 +52,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("Crane Simulator 2024")
         # Set menu bar actions
-        self.actionSave.triggered.connect(self.save)
-        self.actionExit.triggered.connect(self.on_exit)
-        self.actionAbout.triggered.connect(self.about)
-        self.actionAbout_Qt.triggered.connect(PySide6.QtWidgets.QApplication.aboutQt)
+        self.create_actions()
         # Set tree widgets
         self.debug_treeWidget.setColumnCount(1)
         self.debug_treeWidget.setHeaderLabel("View Points of Nodes/Beams")
@@ -81,6 +78,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
 
+    def create_actions(self):
+        self.actionSave.triggered.connect(self.save)
+        self.actionExit.triggered.connect(self.on_exit)
+        self.actionAbout.triggered.connect(self.about)
+        self.actionAbout_Qt.triggered.connect(PySide6.QtWidgets.QApplication.aboutQt)
+
     def on_exit(self):
         if self.is_saved:
             sys.exit()
@@ -93,47 +96,48 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             QMessageBox.critical(self, "Error", "File name was empty. Saving configuration is not possible!")
             return False
         else:
-            dictionary = dict()
-            tower = dict()
-            tower["height"] = self.towerHeight_spinbox.value()
-            tower["width"] = self.towerWidth_spinbox.value()
-            tower["segments"] = self.towerSegment_spinbox.value()
-            tower["type"] = self.towerSupportType_comboBox.currentText()
-            dictionary["tower"] = tower
-            jib = dict()
-            jib["length"] = self.jibLength_spinBox.value()
-            jib["height"] = self.jibHeight_spinBox.value()
-            jib["segments"] = self.jibSegment_spinBox.value()
-            jib["type"] = self.jibSupportType_comboBox.currentText()
-            dictionary["jib"] = jib
-            counterjib = dict()
-            counterjib["length"] = self.counterJibLength_spinBox.value()
-            counterjib["height"] = self.counterJibHeight_spinBox.value()
-            counterjib["segments"] = self.counterJibSegments_spinBox.value()
-            counterjib["type"] = self.counterJibSupportType_comboBox.currentText()
-            dictionary["counterjib"] = counterjib
-            fem = dict()
-            fem["jibLeft"] = self.jib_left_spinBox.value()
-            fem["jibRight"] = self.jib_right_spinBox.value()
-            fem["counterJibLeft"] = self.counterjib_left_spinBox.value()
-            fem["counterJibRight"] = self.counterjib_right_spinBox.value()
-            fem["scale"] = self.scaleSpinBox.value()
-            dictionary["fem"] = fem
-            wind = dict()
-            wind["enabled"] = self.wind_settings.isChecked()
-            wind["direction"] = self.wind_direction.currentText()
-            wind["force"] = self.wind_force.value()
-            dictionary["wind"] = wind
-            gravity = dict()
-            gravity["enabled"] = self.enable_gravity.isChecked()
-            dictionary["gravity"] = gravity
-            ignorespec = dict()
-            ignorespec["enabled"] = self.ignore_specification.isChecked()
-            dictionary["ignorespec"] = ignorespec
+            return file_handler.save_file(file_name, self.config_to_dictionary())
 
-            self.is_saved = True
-
-            return file_handler.save_file(file_name, dictionary)
+    def config_to_dictionary(self):
+        dictionary = dict()
+        tower = dict()
+        tower["height"] = self.towerHeight_spinbox.value()
+        tower["width"] = self.towerWidth_spinbox.value()
+        tower["segments"] = self.towerSegment_spinbox.value()
+        tower["type"] = self.towerSupportType_comboBox.currentText()
+        dictionary["tower"] = tower
+        jib = dict()
+        jib["length"] = self.jibLength_spinBox.value()
+        jib["height"] = self.jibHeight_spinBox.value()
+        jib["segments"] = self.jibSegment_spinBox.value()
+        jib["type"] = self.jibSupportType_comboBox.currentText()
+        dictionary["jib"] = jib
+        counterjib = dict()
+        counterjib["length"] = self.counterJibLength_spinBox.value()
+        counterjib["height"] = self.counterJibHeight_spinBox.value()
+        counterjib["segments"] = self.counterJibSegments_spinBox.value()
+        counterjib["type"] = self.counterJibSupportType_comboBox.currentText()
+        dictionary["counterjib"] = counterjib
+        fem = dict()
+        fem["jibLeft"] = self.jib_left_spinBox.value()
+        fem["jibRight"] = self.jib_right_spinBox.value()
+        fem["counterJibLeft"] = self.counterjib_left_spinBox.value()
+        fem["counterJibRight"] = self.counterjib_right_spinBox.value()
+        fem["scale"] = self.scaleSpinBox.value()
+        dictionary["fem"] = fem
+        wind = dict()
+        wind["enabled"] = self.wind_settings.isChecked()
+        wind["direction"] = self.wind_direction.currentText()
+        wind["force"] = self.wind_force.value()
+        dictionary["wind"] = wind
+        gravity = dict()
+        gravity["enabled"] = self.enable_gravity.isChecked()
+        dictionary["gravity"] = gravity
+        ignorespec = dict()
+        ignorespec["enabled"] = self.ignore_specification.isChecked()
+        dictionary["ignorespec"] = ignorespec
+        self.is_saved = True
+        return dictionary
 
     def about(self):
         QMessageBox.about(self, "About Crane Simulator 2024",
@@ -235,20 +239,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.update_plot()
             nodes, beams = crane.get_crane()
             self.update_debug_tree_widget(nodes, beams)
-            total_length = crane.get_length()
-            total_length = total_length / 1000
-            total_volumn = total_length * self.crane.A
-            total_mass = total_volumn * self.crane.DENSITY
-            total_cost = total_mass / 1000 * 1000
-            self.total_length.setText(f'{(total_length):.3f} m')
-            self.total_volumn.setText(f'{(total_volumn):.3f} m\u00B3')
-            self.total_mass.setText(f'{(total_mass):.3f} kg')
-            self.total_cost.setText(f'{(total_cost):.3f} \u20AC')
+            self.update_info()
 
             if self.fem_settings.isChecked():
                 self.update_fem_tree_widget(self.N, self.R, self.U)
 
         self.progressBar.setValue(100)
+
+    def update_info(self):
+        total_length = crane.get_length()
+        total_length = total_length / 1000
+        total_volumn = total_length * self.crane.A
+        total_mass = total_volumn * self.crane.DENSITY
+        total_cost = total_mass / 1000 * 1000
+        self.total_length.setText(f'{(total_length):.3f} m')
+        self.total_volumn.setText(f'{(total_volumn):.3f} m\u00B3')
+        self.total_mass.setText(f'{(total_mass):.3f} kg')
+        self.total_cost.setText(f'{(total_cost):.3f} \u20AC')
 
     def check_config(self):
         """Checks if all beams are within the required range"""
