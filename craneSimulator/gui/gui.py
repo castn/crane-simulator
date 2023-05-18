@@ -7,6 +7,7 @@ from PyQt6.uic.properties import QtGui
 from craneSimulator.truss.crane import Crane
 from craneSimulator.util import file_handler
 from craneSimulator.util.file_handler import FileHandler
+from craneSimulator.util.string_handler import string_to_boolean
 
 sys.path.append('./')
 
@@ -79,10 +80,49 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.apply_button.clicked.connect(self.apply_configuration)
 
     def create_actions(self):
+        self.actionOpen.triggered.connect(self.open)
         self.actionSave.triggered.connect(self.save)
         self.actionExit.triggered.connect(self.on_exit)
         self.actionAbout.triggered.connect(self.about)
         self.actionAbout_Qt.triggered.connect(PySide6.QtWidgets.QApplication.aboutQt)
+
+    def open(self):
+        file_name, types_of_files = QFileDialog.getOpenFileName(self)
+        if file_name != "":
+            self.fileHandler.load_file(file_name)
+            if self.fileHandler.config == type(None):
+                QMessageBox.critical(self, "Error", "Could not load config. Possible error while reading the file")
+            else:
+                config = self.fileHandler.config
+                tower = config.get("tower")
+                self.towerHeight_spinbox.setValue(int(tower.get("height")))
+                self.towerWidth_spinbox.setValue(int(tower.get("width")))
+                self.towerSegment_spinbox.setValue(int(tower.get("segments")))
+                self.towerSupportType_comboBox.setCurrentText(tower.get("type"))
+                jib = config.get("jib")
+                self.jibLength_spinBox.setValue(int(jib.get("length")))
+                self.jibHeight_spinBox.setValue(int(jib.get("height")))
+                self.jibSegment_spinBox.setValue(int(jib.get("segments")))
+                self.jibSupportType_comboBox.setCurrentText(jib.get("type"))
+                counterjib = config.get("counterjib")
+                self.counterJibLength_spinBox.setValue(int(counterjib.get("length")))
+                self.counterJibHeight_spinBox.setValue(int(counterjib.get("height")))
+                self.counterJibSegments_spinBox.setValue(int(counterjib.get("segments")))
+                self.counterJibSupportType_comboBox.setCurrentText(counterjib.get("type"))
+                fem = config.get("fem")
+                self.jib_left_spinBox.setValue(int(fem.get("jibLeft")))
+                self.jib_right_spinBox.setValue(int(fem.get("jibRight")))
+                self.counterjib_left_spinBox.setValue(int(fem.get("counterJibLeft")))
+                self.counterjib_right_spinBox.setValue(int(fem.get("counterJibRight")))
+                self.scaleSpinBox.setValue(int(fem.get("scale")))
+                wind = config.get("wind")
+                self.wind_settings.setChecked(string_to_boolean(wind.get("enabled")))
+                self.wind_direction.setCurrentText(wind.get("direction"))
+                self.wind_force.setValue(int(wind.get("force")))
+                gravity = config.get("gravity")
+                self.enable_gravity.setChecked(string_to_boolean(gravity.get("enabled")))
+                ignorespec = config.get("ignorespec")
+                self.ignore_specification.setChecked(string_to_boolean(ignorespec.get("enabled")))
 
     def on_exit(self):
         if self.is_saved:
@@ -93,7 +133,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def save(self):
         file_name, types_of_files = QFileDialog.getSaveFileName(self)
         if file_name == "":
-            QMessageBox.critical(self, "Error", "File name was empty. Saving configuration is not possible!")
             return False
         else:
             return file_handler.save_file(file_name, self.config_to_dictionary())
