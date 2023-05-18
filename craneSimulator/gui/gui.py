@@ -1,8 +1,6 @@
-import logging
 import sys
 
 import PySide6.QtWidgets
-from PyQt6.uic.properties import QtGui
 
 from craneSimulator.truss.crane import Crane
 from craneSimulator.util import file_handler
@@ -11,7 +9,6 @@ from craneSimulator.util.string_handler import string_to_boolean
 
 sys.path.append('./')
 
-import numpy as np
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QApplication, QMessageBox, QTreeWidgetItem, QFileDialog
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
@@ -83,6 +80,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionOpen.triggered.connect(self.open)
         self.actionSave.triggered.connect(self.save)
         self.actionExit.triggered.connect(self.on_exit)
+        self.actionReport_bug.triggered.connect(self.report_bug)
         self.actionAbout.triggered.connect(self.about)
         self.actionAbout_Qt.triggered.connect(PySide6.QtWidgets.QApplication.aboutQt)
 
@@ -179,6 +177,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         dictionary["ignorespec"] = ignorespec
         self.is_saved = True
         return dictionary
+
+    def report_bug(self):
+        QMessageBox.about(self, "Bug Report",
+                          "You found a bug and want to report it? Great, please open an issue on "
+                          "<a href='https://github.com/'>Github</a> where you decribe the bug in as much details as possible. "
+                          "If you can please add screenshots or anything else. That can help us to fix it as soon as possible")
 
     def about(self):
         QMessageBox.about(self, "About Crane Simulator 2024",
