@@ -60,7 +60,7 @@ def apply_forces(window, nodes, end_tower, end_jib):
     Conditions.p = p
 
 
-def apply_gravity(nodes, beams, A, density):
+def apply_gravity(nodes, beams, A, density, grav_const):
     """Applies gravity to each node"""
     for i in range(len(nodes)):
         fitting_beams_lc = np.where(beams[:, 0] == i)[0]
@@ -71,7 +71,7 @@ def apply_gravity(nodes, beams, A, density):
             start_float = np.array(beams[fitting_beams[j], 0]).astype(float)
             end_float = np.array(beams[fitting_beams[j], 1]).astype(float)
             length += np.linalg.norm(end_float - start_float)
-        Conditions.p[i, 2] += - ((length / 2) / 1000 * A * density * 9.81) * kN
+        Conditions.p[i, 2] += - ((length / 2) / 1000 * A * density * grav_const) * kN
 
 
 def apply_wind(direc, force):
@@ -94,7 +94,13 @@ def apply_wind(direc, force):
         # force in east dir
         # -x
         # tower: 2+4n, 3+4n
-        print()
+        for t_n in range(int(Dims.TOWER_END  / 4) - 1):
+            Conditions.p[(2 + 4 * t_n), 0] = - force * kN
+            Conditions.p[(3 + 4 * t_n), 0] = - force * kN
+        # jib: last 3
+        for j_n in range(int(Dims.JIB_END - 3), int(Dims.JIB_END)):
+            Conditions.p[j_n, 0] = - force * kN
+        # counterjib: none
     elif direc == 'back':
         # force in south dir
         # +y dir
@@ -105,11 +111,18 @@ def apply_wind(direc, force):
         for j_n in range(Dims.TOWER_END, Dims.JIB_END):
             Conditions.p[(0 + 3 * j_n), 1] = force * kN
             Conditions.p[(1 + 3 * j_n), 1] = force * kN
-        print()
+        # counterjib: top center for 1-2 towers, rest just for truss
     elif direc == 'left':
         # force in west dir
         # +x dir
-        print()
+        # tower: 2+4n, 3+4n
+        for t_n in range(int(Dims.TOWER_END  / 4) - 1):
+            Conditions.p[(0 + 4 * t_n), 0] = force * kN
+            Conditions.p[(1 + 4 * t_n), 0] = force * kN
+        # jib: none
+        # counterjib: truss last 3; last 2 plus tower
+        for cj_n in range(int(Dims.COUNTERJIB_END - 2), int(Dims.COUNTERJIB_END)):
+            Conditions.p[cj_n, 0] = force * kN
 
 
 def analyze(nodes, beams, E, A):

@@ -143,6 +143,7 @@ class Crane:
         # Cross section of each beam
         self.A = 0.01  # 0.01m^2
         self.DENSITY = 7850
+        self.GRAVITY_CONSTANT = 9.81
 
         self.has_tower = True
         self.has_jib = True
@@ -160,9 +161,7 @@ class Crane:
     def enable_gravity(self, window):
         """Applies gravity to nodes"""
         analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES)
-        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY)
-        # test section
-        analysis.apply_wind('from front', 1)
+        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY, self.GRAVITY_CONSTANT)
 
     def reset_forces(self, window):
         """Resets forces on all nodes"""
