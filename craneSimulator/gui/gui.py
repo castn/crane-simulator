@@ -71,7 +71,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dims = Dims()
         self.set_dims()
         self.apply_configuration()
-        self.update_plot()
 
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
@@ -240,14 +239,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Build undeformed crane with updated values
         nodes, beams = crane.get_crane()
-        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', updated_canvas.axes, updated_canvas.fig)
+        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.canvas.axes, self.canvas.fig)
 
         if self.fem_settings.isChecked():
             # Build deformed crane with updated values
             muliplier = self.multiplierSpinBox.value()
             self.N, self.R, self.U = self.crane.analyze()
             deformed_nodes = self.U * muliplier + nodes
-            plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', updated_canvas.axes, updated_canvas.fig)
+            plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', self.canvas.axes, self.canvas.fig)
 
     def apply_configuration(self):
         """Updates crane configuration"""
