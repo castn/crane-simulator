@@ -114,7 +114,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.jib_right_spinBox.setValue(int(fem.get("jibRight")))
         self.counterjib_left_spinBox.setValue(int(fem.get("counterJibLeft")))
         self.counterjib_right_spinBox.setValue(int(fem.get("counterJibRight")))
-        self.scaleSpinBox.setValue(int(fem.get("scale")))
+        self.multiplierSpinBox.setValue(int(fem.get("scale")))
         wind = config.get("wind")
         self.wind_settings.setChecked(string_to_boolean(wind.get("enabled")))
         self.wind_direction.setCurrentText(wind.get("direction"))
@@ -162,7 +162,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         fem["jibRight"] = self.jib_right_spinBox.value()
         fem["counterJibLeft"] = self.counterjib_left_spinBox.value()
         fem["counterJibRight"] = self.counterjib_right_spinBox.value()
-        fem["scale"] = self.scaleSpinBox.value()
+        fem["scale"] = self.multiplierSpinBox.value()
         dictionary["fem"] = fem
         wind = dict()
         wind["enabled"] = self.wind_settings.isChecked()
