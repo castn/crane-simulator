@@ -461,14 +461,14 @@
                  </property>
                  <layout class="QFormLayout" name="formLayout_6">
                   <item row="4" column="0">
-                   <widget class="QLabel" name="scale_label">
+                   <widget class="QLabel" name="multiplier_label">
                     <property name="text">
-                     <string>Scale</string>
+                     <string>Multiplier</string>
                     </property>
                    </widget>
                   </item>
                   <item row="4" column="1">
-                   <widget class="QSpinBox" name="scaleSpinBox">
+                   <widget class="QSpinBox" name="multiplierSpinBox">
                     <property name="minimum">
                      <number>1</number>
                     </property>
@@ -594,38 +594,6 @@
                   </size>
                  </property>
                 </spacer>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="fem">
-              <attribute name="title">
-               <string>FEM</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout">
-               <item>
-                <widget class="QTreeWidget" name="fem_treeWidget">
-                 <column>
-                  <property name="text">
-                   <string notr="true">1</string>
-                  </property>
-                 </column>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="debug">
-              <attribute name="title">
-               <string>Debug</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout_7">
-               <item>
-                <widget class="QTreeWidget" name="debug_treeWidget">
-                 <column>
-                  <property name="text">
-                   <string notr="true">1</string>
-                  </property>
-                 </column>
-                </widget>
                </item>
               </layout>
              </widget>
@@ -804,55 +772,80 @@
           </item>
          </layout>
         </widget>
-        <widget class="QGroupBox" name="outputBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>0</number>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>7</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="title">
-          <string>Output</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_8">
-          <item>
-           <widget class="QPlainTextEdit" name="output">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="clear_button">
+         <widget class="QWidget" name="console_output">
+          <attribute name="title">
+           <string>Console</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <item>
+            <widget class="QPlainTextEdit" name="output">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="clear_button">
+               <property name="text">
+                <string>Clear</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="fem_output">
+          <attribute name="title">
+           <string>FEM</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <widget class="QTreeWidget" name="fem_treeWidget">
+             <column>
               <property name="text">
-               <string>Clear</string>
+               <string notr="true">1</string>
               </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="debug_output">
+          <attribute name="title">
+           <string>Debug</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_11">
+           <item>
+            <widget class="QTreeWidget" name="debug_treeWidget">
+             <column>
+              <property name="text">
+               <string notr="true">1</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </widget>
       </item>
@@ -866,7 +859,7 @@
      <x>0</x>
      <y>0</y>
      <width>1022</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -931,7 +924,6 @@
   <tabstop>jibHeight_spinBox</tabstop>
   <tabstop>counterJibLength_spinBox</tabstop>
   <tabstop>counterJibHeight_spinBox</tabstop>
-  <tabstop>output</tabstop>
   <tabstop>clear_button</tabstop>
  </tabstops>
  <resources/>

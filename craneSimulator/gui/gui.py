@@ -244,9 +244,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if self.fem_settings.isChecked():
             # Build deformed crane with updated values
-            scale = self.scaleSpinBox.value()
+            muliplier = self.multiplierSpinBox.value()
             self.N, self.R, self.U = self.crane.analyze()
-            deformed_nodes = self.U * scale + nodes
+            deformed_nodes = self.U * muliplier + nodes
             plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', updated_canvas.axes, updated_canvas.fig)
 
     def apply_configuration(self):
