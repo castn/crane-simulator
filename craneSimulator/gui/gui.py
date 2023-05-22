@@ -246,13 +246,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             muliplier = self.multiplierSpinBox.value()
             self.N, self.R, self.U = self.crane.analyze()
             deformed_nodes = self.U * muliplier + nodes
-            plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', self.canvas.axes, self.canvas.fig)
+            #plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', self.canvas.axes, self.canvas.fig)
+            plotter.plot_deformation(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig)
             print("Jib displacement at front where forces are applied")
             a = crane.Dims.JIB_NUM_NODES
             b = nodes[a - 2]
             c = nodes[a - 1]
-            print(deformed_nodes[a - 2] -b)
-            print(deformed_nodes[a - 1] -c)
+            print(deformed_nodes[a - 2] - b)
+            print(deformed_nodes[a - 1] - c)
 
     def apply_configuration(self):
         """Updates crane configuration"""
@@ -284,7 +285,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.check_config():
             if not self.enable_gravity.isChecked() or not self.wind_settings.isChecked():
                 self.crane.reset_forces(self)
-            
+
             if self.enable_gravity.isChecked():
                 self.crane.enable_gravity(self)
 
