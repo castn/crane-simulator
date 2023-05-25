@@ -49,9 +49,9 @@ def plot_deformation(nodes, deformed_nodes, beams, line_style, ax, fig):
         difference = numpy.array([[xi, xf], [yi, yf], [zi, zf]]) - numpy.array([[dxi, dxf], [dyi, dyf], [dzi, dzf]])
 
         if numpy.all(difference == numpy.array([[0,0],[0, 0],[0, 0]])):
-            line = ax.plot([xi, xf], [yi, yf], [zi, zf], color="g", linestyle=line_style, linewidth=LINE_WIDTH)
+            line = ax.plot([dxi, dxf], [dyi, dyf], [dzi, dzf], color="g", linestyle=line_style, linewidth=LINE_WIDTH)
         else:
-            line = ax.plot([xi, xf], [yi, yf], [zi, zf], color="r", linestyle=line_style, linewidth=LINE_WIDTH)
+            line = ax.plot([dxi, dxf], [dyi, dyf], [dzi, dzf], color="r", linestyle=line_style, linewidth=LINE_WIDTH)
         line = line[0]
     line.set_label("Deformed")
     fig.legend(prop={'size': 10})
