@@ -74,61 +74,93 @@ def apply_gravity(nodes, beams, A, density, grav_const):
         Conditions.p[i, 2] += - ((length / 2) / 1000 * A * density * grav_const) * kN
 
 
-def apply_wind(direc, force):
+def apply_wind(direc, force, cj_sup_type, cj_end):
     """Applies wind in specified direction with specified force to the crane"""
     print(f'{direc} - {force}')
     if direc == 'front':
-        # force in north dir
-        # -y dir
-        # tower: all odd nodes
-        print(Dims.TOWER_END / 2)
-        for t_n in range(int(Dims.TOWER_END / 2)):
-            Conditions.p[(2 * t_n + 1), 1] = - force * kN
-        # jib: 0+3n (top), 2+3n (bot)
-        print(Dims.JIB_END / 3)
-        for j_n in range(int(Dims.TOWER_END), int(Dims.JIB_END / 3)):
-            Conditions.p[(0 + 3 * j_n), 1] = - force * kN
-            Conditions.p[(2 + 3 * j_n), 1] = - force * kN
-        # counterjib: top center for 1-2 towers, rest just for truss
+        apply_wind_front(force, cj_sup_type, cj_end)
     elif direc == 'right':
-        # force in east dir
-        # -x
-        # tower: 2+4n, 3+4n
-        for t_n in range(int(Dims.TOWER_END  / 4) - 1):
-            Conditions.p[(2 + 4 * t_n), 0] = - force * kN
-            Conditions.p[(3 + 4 * t_n), 0] = - force * kN
-        # jib: last 3
-        for j_n in range(int(Dims.JIB_END - 3), int(Dims.JIB_END)):
-            Conditions.p[j_n, 0] = - force * kN
-        # counterjib: none
+        apply_wind_right(force)
     elif direc == 'back':
-        # force in south dir
-        # +y dir
-        # tower: all even nodes
-        for t_n in range(Dims.TOWER_END):
-            Conditions.p[2 * t_n, 1] = force * kN
-        # jib: 0+3n (top), 1+3n (bot)
-        for j_n in range(Dims.TOWER_END, Dims.JIB_END):
-            Conditions.p[(0 + 3 * j_n), 1] = force * kN
-            Conditions.p[(1 + 3 * j_n), 1] = force * kN
-        # counterjib: top center for 1-2 towers, rest just for truss
+        apply_wind_back(force, cj_sup_type, cj_end)
     elif direc == 'left':
-        # force in west dir
-        # +x dir
-        # tower: 2+4n, 3+4n
-        for t_n in range(int(Dims.TOWER_END  / 4) - 1):
-            Conditions.p[(0 + 4 * t_n), 0] = force * kN
-            Conditions.p[(1 + 4 * t_n), 0] = force * kN
-        # jib: none
-        # counterjib: truss last 3; last 2 plus tower
-        for cj_n in range(int(Dims.COUNTERJIB_END - 2), int(Dims.COUNTERJIB_END)):
-            Conditions.p[cj_n, 0] = force * kN
+        apply_wind_left(force, cj_sup_type)
 
+def apply_wind_front(force, cj_sup_type, cj_end):
+    # force in north dir
+    # y dir
+    # tower: all odd nodes
+    for t_n in range(int(Dims.TOWER_END / 2)):
+        Conditions.p[(1 + 2 * t_n), 1] = force * kN
+    # jib: 0+3n (top), 2+3n (bot)
+    for j_n in range(int(Dims.TOWER_END), int(Dims.JIB_END / 3)):
+        Conditions.p[(0 + 3 * j_n), 1] = force * kN
+        Conditions.p[(2 + 3 * j_n), 1] = force * kN
+    # counterjib: top center for 1-2 towers, rest just for truss
+    for cj_n in range(int(Dims.JIB_END), int(cj_end / 2)):
+        Conditions.p[Dims.JIB_END + (1 + 2 * j_n), 1] = force * kN
+    if cj_sup_type == 'Truss':
+        for cj_n in range(cj_end, int(Dims.COUNTERJIB_END)):
+            Conditions.p[cj_n, 1] = force * kN
+    elif cj_sup_type == 'Single tower':
+        Conditions.p[int(Dims.COUNTERJIB_END), 1] = force * kN
+    elif cj_sup_type == 'Twin towers':
+        Conditions.p[int(Dims.COUNTERJIB_END) - 1, 1] = force * kN
+
+def apply_wind_right(force):
+    # force in east dir
+    # -x
+    # tower: 2+4n, 3+4n
+    for t_n in range(int(Dims.TOWER_END  / 4) - 1):
+        Conditions.p[(2 + 4 * t_n), 0] = - force * kN
+        Conditions.p[(3 + 4 * t_n), 0] = - force * kN
+    # jib: last 3
+    for j_n in range(int(Dims.JIB_END) - 3, int(Dims.JIB_END)):
+        Conditions.p[j_n, 0] = - force * kN
+    # counterjib: none
+
+def apply_wind_back(force, cj_sup_type, cj_end):
+    # force in south dir
+    # -y dir
+    # tower: all even nodes
+    for t_n in range(Dims.TOWER_END):
+        Conditions.p[2 * t_n, 1] = - force * kN
+    print('Completed tower')
+    # jib: 0+3n (top), 1+3n (bot)
+    for j_n in range(Dims.TOWER_END, int(Dims.JIB_END / 3)):
+        Conditions.p[(0 + 3 * j_n), 1] = - force * kN
+        Conditions.p[(1 + 3 * j_n), 1] = - force * kN
+    print('Completed jib')
+    # counterjib: top center for 1-2 towers, rest just for truss
+    for cj_n in range(int(Dims.JIB_END), int(cj_end / 2)):
+        Conditions.p[Dims.JIB_END + (0 + 2 * j_n), 1] = - force * kN
+    if cj_sup_type == 'Truss':
+        for cj_n in range(cj_end, int(Dims.COUNTERJIB_END)):
+            Conditions.p[cj_n, 1] = - force * kN
+    elif cj_sup_type == 'Single tower' or cj_sup_type == 'Twin towers':
+        Conditions.p[int(Dims.COUNTERJIB_END), 1] = - force * kN
+
+def apply_wind_left(force, cj_sup_type):
+    # force in west dir
+    # +x dir
+    # tower: 2+4n, 3+4n
+    for t_n in range(int(Dims.TOWER_END  / 4) - 1):
+        Conditions.p[(0 + 4 * t_n), 0] = force * kN
+        Conditions.p[(1 + 4 * t_n), 0] = force * kN
+    # jib: none
+    # counterjib: truss last 3; last 2 plus tower
+    if cj_sup_type == 'Twin towers':
+        start_cj_n = int(Dims.COUNTERJIB_END) - 4
+    elif cj_sup_type == 'None':
+        start_cj_n = int(Dims.COUNTERJIB_END) - 2
+    else:
+        start_cj_n = int(Dims.COUNTERJIB_END) - 3
+    for cj_n in range(start_cj_n, int(Dims.COUNTERJIB_END)):
+        Conditions.p[cj_n, 0] = force * kN
 
 def analyze(nodes, beams, E, A):
     """Perform truss structural analysis"""
     print('Forces')
-    print(Conditions.p)
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
 

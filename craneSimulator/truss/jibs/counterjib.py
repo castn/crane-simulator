@@ -135,7 +135,7 @@ def create_support():
 
 def create_truss_support():
     """Creates truss style support structure for the counterjib"""
-    support_start = len(Comps.nodes)
+    support_start = Dims.END_CJ
     for i in range(Dims.SEGMENTS + 1):
         # create required nodes
         if i == 0:
@@ -234,6 +234,16 @@ def get_longest_beam():
     return Dims.LONGEST_BEAM
 
 
+def get_support_type():
+    """Returns support type of counterjib"""
+    return Dims.SUPPORT_TYPE
+
+
+def get_end_cj():
+    """Returns end of counterjib where support starts (if applicable)"""
+    return Dims.END_CJ
+
+
 def append_beam(start_node, end_node):
     """
     Creates a beam between 2 given points and adds the length to a running total
@@ -293,7 +303,7 @@ def set_dims(length, height, segs, sup_style):
     Comps.nodes = []
     Comps.beams = []
     Dims.TOTAL_LENGTH = 0
-    
+
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height

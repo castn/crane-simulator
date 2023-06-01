@@ -14,7 +14,6 @@ class Dims:
     TOWER_HEIGHT = 0
     TOWER_WIDTH = 0
     TOWER_NUM_NODES = 0
-    
     JIB_NUM_NODES = 0
 
 
@@ -169,7 +168,7 @@ class Crane:
 
     def enable_wind(self, direc, force):
         """Applies wind in given direction with given force"""
-        analysis.apply_wind(direc.lower(), force)
+        analysis.apply_wind(direc.lower(), force, counterjib.get_support_type(), counterjib.get_end_cj())
 
     def analyze(self):
         """Performs the analysis of the crane"""
