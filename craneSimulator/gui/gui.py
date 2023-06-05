@@ -59,11 +59,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Set default size of plotBox, otherwise will shrink to minimal and needs manual adjustment
         self.plotBox.setGeometry(0, 0, 716, 544)
         # Create matplot canvas and associated toolbar
-        self.canvas = matplotlib_canvas(self, width=5, height=4, dpi=100)
-        self.toolbar = NavigationToolbar(self.canvas, self)
+        self.canvas = None #matplotlib_canvas(self, width=5, height=4, dpi=100)
+        self.toolbar = None
         # Add canvas and toolbar to dedicated widget in this window
-        self.plot_layout.addWidget(self.toolbar)
-        self.plot_layout.addWidget(self.canvas)
 
         self.fileHandler = FileHandler()
         self.is_saved = False
@@ -248,12 +246,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             deformed_nodes = self.U * muliplier + nodes
             #plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', self.canvas.axes, self.canvas.fig)
             plotter.plot_deformation(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig)
-            print("Jib displacement at front where forces are applied")
-            a = crane.Dims.JIB_NUM_NODES
-            b = nodes[a - 2]
-            c = nodes[a - 1]
-            print(deformed_nodes[a - 2] - b)
-            print(deformed_nodes[a - 1] - c)
+            self.output.appendPlainText("Jib displacement at front where forces are applied")
+            self.output.appendPlainText(
+                str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - nodes[crane.Dims.JIB_NUM_NODES - 2]))
+            self.output.appendPlainText(
+                str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 1] - nodes[crane.Dims.JIB_NUM_NODES - 1]))
+            self.output.appendPlainText("\nCounter Jib displacement at back where forces are applied")
+            self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 2] - nodes[len(nodes) - 2]))
+            self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 1] - nodes[len(nodes) - 1]))
 
     def apply_configuration(self):
         """Updates crane configuration"""
