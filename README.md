@@ -21,4 +21,4 @@ die unterste Zeile mit dem ``prefix:`` und committe die Änderungen.
 
 ## Oder
 
-Nutz die Python-Installation die schon auf deinem Rechner ist solange diese Numpy hat
+Nutze die Python-Installation die schon auf deinem Rechner ist solange diese Numpy und PyQT6 hat
