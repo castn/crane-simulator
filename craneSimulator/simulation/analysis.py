@@ -176,17 +176,17 @@ def analyze(nodes, beams, E, A):
     K = np.zeros([total_number_of_dof, total_number_of_dof])                                                                # Global stiffness matrix
     for k in range(number_of_elements):
         aux = dof * beams[k, :]
-        index = np.r_[aux[0]:aux[0] + dof, aux[1]:aux[1] + dof]  # Save dof at each node
+        index = np.r_[aux[0]:aux[0] + dof, aux[1]:aux[1] + dof]                                                             # Save dof at each node
         ES = np.dot(transformation_vector[k][np.newaxis].transpose() * E * A, transformation_vector[k][np.newaxis]) / L[k]  # Stiffness for each element (Local stiffness for each element)
         K[np.ix_(index, index)] = K[np.ix_(index, index)] + ES
     
     free_dof = Conditions.dof_condition.flatten().nonzero()[0]                                                              # Get all DOF that are NOT defined as zero (can move)
     support_dof = (Conditions.dof_condition.flatten() == 0).nonzero()[0]                                                    # Get all DOF that are defined as zero (can't move; manully defined above)
     
-    K_topleft = K[np.ix_(free_dof, free_dof)]                                                                               # Teil der Globalen Steifigkeitsmatrix https://youtu.be/Y-ILnLMZYMw?t=2381
-    K_topright = K[np.ix_(free_dof, support_dof)]                                                                           # Siehe K_topleft
-    K_bottomleft = K_topright.transpose()                                                                                   # Siehe K_topleft
-    K_bottomright = K[np.ix_(support_dof, support_dof)]                                                                     # Siehe K_topleft
+    K_topleft = K[np.ix_(free_dof, free_dof)]                                                                               # Part of global stiffness matrix https://youtu.be/Y-ILnLMZYMw?t=2381
+    K_topright = K[np.ix_(free_dof, support_dof)]                                                                           # See K_topleft
+    K_bottomleft = K_topright.transpose()                                                                                   # See K_topleft
+    K_bottomright = K[np.ix_(support_dof, support_dof)]                                                                     # See K_topleft
     
     p_flatten = Conditions.p.flatten()[free_dof]                                                                            # Flatten only free_dof
     Uf = np.linalg.lstsq(K_topleft, p_flatten, rcond=None)[0]                                                               # Deformation at all nodes with free DOF

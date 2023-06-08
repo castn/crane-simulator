@@ -186,10 +186,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                           "<b>Crane Simulator 2024</b> is a software written in Python which was developed in the "
                           "context of a project course at the TU Darmstadt. The source code is available on Github.")
 
-    def update_debug_tree_widget(self, nodes, beams):
+    def update_debug_tree_widget(self, nodes, beams, def_nodes):
         """Updates node and beam tree in 'Debug' tab"""
         self.debug_treeWidget.clear()
-        tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams")]
+        tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams"), create_tree_item(def_nodes, "Deformed nodes")]
         self.debug_treeWidget.insertTopLevelItems(0, tree_items)
 
     def update_fem_tree_widget(self, N, R, U):
@@ -241,9 +241,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if self.fem_settings.isChecked():
             # Build deformed crane with updated values
-            muliplier = self.multiplierSpinBox.value()
+            multiplier = self.multiplierSpinBox.value()
             self.N, self.R, self.U = self.crane.analyze()
-            deformed_nodes = self.U * muliplier + nodes
+            deformed_nodes = self.U * multiplier + nodes
             #plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', self.canvas.axes, self.canvas.fig)
             plotter.plot_deformation(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig)
             self.output.appendPlainText("Jib displacement at front where forces are applied")
@@ -294,7 +294,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             self.update_plot()
             nodes, beams = crane.get_crane()
-            self.update_debug_tree_widget(nodes, beams)
+            self.update_debug_tree_widget(nodes, beams, nodes + self.U)
             self.update_info()
 
             if self.fem_settings.isChecked():
