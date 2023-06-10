@@ -303,7 +303,8 @@ def set_dims(length, height, segs, sup_style):
     Comps.nodes = []
     Comps.beams = []
     Dims.TOTAL_LENGTH = 0
-
+    Dims.LONGEST_BEAM = 0
+    
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height
