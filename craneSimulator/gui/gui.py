@@ -255,6 +255,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.output.appendPlainText("\nCounter Jib displacement at back where forces are applied")
             self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 2] - nodes[len(nodes) - 2]))
             self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 1] - nodes[len(nodes) - 1]))
+            self.output.appendPlainText('\n')
 
     def apply_configuration(self):
         """Updates crane configuration"""

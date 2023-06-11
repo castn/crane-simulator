@@ -75,10 +75,10 @@ def plot_deformation_with_grad(nodes, deformed_nodes, beams, line_style, ax, fig
         line = ax.plot([dxi, dxf], [dyi, dyf], [dzi, dzf], color=cmap(norm(axial_forces[i])), linestyle=line_style, linewidth=LINE_WIDTH)
         line = line[0]
     line.set_label("Deformed")
-    cmap_legend = [mpl.lines.Line2D([0], [0], color=cmap(0.), lw=4, label='Low'),
+    cmap_legend = [mpl.lines.Line2D([0], [0], color=cmap(0.), lw=4, label=f'Low ({min(axial_forces):.0f})'),
                     mpl.lines.Line2D([0], [0], color=cmap(.5), lw=4, label='Medium'),
-                    mpl.lines.Line2D([0], [0], color=cmap(1.), lw=4, label='High')]
-    fig.legend(handles=cmap_legend, prop={'size': 10}, loc='upper left', title='Axial forces')
+                    mpl.lines.Line2D([0], [0], color=cmap(1.), lw=4, label=f'High ({max(axial_forces):.0f})')]
+    fig.legend(handles=cmap_legend, prop={'size': 10}, loc='upper left', title='Absolute axial forces')
     fig.gca().set_aspect('equal')
 
 def display():
