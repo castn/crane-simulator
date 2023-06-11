@@ -139,8 +139,7 @@ class Crane:
     def __init__(self):
         # Youngs Module
         self.E = 210e9  # 210GPa
-        # Cross section of each beam
-        self.A = 0.01  # 0.01m^2
+        self.A = 0.01  # Cross-section of beams (0.0025-0.0625)
         self.DENSITY = 7850
         self.GRAVITY_CONSTANT = 9.81
 
