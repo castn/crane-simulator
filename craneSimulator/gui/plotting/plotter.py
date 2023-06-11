@@ -65,7 +65,7 @@ def plot_deformation(nodes, deformed_nodes, beams, line_style, ax, fig):
 def plot_deformation_with_grad(nodes, deformed_nodes, beams, line_style, ax, fig, axial_forces):
     axial_forces = np.absolute(axial_forces)
     norm = mpl.colors.Normalize(min(axial_forces), max(axial_forces))
-    cmap = cm.get_cmap('gist_heat')
+    cmap = cm.get_cmap('copper')
     for i in range(len(beams)):
         # Deformed nodes
         dxi, dxf = deformed_nodes[beams[i, 0], 0], deformed_nodes[beams[i, 1], 0]
@@ -75,7 +75,10 @@ def plot_deformation_with_grad(nodes, deformed_nodes, beams, line_style, ax, fig
         line = ax.plot([dxi, dxf], [dyi, dyf], [dzi, dzf], color=cmap(norm(axial_forces[i])), linestyle=line_style, linewidth=LINE_WIDTH)
         line = line[0]
     line.set_label("Deformed")
-    fig.legend(prop={'size': 10})
+    cmap_legend = [mpl.lines.Line2D([0], [0], color=cmap(0.), lw=4, label='Low'),
+                    mpl.lines.Line2D([0], [0], color=cmap(.5), lw=4, label='Medium'),
+                    mpl.lines.Line2D([0], [0], color=cmap(1.), lw=4, label='High')]
+    fig.legend(handles=cmap_legend, prop={'size': 10}, loc='upper left', title='Axial forces')
     fig.gca().set_aspect('equal')
 
 def display():
