@@ -137,9 +137,8 @@ def set_default_dims():
 
 class Crane:
     def __init__(self):
-        # Youngs Module
-        self.E = 210e9  # 210GPa
-        self.A = 0.01  # Cross-section of beams (0.0025-0.0625)
+        self.E = 210e9  # Youngs module (210GPa)
+        self.A = 0.01  # Cross-section of beams (0.0025-0.0625m^2)
         self.DENSITY = 7850
         self.GRAVITY_CONSTANT = 9.81
 
