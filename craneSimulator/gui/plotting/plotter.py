@@ -1,8 +1,10 @@
 """
 Provides all functions to plot the crane and to display the plot
 """
-import numpy
+import numpy as np
 from matplotlib import pyplot as plt
+import matplotlib as mpl
+import matplotlib.cm as cm
 
 LINE_WIDTH = 1
 
@@ -30,6 +32,8 @@ def plot(nodes, beams, color, line_style, label, ax, fig):
         line = ax.plot([xi, xf], [yi, yf], [zi, zf], color=color, linestyle=line_style, linewidth=LINE_WIDTH)
         # Override list with first element in list, always the Line3D object.
         line = line[0]
+        
+        # ax.plot(xi, yi, zi, label=i) # Labels points on graph (I think)
     line.set_label(label)
     fig.legend(prop={'size': 10})
     fig.gca().set_aspect('equal')
@@ -46,12 +50,29 @@ def plot_deformation(nodes, deformed_nodes, beams, line_style, ax, fig):
         dxi, dxf = deformed_nodes[beams[i, 0], 0], deformed_nodes[beams[i, 1], 0]
         dyi, dyf = deformed_nodes[beams[i, 0], 1], deformed_nodes[beams[i, 1], 1]
         dzi, dzf = deformed_nodes[beams[i, 0], 2], deformed_nodes[beams[i, 1], 2]
-        difference = numpy.array([[xi, xf], [yi, yf], [zi, zf]]) - numpy.array([[dxi, dxf], [dyi, dyf], [dzi, dzf]])
+        difference = np.array([[xi, xf], [yi, yf], [zi, zf]]) - np.array([[dxi, dxf], [dyi, dyf], [dzi, dzf]])
 
-        if numpy.all(difference == numpy.array([[0,0],[0, 0],[0, 0]])):
+        if np.all(difference == np.array([[0,0],[0, 0],[0, 0]])):
             line = ax.plot([dxi, dxf], [dyi, dyf], [dzi, dzf], color="g", linestyle=line_style, linewidth=LINE_WIDTH)
         else:
             line = ax.plot([dxi, dxf], [dyi, dyf], [dzi, dzf], color="r", linestyle=line_style, linewidth=LINE_WIDTH)
+        line = line[0]
+    line.set_label("Deformed")
+    fig.legend(prop={'size': 10})
+    fig.gca().set_aspect('equal')
+    
+
+def plot_deformation_with_grad(nodes, deformed_nodes, beams, line_style, ax, fig, axial_forces):
+    axial_forces = np.absolute(axial_forces)
+    norm = mpl.colors.Normalize(min(axial_forces), max(axial_forces))
+    cmap = cm.get_cmap('gist_heat')
+    for i in range(len(beams)):
+        # Deformed nodes
+        dxi, dxf = deformed_nodes[beams[i, 0], 0], deformed_nodes[beams[i, 1], 0]
+        dyi, dyf = deformed_nodes[beams[i, 0], 1], deformed_nodes[beams[i, 1], 1]
+        dzi, dzf = deformed_nodes[beams[i, 0], 2], deformed_nodes[beams[i, 1], 2]
+
+        line = ax.plot([dxi, dxf], [dyi, dyf], [dzi, dzf], color=cmap(norm(axial_forces[i])), linestyle=line_style, linewidth=LINE_WIDTH)
         line = line[0]
     line.set_label("Deformed")
     fig.legend(prop={'size': 10})

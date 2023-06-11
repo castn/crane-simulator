@@ -245,7 +245,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.N, self.R, self.U = self.crane.analyze()
             deformed_nodes = self.U * multiplier + nodes
             #plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', self.canvas.axes, self.canvas.fig)
-            plotter.plot_deformation(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig)
+            # plotter.plot_deformation(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig)
+            plotter.plot_deformation_with_grad(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig, self.N)
             self.output.appendPlainText("Jib displacement at front where forces are applied")
             self.output.appendPlainText(
                 str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - nodes[crane.Dims.JIB_NUM_NODES - 2]))

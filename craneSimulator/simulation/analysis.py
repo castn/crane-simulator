@@ -160,7 +160,6 @@ def apply_wind_left(force, cj_sup_type):
 
 def analyze(nodes, beams, E, A):
     """Perform truss structural analysis"""
-    print('Forces')
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
 
