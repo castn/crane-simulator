@@ -19,17 +19,19 @@ class Dims():
     JIB_END = 0
     COUNTERJIB_END = 0
 
+
 kN = 1e3
+
 
 def generate_conditions(nodes):
     """Generates conditions for the crane"""
     Comps.nodes = nodes
-    
+
     # Support Displacement
     Conditions.Ur = [0, 0, 0,
                      0, 0, 0,
                      0, 0, 0,
-                     0, 0, 0] # nodes 0-4 in xyz
+                     0, 0, 0]  # nodes 0-4 in xyz
 
     # Condition of DOF (0 = fixed, 1 = free)
     dof_condition = np.ones_like(nodes).astype(int)
@@ -47,7 +49,7 @@ def apply_forces(window, nodes, end_tower, end_jib):
     Dims.TOWER_END = end_tower
     Dims.JIB_END = end_jib
     Dims.COUNTERJIB_END = len(nodes)
-    
+
     # Applied forces
     p = np.zeros_like(nodes)
     # TODO change indices
@@ -86,6 +88,7 @@ def apply_wind(direc, force, cj_sup_type, cj_end):
     elif direc == 'left':
         apply_wind_left(force, cj_sup_type)
 
+
 def apply_wind_front(force, cj_sup_type, cj_end):
     # force in north dir
     # y dir
@@ -107,17 +110,19 @@ def apply_wind_front(force, cj_sup_type, cj_end):
     elif cj_sup_type == 'Twin towers':
         Conditions.p[int(Dims.COUNTERJIB_END) - 1, 1] = force * kN
 
+
 def apply_wind_right(force):
     # force in east dir
     # -x
     # tower: 2+4n, 3+4n
-    for t_n in range(int(Dims.TOWER_END  / 4) - 1):
+    for t_n in range(int(Dims.TOWER_END / 4) - 1):
         Conditions.p[(2 + 4 * t_n), 0] = - force * kN
         Conditions.p[(3 + 4 * t_n), 0] = - force * kN
     # jib: last 3
     for j_n in range(int(Dims.JIB_END) - 3, int(Dims.JIB_END)):
         Conditions.p[j_n, 0] = - force * kN
     # counterjib: none
+
 
 def apply_wind_back(force, cj_sup_type, cj_end):
     # force in south dir
@@ -140,11 +145,12 @@ def apply_wind_back(force, cj_sup_type, cj_end):
     elif cj_sup_type == 'Single tower' or cj_sup_type == 'Twin towers':
         Conditions.p[int(Dims.COUNTERJIB_END), 1] = - force * kN
 
+
 def apply_wind_left(force, cj_sup_type):
     # force in west dir
     # +x dir
     # tower: 2+4n, 3+4n
-    for t_n in range(int(Dims.TOWER_END  / 4) - 1):
+    for t_n in range(int(Dims.TOWER_END / 4) - 1):
         Conditions.p[(0 + 4 * t_n), 0] = force * kN
         Conditions.p[(1 + 4 * t_n), 0] = force * kN
     # jib: none
@@ -158,13 +164,47 @@ def apply_wind_left(force, cj_sup_type):
     for cj_n in range(start_cj_n, int(Dims.COUNTERJIB_END)):
         Conditions.p[cj_n, 0] = force * kN
 
-def analyze(nodes, beams, E, A):
+
+def first_euler_buckling_case(length, flexural_strength):
+    return ((np.pi ** 2) / 4 * length ** 2) * flexural_strength
+
+
+def second_euler_buckling_case(length, flexural_strength):
+    return ((np.pi ** 2) / length ** 2) * flexural_strength
+
+
+def third_euler_buckling_case(length, flexural_strength):
+    return ((np.pi ** 2) / (0.7 * length) ** 2) * flexural_strength
+
+
+def fourth_euler_buckling_case(length, flexural_strength):
+    return (4 * (np.pi ** 2) / length ** 2) * flexural_strength
+
+
+def is_euler_buckling_rod(E, A, DENSITY, length, force):
+    mass = length * A * DENSITY
+    J = (1 / 12) * mass * length ** 2
+    flexural_strength = E * J
+    a = first_euler_buckling_case(length, flexural_strength)
+    if force >= a:
+        return True
+    elif force >= second_euler_buckling_case(length, flexural_strength):
+        return True
+    elif force >= third_euler_buckling_case(length, flexural_strength):
+        return True
+    elif force >= fourth_euler_buckling_case(length, flexural_strength):
+        return True
+    else:
+        return False
+
+
+def analyze(nodes, beams, E, A, DENSITY):
     """Perform truss structural analysis"""
     # Adjust coordinates to mm instead of m
     print(nodes)
     nodes = nodes / 1000
     print(nodes)
-    
+
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
 
@@ -202,4 +242,11 @@ def analyze(nodes, beams, E, A):
     N = E * A / L[:] * (transformation_vector[:] + u[:]).sum(axis=1)
     reaction_force = (K_bottomleft[:] * Uf).sum(axis=1) + (K_bottomright[:] * Conditions.Ur).sum(axis=1)                    # Reaction force
     reaction_force = reaction_force.reshape(4, dof)
+
+    for i in range(number_of_elements):
+        n = N[i]
+        l = L[i]
+        if is_euler_buckling_rod(E, A, DENSITY, l, n):
+            print(f"{i} is euler buckling rod!")
+
     return np.array(N), np.array(reaction_force), U

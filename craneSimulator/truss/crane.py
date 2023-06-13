@@ -172,4 +172,4 @@ class Crane:
         """Performs the analysis of the crane"""
         nodes, beams = get_crane()
         analysis.generate_conditions(Comps.nodes)
-        return analysis.analyze(nodes, beams, self.E, self.A)
+        return analysis.analyze(nodes, beams, self.E, self.A, self.DENSITY)
