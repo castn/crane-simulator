@@ -183,6 +183,7 @@ def fourth_euler_buckling_case(length, flexural_strength):
 
 def is_euler_buckling_rod(E, A, DENSITY, length, force):
     mass = length * A * DENSITY
+    # around where do we actually rotate? not the end?
     I_mid = (1 / 12) * mass * length ** 2
     I_end = (1 / 3) * mass * length ** 2
     flexural_strength = E * I_mid
@@ -239,7 +240,6 @@ def analyze(nodes, beams, E, A, DENSITY):
     deformation[support_dof] = Conditions.Ur                                                                                # Deformation of all nodes that are fixed
     deformation = deformation.reshape(number_of_nodes, dof)                                                                                     # Deformation vector for each node
     u = np.concatenate((deformation[beams[:, 0]], deformation[beams[:, 1]]), axis=1)                                                            # Deformed nodes for each beam? https://youtu.be/Y-ILnLMZYMw?t=3013
-    print(f'Normal: {(transformation_vector[:] * u[:]).sum(axis=1)}')
     axial_force = (E * A / L[:]) * (transformation_vector[:] * u[:]).sum(axis=1)                                            # Axial forces for each beam
     reaction_force = (K_bottomleft[:] * Uf).sum(axis=1) + (K_bottomright[:] * Conditions.Ur).sum(axis=1)                    # Reaction forces in fixed nodes
     reaction_force = reaction_force.reshape(4, dof)
@@ -249,6 +249,5 @@ def analyze(nodes, beams, E, A, DENSITY):
         l = L[i]
         if is_euler_buckling_rod(E, A, DENSITY, l, n):
             print(f"{i} is euler buckling rod!")
-    is_euler_buckling_rod(E, A, DENSITY, L[4], axial_force[4])
 
     return np.array(axial_force), np.array(reaction_force), deformation
