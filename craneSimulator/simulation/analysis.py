@@ -166,7 +166,7 @@ def apply_wind_left(force, cj_sup_type):
 
 
 def first_euler_buckling_case(length, flexural_strength):
-    return ((np.pi ** 2) / 4 * length ** 2) * flexural_strength
+    return ((np.pi ** 2) / (4 * length ** 2)) * flexural_strength
 
 
 def second_euler_buckling_case(length, flexural_strength):
@@ -183,10 +183,11 @@ def fourth_euler_buckling_case(length, flexural_strength):
 
 def is_euler_buckling_rod(E, A, DENSITY, length, force):
     mass = length * A * DENSITY
-    J = (1 / 12) * mass * length ** 2
-    flexural_strength = E * J
-    a = first_euler_buckling_case(length, flexural_strength)
-    if force >= a:
+    I_mid = (1 / 12) * mass * length ** 2
+    I_end = (1 / 3) * mass * length ** 2
+    flexural_strength = E * I_mid
+    
+    if force >= first_euler_buckling_case(length, flexural_strength):
         return True
     elif force >= second_euler_buckling_case(length, flexural_strength):
         return True
@@ -200,10 +201,8 @@ def is_euler_buckling_rod(E, A, DENSITY, length, force):
 
 def analyze(nodes, beams, E, A, DENSITY):
     """Perform truss structural analysis"""
-    # Adjust coordinates to mm instead of m
-    print(nodes)
+    # Adjust coordinates to m instead of mm
     nodes = nodes / 1000
-    print(nodes)
 
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
@@ -221,8 +220,9 @@ def analyze(nodes, beams, E, A, DENSITY):
     for k in range(number_of_elements):
         aux = dof * beams[k, :]
         index = np.r_[aux[0]:aux[0] + dof, aux[1]:aux[1] + dof]                                                             # Save dof at each node
-        ES = np.dot(transformation_vector[k][np.newaxis].transpose() * E * A, transformation_vector[k][np.newaxis]) / L[k]  # Stiffness for each element (Local stiffness for each element)
-        K[np.ix_(index, index)] = K[np.ix_(index, index)] + ES
+        elem_stiffness = np.dot(transformation_vector[k][np.newaxis].transpose() * E * A,
+                                transformation_vector[k][np.newaxis]) / L[k]                                                # Stiffness for each element (Local stiffness for each element)
+        K[np.ix_(index, index)] = K[np.ix_(index, index)] + elem_stiffness
     
     free_dof = Conditions.dof_condition.flatten().nonzero()[0]                                                              # Get all DOF that are NOT defined as zero (can move)
     support_dof = (Conditions.dof_condition.flatten() == 0).nonzero()[0]                                                    # Get all DOF that are defined as zero (can't move; manully defined above)
@@ -234,19 +234,21 @@ def analyze(nodes, beams, E, A, DENSITY):
     
     p_flatten = Conditions.p.flatten()[free_dof]                                                                            # Flatten only free_dof
     Uf = np.linalg.lstsq(K_topleft, p_flatten, rcond=None)[0]                                                               # Deformation at all nodes with free DOF
-    U = Conditions.dof_condition.astype(float).flatten()                                                                    # Contains all the deformation data
-    U[free_dof] = Uf
-    U[support_dof] = Conditions.Ur
-    U = U.reshape(number_of_nodes, dof)                                                                                     # Deformation vector for each node
-    u = np.concatenate((U[beams[:, 0]], U[beams[:, 1]]), axis=1)                                                            # Deformed nodes for each beam? https://youtu.be/Y-ILnLMZYMw?t=3013
-    N = E * A / L[:] * (transformation_vector[:] + u[:]).sum(axis=1)
-    reaction_force = (K_bottomleft[:] * Uf).sum(axis=1) + (K_bottomright[:] * Conditions.Ur).sum(axis=1)                    # Reaction force
+    deformation = Conditions.dof_condition.astype(float).flatten()                                                          # Contains all the deformation data
+    deformation[free_dof] = Uf                                                                                              # Deformation of all nodes that are free to move
+    deformation[support_dof] = Conditions.Ur                                                                                # Deformation of all nodes that are fixed
+    deformation = deformation.reshape(number_of_nodes, dof)                                                                                     # Deformation vector for each node
+    u = np.concatenate((deformation[beams[:, 0]], deformation[beams[:, 1]]), axis=1)                                                            # Deformed nodes for each beam? https://youtu.be/Y-ILnLMZYMw?t=3013
+    print(f'Normal: {(transformation_vector[:] * u[:]).sum(axis=1)}')
+    axial_force = (E * A / L[:]) * (transformation_vector[:] * u[:]).sum(axis=1)                                            # Axial forces for each beam
+    reaction_force = (K_bottomleft[:] * Uf).sum(axis=1) + (K_bottomright[:] * Conditions.Ur).sum(axis=1)                    # Reaction forces in fixed nodes
     reaction_force = reaction_force.reshape(4, dof)
 
     for i in range(number_of_elements):
-        n = N[i]
+        n = axial_force[i]
         l = L[i]
         if is_euler_buckling_rod(E, A, DENSITY, l, n):
             print(f"{i} is euler buckling rod!")
+    is_euler_buckling_rod(E, A, DENSITY, L[4], axial_force[4])
 
-    return np.array(N), np.array(reaction_force), U
+    return np.array(axial_force), np.array(reaction_force), deformation

@@ -317,7 +317,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.total_length.setText(f'{(total_length):.3f} m')
         self.total_volumn.setText(f'{(total_volumn):.3f} m\u00B3')
         self.total_mass.setText(f'{(total_mass):.3f} kg')
-        self.total_cost.setText(f'{(total_cost):.3f} \u20AC')
+        self.total_cost.setText(f'{(total_cost):.2f} \u20AC')
 
     def check_config(self):
         """Checks if all beams are within the required range"""
