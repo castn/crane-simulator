@@ -1,6 +1,7 @@
 import sys
 
 import PySide6.QtWidgets
+from PySide6.QtGui import QPixmap
 
 from craneSimulator.truss.crane import Crane
 from craneSimulator.util import file_handler
@@ -59,7 +60,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Set default size of plotBox, otherwise will shrink to minimal and needs manual adjustment
         self.plotBox.setGeometry(0, 0, 716, 544)
         # Create matplot canvas and associated toolbar
-        self.canvas = None #matplotlib_canvas(self, width=5, height=4, dpi=100)
+        self.canvas = None  # matplotlib_canvas(self, width=5, height=4, dpi=100)
         self.toolbar = None
         # Add canvas and toolbar to dedicated widget in this window
 
@@ -89,6 +90,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 QMessageBox.critical(self, "Error", "Could not load config. Possible error while reading the file")
             else:
                 self.dictionary_to_config(self.fileHandler.config)
+                QMessageBox.information(self, "Import successful", f"Successfully imported {file_name}.\n\nClick the "
+                                                                   f"Apply button to render the changes!")
 
     def dictionary_to_config(self, config):
         tower = config.get("tower")
@@ -176,6 +179,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return dictionary
 
     def report_bug(self):
+        # aboutBox = QMessageBox(self)
+        # aboutBox.setText("The document has been modified.")
+        # aboutBox.icon("../../resources/debug.svg")
+        # aboutBox.exec()
         QMessageBox.about(self, "Bug Report",
                           "You found a bug and want to report it? Great, please open an issue on "
                           "<a href='https://github.com/'>Github</a> where you decribe the bug in as much details as possible. "
@@ -183,13 +190,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def about(self):
         QMessageBox.about(self, "About Crane Simulator 2024",
-                          "<b>Crane Simulator 2024</b> is a software written in Python which was developed in the "
+                          "<b>Crane Simulator 2024</b><br> is a software written in Python which was developed in the "
                           "context of a project course at the TU Darmstadt. The source code is available on Github.")
 
     def update_debug_tree_widget(self, nodes, beams, def_nodes):
         """Updates node and beam tree in 'Debug' tab"""
         self.debug_treeWidget.clear()
-        tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams"), create_tree_item(def_nodes, "Deformed nodes")]
+        tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams"),
+                      create_tree_item(def_nodes, "Deformed nodes")]
         self.debug_treeWidget.insertTopLevelItems(0, tree_items)
 
     def update_fem_tree_widget(self, N, R, U):
@@ -245,11 +253,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.N, self.R, self.U = self.crane.analyze()
             deformed_nodes = self.U * multiplier + nodes
             if self.axial_coloring.isChecked():
-                plotter.plot_deformation_with_grad(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig, self.N, self.cmap.currentText())
+                plotter.plot_deformation_with_grad(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig,
+                                                   self.N, self.cmap.currentText())
             else:
                 plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', self.canvas.axes, self.canvas.fig)
             # plotter.plot_deformation(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig)
-            
+
             self.output.appendPlainText("Jib displacement at front where forces are applied")
             self.output.appendPlainText(
                 str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - nodes[crane.Dims.JIB_NUM_NODES - 2]))
