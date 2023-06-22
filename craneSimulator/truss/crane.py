@@ -138,7 +138,7 @@ def set_default_dims():
 class Crane:
     def __init__(self):
         self.E = 210e9  # Youngs module (210GPa)
-        self.A = 0.01  # Cross-section of beams (0.0025-0.0625m^2)
+        self.A = 0.0025  # Cross-section of beams (0.0025-0.0625m^2)
         self.DENSITY = 7850
         self.GRAVITY_CONSTANT = 9.81
 
@@ -173,5 +173,7 @@ class Crane:
         nodes, beams = get_crane()
         analysis.generate_conditions(Comps.nodes)
         axial_force, reaction_force, deformation = analysis.analyze(nodes.copy(), beams.copy(), self.E, self.A, self.DENSITY)
-        analysis.optimize(nodes, beams, axial_force, self.E, self.A, self.DENSITY)
-        return axial_force, reaction_force, deformation
+        o_axial_force, o_reaction_force, o_deformation = analysis.optimize(nodes, beams, axial_force, self.E, self.A, self.DENSITY)
+        a = list(set(axial_force) - set(o_axial_force))
+        return o_axial_force, o_reaction_force, o_deformation
+        #return axial_force, reaction_force, deformation
