@@ -172,5 +172,6 @@ class Crane:
         """Performs the analysis of the crane"""
         nodes, beams = get_crane()
         analysis.generate_conditions(Comps.nodes)
-        analysis.optimize(nodes, beams, self.E, self.A, self.DENSITY)
-        return analysis.analyze(nodes.copy(), beams.copy(), self.E, self.A, self.DENSITY)
+        axial_force, reaction_force, deformation = analysis.analyze(nodes.copy(), beams.copy(), self.E, self.A, self.DENSITY)
+        analysis.optimize(nodes, beams, axial_force, self.E, self.A, self.DENSITY)
+        return axial_force, reaction_force, deformation
