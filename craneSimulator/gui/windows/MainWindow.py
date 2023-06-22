@@ -209,7 +209,7 @@ class Ui_MainWindow(object):
         self.multiplierSpinBox = QtWidgets.QSpinBox(parent=self.fem_settings)
         self.multiplierSpinBox.setMinimum(1)
         self.multiplierSpinBox.setMaximum(100)
-        self.multiplierSpinBox.setProperty("value", 10)
+        self.multiplierSpinBox.setProperty("value", 1)
         self.multiplierSpinBox.setObjectName("multiplierSpinBox")
         self.formLayout_6.setWidget(4, QtWidgets.QFormLayout.ItemRole.FieldRole, self.multiplierSpinBox)
         self.lable_jib_left = QtWidgets.QLabel(parent=self.fem_settings)
