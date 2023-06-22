@@ -203,7 +203,7 @@ def is_euler_buckling_rod(E, A, DENSITY, length, force):
 def analyze(nodes, beams, E, A, DENSITY):
     """Perform truss structural analysis"""
     # Adjust coordinates to m instead of mm
-    nodes = nodes / 1000
+    #nodes = nodes / 1000
 
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
@@ -214,7 +214,7 @@ def analyze(nodes, beams, E, A, DENSITY):
 
     # structural analysis
     distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]                                                                # Distance between joints of the beam
-    L = np.sqrt((distance ** 2).sum(axis=1))                                                                                # Length of each beam
+    L = np.sqrt((distance ** 2).sum(axis=1))                                                                                # Length of each beam in meters
     angle = distance.transpose() / L                                                                                        # Angle matrix
     transformation_vector = np.concatenate((- angle.transpose(), angle.transpose()), axis=1)                                # Transformation vector
     K = np.zeros([total_number_of_dof, total_number_of_dof])                                                                # Global stiffness matrix
@@ -251,3 +251,12 @@ def analyze(nodes, beams, E, A, DENSITY):
             print(f"{i} is euler buckling rod!")
 
     return np.array(axial_force), np.array(reaction_force), deformation
+
+
+def optimize(nodes, beams, E, A, DENSITY):
+    area_per_rod = np.zeros(len(beams))
+    # Make all rods have the same area
+    for i in range(len(beams)):
+        area_per_rod[i] = A
+
+
