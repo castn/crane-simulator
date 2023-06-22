@@ -333,20 +333,24 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if not self.ignore_specification.isChecked():
             tower_longest = crane.tower.get_longest_beam()
             if tower_longest < 500 or tower_longest > 2000:
-                QMessageBox.critical(self, 'Specification Violation',
-                                     f'Your inputted tower parameters violate the length requirements for a beam with a length of {tower_longest:.4f}mm which falls outside the allowed range of 500-2000mm')
+                self.display_waring("Tower", tower_longest)
                 return False
             jib_longest = crane.jib.get_longest_beam()
             if jib_longest < 500 or jib_longest > 2000:
-                QMessageBox.critical(self, 'Specification Violation',
-                                     f'Your inputted jib parameters violate the length requirements for a beam with a length of {jib_longest:.4f}mm which falls outside the allowed range of 500-2000mm')
+                self.display_waring("Jib", jib_longest)
                 return False
             counterjib_longest = crane.counterjib.get_longest_beam()
             if counterjib_longest < 500 or counterjib_longest > 2000:
-                QMessageBox.critical(self, 'Specification Violation',
-                                     f'Your inputted counterjib parameters violate the length requirements for a beam with a length of {counterjib_longest:.4f}mm which falls outside the allows range of 500-2000mm')
+                self.display_waring("Counter Jib", counterjib_longest)
                 return False
         return True
+
+    def display_waring(self, type, longest_beam):
+        QMessageBox.critical(self, 'Specification Violation',
+                             f'Input parameters of <b>{type}</b> produce a value that violates the requirements.<br>'
+                             f'Longest beam in your {type} has a length of {longest_beam:.4f}mm, but it must be in '
+                             f'range of 500-2000mm. Change your parameters to fix this issue.<br><br>'
+                             f'Allow specification violations? Check box "<i>Ignore specifications of project task</i>" in settings section')
 
 
 # You need one (and only one) QApplication instance per application.
