@@ -90,7 +90,7 @@ def create_beams():
     """Creates all beams needed for the counterjib"""
     start_node_cj = Dims.END_NODE_JIB  # len(nodes)
     if not Dims.IS_CONNECTED:
-        append_beam(0, 1)
+        append_beam(0, 1, True)
     for i in range(Dims.SEGMENTS):
         val_to_add = 2 * (i - 1)
         create_frame_beams(i, start_node_cj, val_to_add)
@@ -100,25 +100,27 @@ def create_beams():
 def create_frame_beams(i, start_node_cj, val_to_add):
     """Creates the outer frame of the counterjib"""
     if i == 0:
-        append_beam(Dims.END_NODE_TOWER, start_node_cj)
-        append_beam(Dims.END_NODE_TOWER + 1, start_node_cj + 1)
+        append_beam(Dims.END_NODE_TOWER, start_node_cj, True)
+        append_beam(Dims.END_NODE_TOWER + 1, start_node_cj + 1, True)
     else:
-        append_beam(start_node_cj + val_to_add, start_node_cj + 2 + val_to_add)
+        append_beam(start_node_cj + val_to_add, start_node_cj + 2 + val_to_add
+                    , True)
         append_beam(start_node_cj + 1 + val_to_add,
-                    start_node_cj + 3 + val_to_add)
+                    start_node_cj + 3 + val_to_add, True)
     append_beam(start_node_cj + val_to_add + 2,
-                start_node_cj + 1 + val_to_add + 2)
+                start_node_cj + 1 + val_to_add + 2, True)
 
 
 def create_diag_beams(i, start_node_cj, val_to_add):
     """Creates the diagonal beams of the counterjib"""
     if i == 0:
-        append_beam(Dims.END_NODE_TOWER, start_node_cj + 1)
-        append_beam(Dims.END_NODE_TOWER + 1, start_node_cj)
+        append_beam(Dims.END_NODE_TOWER, start_node_cj + 1, True)
+        append_beam(Dims.END_NODE_TOWER + 1, start_node_cj, True)
     else:
-        append_beam(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add)
+        append_beam(start_node_cj + val_to_add, start_node_cj + 3 + val_to_add
+                    , True)
         append_beam(start_node_cj + 1 + val_to_add,
-                    start_node_cj + 2 + val_to_add)
+                    start_node_cj + 2 + val_to_add, True)
 
 
 def create_support():
@@ -149,26 +151,26 @@ def create_truss_support():
         # second batch
         if i == 1:
             # diagonal sections
-            append_beam(Dims.END_NODE_TOWER, support_start + 1)
-            append_beam(Dims.END_NODE_TOWER + 1, support_start + 1)
-            append_beam(Dims.END_NODE_JIB, support_start + 1)
-            append_beam(Dims.END_NODE_JIB + 1, support_start + 1)
+            append_beam(Dims.END_NODE_TOWER, support_start + 1, True)
+            append_beam(Dims.END_NODE_TOWER + 1, support_start + 1, True)
+            append_beam(Dims.END_NODE_JIB, support_start + 1, True)
+            append_beam(Dims.END_NODE_JIB + 1, support_start + 1, True)
             # top section
-            append_beam(support_start, support_start + 1)
+            append_beam(support_start, support_start + 1, True)
         # the rest
         else:
             if i == 0:
                 start_node = Dims.END_NODE_TOWER
-                append_beam(Dims.END_NODE_TOWER + 4, support_start)
+                append_beam(Dims.END_NODE_TOWER + 4, support_start, True)
             else:
                 start_node = Dims.END_NODE_JIB - max(i - 2, 0)
-                append_beam(support_start + (i - 1), support_start + i)
+                append_beam(support_start + (i - 1), support_start + i, True)
             # diagonal sections
             val_to_add = max(3 * (i - 2), 0)
-            append_beam(0 + start_node + val_to_add, support_start + i)
-            append_beam(1 + start_node + val_to_add, support_start + i)
-            append_beam(2 + start_node + val_to_add, support_start + i)
-            append_beam(3 + start_node + val_to_add, support_start + i)
+            append_beam(0 + start_node + val_to_add, support_start + i, True)
+            append_beam(1 + start_node + val_to_add, support_start + i, True)
+            append_beam(2 + start_node + val_to_add, support_start + i, True)
+            append_beam(3 + start_node + val_to_add, support_start + i, True)
 
 
 def create_cable_support(one_node):
@@ -179,12 +181,12 @@ def create_cable_support(one_node):
                      2, Dims.START_HEIGHT + Dims.TOWER_WIDTH])
         # tower to new top
         for i in range(4):
-            append_beam(Dims.END_NODE_TOWER + i, cable_start)
+            append_beam(Dims.END_NODE_TOWER + i, cable_start, True)
         # jib to new top
-        append_beam(Dims.END_NODE_TOWER + 4, cable_start)
+        append_beam(Dims.END_NODE_TOWER + 4, cable_start, True)
         # new top to end counterjib
-        append_beam(cable_start, cable_start - 1)
-        append_beam(cable_start, cable_start - 2)
+        append_beam(cable_start, cable_start - 1, False)
+        append_beam(cable_start, cable_start - 2, False)
     else:
         Comps.nodes.append([Dims.TOWER_WIDTH / 2, 0,
                      Dims.START_HEIGHT + Dims.TOWER_WIDTH])
@@ -192,16 +194,16 @@ def create_cable_support(one_node):
                      Dims.START_HEIGHT + Dims.TOWER_WIDTH])
         # tower to new tops
         for i in range(2):
-            append_beam(Dims.END_NODE_TOWER + i, cable_start + i)
-            append_beam(Dims.END_NODE_TOWER + i + 2, cable_start + i)
+            append_beam(Dims.END_NODE_TOWER + i, cable_start + i, True)
+            append_beam(Dims.END_NODE_TOWER + i + 2, cable_start + i, True)
         # between new tops
-        append_beam(cable_start, cable_start + 1)
+        append_beam(cable_start, cable_start + 1, True)
         # jib to new tops
-        append_beam(Dims.END_NODE_TOWER + 4, cable_start)
-        append_beam(Dims.END_NODE_TOWER + 4, cable_start + 1)
+        append_beam(Dims.END_NODE_TOWER + 4, cable_start, True)
+        append_beam(Dims.END_NODE_TOWER + 4, cable_start + 1, True)
         # new tops to end counterjib
-        append_beam(cable_start, cable_start - 2)
-        append_beam(cable_start + 1, cable_start - 1)
+        append_beam(cable_start, cable_start - 2, False)
+        append_beam(cable_start + 1, cable_start - 1, False)
 
 
 def get_nodes():
@@ -244,7 +246,7 @@ def get_end_cj():
     return Dims.END_CJ
 
 
-def append_beam(start_node, end_node):
+def append_beam(start_node, end_node, len_counts):
     """
     Creates a beam between 2 given points and adds the length to a running total
 
@@ -256,7 +258,8 @@ def append_beam(start_node, end_node):
     start_float = np.array(Comps.nodes[start_node]).astype(float)
     end_float = np.array(Comps.nodes[end_node]).astype(float)
     length = np.linalg.norm(end_float - start_float)
-    Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
+    if len_counts:
+        Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
     Dims.TOTAL_LENGTH += length
 
 

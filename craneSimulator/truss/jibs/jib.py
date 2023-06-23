@@ -16,6 +16,7 @@ class Dims:
     SEGMENT_LENGTH = 0
     SEGMENTS = 0
     HEIGHT = 0
+    SUPPORT_TYPE = ''
 
     START_HEIGHT = 0
     TOWER_WIDTH = 0
@@ -82,7 +83,15 @@ def create_segments():
                                 Dims.TOWER_WIDTH,
                                 Dims.START_HEIGHT])
         if i < Dims.SEGMENTS:
-            Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2,
+            if Dims.SUPPORT_TYPE == 'Truss':
+                x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
+            else:
+                x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i
+            Comps.nodes.append([x_coord,
+                                Dims.SEGMENT_LENGTH / 2,
+                                Dims.START_HEIGHT + Dims.HEIGHT])
+        if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != 'Truss':
+            Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
                                 Dims.START_HEIGHT + Dims.HEIGHT])
 
@@ -93,18 +102,24 @@ def create_beams():
         val_to_add = 3 * i + Dims.INIT_BAR
         create_horizontal_beams(i, val_to_add)
         create_diagonal_beams(val_to_add)
+    if Dims.SUPPORT_TYPE != 'Truss':
+        val_to_add = 3 * Dims.SEGMENTS + Dims.INIT_BAR
+        append_beam(0 + val_to_add, 2 + val_to_add)
+        append_beam(1 + val_to_add, 2 + val_to_add)
 
 
 def create_horizontal_beams(i, val_to_add):
-    """Create the horizontal beams of a segment"""
+    """Create the horizontal beams of a segment, here representing the bottom structure and top"""
     if i == 0 and not Dims.IS_CONNECTED:
         append_beam(0 + val_to_add, 1 + val_to_add)  # first horizontal (0-1)
     if i < Dims.SEGMENTS - 1:
         append_beam(2 + val_to_add, 5 + val_to_add)  # top connection
+    if i == Dims.SEGMENTS - 1 and Dims.SUPPORT_TYPE != 'Truss':
+        append_beam(2 + val_to_add, 5 + val_to_add)
     append_beam(1 + val_to_add, 4 + val_to_add)
     append_beam(4 + val_to_add, 3 + val_to_add)
     append_beam(3 + val_to_add, 0 + val_to_add)
-    append_beam(1 + val_to_add, 3 + val_to_add)  # diagonal beam
+    append_beam(1 + val_to_add, 3 + val_to_add)  # bottom diagonal beam
 
 
 def create_diagonal_beams(val_to_add):
@@ -185,16 +200,17 @@ def get_dims():
     Dims.HEIGHT = height
 
 
-def set_dims(length, height, segs):
+def set_dims(length, height, segs, sup_type):
     """Sets dimensions of the jib to passed-through values"""
     Comps.nodes = []
     Comps.beams = []
     Dims.TOTAL_LENGTH = 0
     Dims.LONGEST_BEAM = 0
-    
+
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height
+    Dims.SUPPORT_TYPE = sup_type
 
 
 def default_dims():
