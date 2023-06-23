@@ -320,11 +320,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """Updates infobox in the bottom left"""
         total_length = crane.get_length()
         total_length = total_length / 1000
-        total_volumn = total_length * self.crane.A
-        total_mass = total_volumn * self.crane.DENSITY
+        total_volume = total_length * self.crane.A
+        total_mass = total_volume * self.crane.DENSITY
         total_cost = total_mass / 1000 * 1000
         self.total_length.setText(f'{(total_length):.3f} m')
-        self.total_volumn.setText(f'{(total_volumn):.3f} m\u00B3')
+        self.total_volume.setText(f'{(total_volume):.3f} m\u00B3')
         self.total_mass.setText(f'{(total_mass):.3f} kg')
         self.total_cost.setText(f'{(total_cost):.2f} \u20AC')
 
