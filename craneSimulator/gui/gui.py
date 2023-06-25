@@ -1,8 +1,8 @@
 import sys
 
 import PySide6.QtWidgets
-from PySide6.QtGui import QPixmap
 
+from craneSimulator.gui.plotting.plotter import PlotterManager
 from craneSimulator.truss.crane import Crane
 from craneSimulator.util import file_handler
 from craneSimulator.util.file_handler import FileHandler
@@ -15,7 +15,6 @@ from PyQt6.QtWidgets import QApplication, QMessageBox, QTreeWidgetItem, QFileDia
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-from craneSimulator.gui.plotting import plotter
 from craneSimulator.gui.windows.MainWindow import Ui_MainWindow
 from craneSimulator.truss import crane
 from craneSimulator.truss.dimensions import Dims
@@ -26,15 +25,14 @@ class matplotlib_canvas(FigureCanvasQTAgg):
 
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.fig.add_subplot(111, projection='3d')
         super(matplotlib_canvas, self).__init__(self.fig)
 
 
-def create_tree_item(arr, name):
+def create_tree_item(arr, name, unit):
     """Creates tree for 'Debug' tab"""
     tree_item = QTreeWidgetItem([name])
     for ind, comp in enumerate(arr):
-        child = QTreeWidgetItem([f"{ind}. {comp}"])
+        child = QTreeWidgetItem([f"{ind}. {comp} {unit}"])
         tree_item.addChild(child)
     return tree_item
 
@@ -54,7 +52,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.create_actions()
         # Set tree widgets
         self.debug_treeWidget.setColumnCount(1)
-        self.debug_treeWidget.setHeaderLabel("View Points of Nodes/Beams")
+        self.debug_treeWidget.setHeaderLabel("Look at the internal values of the crane")
         self.fem_treeWidget.setColumnCount(1)
         self.fem_treeWidget.setHeaderLabel("FEM stuff")
         # Set default size of plotBox, otherwise will shrink to minimal and needs manual adjustment
@@ -193,20 +191,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                           "<b>Crane Simulator 2024</b><br> is a software written in Python which was developed in the "
                           "context of a project course at the TU Darmstadt. The source code is available on Github.")
 
-    def update_debug_tree_widget(self, nodes, beams, def_nodes):
+    def update_debug_tree_widget(self, nodes, beams, def_nodes, area_per_rod):
         """Updates node and beam tree in 'Debug' tab"""
         self.debug_treeWidget.clear()
-        tree_items = [create_tree_item(nodes, "Nodes"), create_tree_item(beams, "Beams"),
-                      create_tree_item(def_nodes, "Deformed nodes")]
+        tree_items = [create_tree_item(nodes, "Coordinates of Nodes", ""),
+                      create_tree_item(beams, "Nodes per Beam", ""),
+                      create_tree_item(def_nodes, "Coordinates of deformed Nodes", ""),
+                      create_tree_item(area_per_rod, "Cross sectional area per Rod", "mm\u00B2")]
         self.debug_treeWidget.insertTopLevelItems(0, tree_items)
 
     def update_fem_tree_widget(self, N, R, U):
         """Updates node and beam tree in 'Debug' tab"""
         self.fem_treeWidget.clear()
         tree_items = [
-            create_tree_item(N.round(decimals=4), "Axial Forces (positive = tension, negative = compression)"),
-            create_tree_item(R.round(decimals=2), "Reaction Forces (positive = upward, negative = downward)"),
-            create_tree_item(U.round(decimals=4), "Deformation at nodes")]
+            create_tree_item(N.round(decimals=4), "Axial Forces (positive = tension, negative = compression)", ""),
+            create_tree_item(R.round(decimals=2), "Reaction Forces (positive = upward, negative = downward)", ""),
+            create_tree_item(U.round(decimals=4), "Deformation at nodes", "")]
         self.fem_treeWidget.insertTopLevelItems(0, tree_items)
 
     def set_dims(self):
@@ -245,29 +245,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Build undeformed crane with updated values
         nodes, beams = crane.get_crane()
-        plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.canvas.axes, self.canvas.fig)
+        plotter_manager = PlotterManager(self.axial_coloring.isChecked(), self.cmap, self.cmap)
 
-        if self.fem_settings.isChecked():
-            # Build deformed crane with updated values
-            multiplier = self.multiplierSpinBox.value()
-            self.N, self.R, self.U = self.crane.analyze()
-            deformed_nodes = self.U * multiplier + nodes
-            if self.axial_coloring.isChecked():
-                plotter.plot_deformation_with_grad(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig,
-                                                   self.N, self.cmap.currentText())
-            else:
-                plotter.plot(deformed_nodes, beams, 'red', '-', 'Deformed', self.canvas.axes, self.canvas.fig)
-            # plotter.plot_deformation(nodes, deformed_nodes, beams, '-', self.canvas.axes, self.canvas.fig)
+        # plotter.plot(nodes, beams, 'gray', '--', 'Undeformed', self.canvas.axes, self.canvas.fig)
 
-            self.output.appendPlainText("Jib displacement at front where forces are applied")
-            self.output.appendPlainText(
-                str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - nodes[crane.Dims.JIB_NUM_NODES - 2]))
-            self.output.appendPlainText(
-                str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 1] - nodes[crane.Dims.JIB_NUM_NODES - 1]))
-            self.output.appendPlainText("\nCounter Jib displacement at back where forces are applied")
-            self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 2] - nodes[len(nodes) - 2]))
-            self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 1] - nodes[len(nodes) - 1]))
-            self.output.appendPlainText('\n')
+        # Build deformed crane with updated values
+        multiplier = self.multiplierSpinBox.value()
+        self.N, self.R, self.U, self.area_per_rod = self.crane.analyze()
+        deformed_nodes = self.U * multiplier + nodes
+        self.o_N, self.o_R, self.o_U, self.o_area_per_rod = self.crane.optimize()
+        o_deformed_nodes = self.o_U * multiplier + nodes
+
+        plotter_manager.create_plots(nodes, deformed_nodes, o_deformed_nodes, beams, self.area_per_rod,
+                                     self.o_area_per_rod, self.canvas.fig, self.N, self.o_N)
+
+        self.output.appendPlainText("Jib displacement at front where forces are applied")
+        self.output.appendPlainText(
+            str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - nodes[crane.Dims.JIB_NUM_NODES - 2]))
+        self.output.appendPlainText(
+            str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 1] - nodes[crane.Dims.JIB_NUM_NODES - 1]))
+        self.output.appendPlainText("\nCounter Jib displacement at back where forces are applied")
+        self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 2] - nodes[len(nodes) - 2]))
+        self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 1] - nodes[len(nodes) - 1]))
+        self.output.appendPlainText('\n')
 
     def apply_configuration(self):
         """Updates crane configuration"""
@@ -309,7 +309,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             self.update_plot()
             nodes, beams = crane.get_crane()
-            self.update_debug_tree_widget(nodes, beams, nodes + self.U)
+            self.update_debug_tree_widget(nodes, beams, nodes + self.U, self.area_per_rod)
             self.update_info()
 
             if self.fem_settings.isChecked():
