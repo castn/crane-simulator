@@ -158,7 +158,8 @@ class Crane:
     def enable_gravity(self, window):
         """Applies gravity to nodes"""
         analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES)
-        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY, self.GRAVITY_CONSTANT)
+        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY,
+                               self.GRAVITY_CONSTANT)
 
     def reset_forces(self, window):
         """Resets forces on all nodes"""
@@ -171,9 +172,14 @@ class Crane:
     def analyze(self):
         """Performs the analysis of the crane"""
         nodes, beams = get_crane()
-        analysis.generate_conditions(Comps.nodes)
-        axial_force, reaction_force, deformation = analysis.analyze(nodes.copy(), beams.copy(), self.E, self.A, self.DENSITY)
-        o_axial_force, o_reaction_force, o_deformation = analysis.optimize(nodes, beams, axial_force, self.E, self.A, self.DENSITY)
-        a = list(set(axial_force) - set(o_axial_force))
-        return o_axial_force, o_reaction_force, o_deformation
-        #return axial_force, reaction_force, deformation
+        analysis.generate_conditions(nodes, beams)
+        axial_force, reaction_force, deformation = analysis.analyze(nodes.copy(), beams.copy(), self.E, self.DENSITY)
+
+        return axial_force, reaction_force, deformation, analysis.get_area_per_rod()
+
+    def optimize(self):
+        nodes, beams = get_crane()
+        analysis.generate_conditions(nodes, beams)
+        axial_force, reaction_force, deformation, area_per_rod = analysis.optimize(nodes.copy(), beams.copy(), self.E,
+                                                                                   self.DENSITY)
+        return axial_force, reaction_force, deformation, area_per_rod
