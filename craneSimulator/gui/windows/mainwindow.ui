@@ -871,24 +871,36 @@
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <widget class="QGroupBox" name="plotBox">
+        <widget class="QTabWidget" name="plotBox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="title">
-          <string>Plot</string>
+         <property name="currentIndex">
+          <number>0</number>
          </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_10">
-          <item>
-           <layout class="QVBoxLayout" name="plot_layout"/>
-          </item>
-         </layout>
+         <widget class="QWidget" name="unoptimizedPlot" native="true">
+          <attribute name="title">
+           <string>Unoptimized</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <layout class="QVBoxLayout" name="unoptimized_plot_layout"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="optimizedPlot">
+          <attribute name="title">
+           <string>Optimized</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QVBoxLayout" name="optimize_plot_layout"/>
+           </item>
+          </layout>
+         </widget>
         </widget>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">

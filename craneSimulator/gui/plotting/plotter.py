@@ -15,30 +15,30 @@ class PlotterManager:
         self.cmap_deformation = cmap_deformation
         self.cmap_area = cmap_area
 
-    def create_plots(self, nodes, deformed_nodes, o_deformed_nodes, beams, area_per_rod, o_area_per_rod, fig, N, o_N):
-        ax_tl = fig.add_subplot(2, 2, 1, projection='3d')
-        ax_tr = fig.add_subplot(2, 2, 2, projection='3d')
-        ax_bl = fig.add_subplot(2, 2, 3, projection='3d')
-        ax_br = fig.add_subplot(2, 2, 4, projection='3d')
-        ax_tl.set_title("Deformation (Unoptimized)")
-        ax_tr.set_title("Cross section area (Unoptimized)")
-        ax_bl.set_title("Deformation (Optimized)")
-        ax_br.set_title("Cross section area (Optimized)")
+    def create_plots(self, nodes, deformed_nodes, o_deformed_nodes, beams, area_per_rod, o_area_per_rod, u_fig,o_fig,  N, o_N):
+        u_ax_l = u_fig.add_subplot(1, 2, 1, projection='3d')
+        u_ax_r = u_fig.add_subplot(1, 2, 2, projection='3d')
+        o_ax_l = o_fig.add_subplot(1, 2, 1, projection='3d')
+        o_ax_r = o_fig.add_subplot(1, 2, 2, projection='3d')
+        u_ax_l.set_title("Deformation (Unoptimized)")
+        u_ax_r.set_title("Cross section area (Unoptimized)")
+        o_ax_l.set_title("Deformation (Optimized)")
+        o_ax_r.set_title("Cross section area (Optimized)")
         # Set view point (camera angle)
         # Here set to display z,x plane
-        ax_tl.view_init(0, -90, 0)
-        ax_tr.view_init(0, -90, 0)
-        ax_bl.view_init(0, -90, 0)
-        ax_br.view_init(0, -90, 0)
+        u_ax_l.view_init(0, -90, 0)
+        u_ax_r.view_init(0, -90, 0)
+        o_ax_l.view_init(0, -90, 0)
+        o_ax_r.view_init(0, -90, 0)
 
         # Plot unoptimized crane
-        plot(nodes, beams, "grey", "--", "Undeformed", ax_tl, fig)
-        plot_deformation_with_grad(deformed_nodes, beams, '-', ax_tl, fig, N, self.cmap_deformation)
-        plot_area_with_grad(nodes, beams, '-', ax_tr, fig, area_per_rod, self.cmap_area)
+        plot(nodes, beams, "grey", "--", "Undeformed", u_ax_l, u_fig)
+        plot_deformation_with_grad(deformed_nodes, beams, '-', u_ax_l, u_fig, N, self.cmap_deformation)
+        plot_area_with_grad(nodes, beams, '-', u_ax_r, u_fig, area_per_rod, self.cmap_area)
         # Plot optimized crane
-        plot(nodes, beams, "grey", "--", "Undeformed", ax_bl, fig)
-        plot_deformation_with_grad(o_deformed_nodes, beams, '-', ax_bl, fig, o_N, self.cmap_deformation)
-        plot_area_with_grad(nodes, beams, '-', ax_br, fig, o_area_per_rod, self.cmap_area)
+        plot(nodes, beams, "grey", "--", "Undeformed", o_ax_l, u_fig)
+        plot_deformation_with_grad(o_deformed_nodes, beams, '-', o_ax_l, u_fig, o_N, self.cmap_deformation)
+        plot_area_with_grad(nodes, beams, '-', o_ax_r, u_fig, o_area_per_rod, self.cmap_area)
 
 
 def plot(nodes, beams, color, line_style, label, axes, fig):

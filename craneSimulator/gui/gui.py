@@ -58,8 +58,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Set default size of plotBox, otherwise will shrink to minimal and needs manual adjustment
         self.plotBox.setGeometry(0, 0, 716, 544)
         # Create matplot canvas and associated toolbar
-        self.canvas = None  # matplotlib_canvas(self, width=5, height=4, dpi=100)
-        self.toolbar = None
+        self.u_canvas = None  # matplotlib_canvas(self, width=5, height=4, dpi=100)
+        self.u_toolbar = None
+        self.o_canvas = None  # matplotlib_canvas(self, width=5, height=4, dpi=100)
+        self.o_toolbar = None
         # Add canvas and toolbar to dedicated widget in this window
 
         self.fileHandler = FileHandler()
@@ -233,15 +235,25 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """Updates 3D plot"""
         # Remove existing toolbar and canvas otherwise only the old one will be displayed instead of the new one
         # Maybe there is another way to do this
-        self.plot_layout.removeWidget(self.toolbar)
-        self.plot_layout.removeWidget(self.canvas)
+        self.unoptimized_plot_layout.removeWidget(self.u_toolbar)
+        self.unoptimized_plot_layout.removeWidget(self.u_canvas)
 
         # Create new canvas and toolbar we will use for plotting
         updated_canvas = matplotlib_canvas(self, width=5, height=4, dpi=100)
-        self.toolbar = NavigationToolbar(updated_canvas, self)
-        self.canvas = updated_canvas
-        self.plot_layout.addWidget(self.toolbar)
-        self.plot_layout.addWidget(self.canvas)
+        self.u_toolbar = NavigationToolbar(updated_canvas, self)
+        self.u_canvas = updated_canvas
+        self.unoptimized_plot_layout.addWidget(self.u_toolbar)
+        self.unoptimized_plot_layout.addWidget(self.u_canvas)
+
+        self.optimize_plot_layout.removeWidget(self.o_toolbar)
+        self.optimize_plot_layout.removeWidget(self.o_canvas)
+
+        # Create new canvas and toolbar we will use for plotting
+        updated_canvas = matplotlib_canvas(self, width=5, height=4, dpi=100)
+        self.o_toolbar = NavigationToolbar(updated_canvas, self)
+        self.o_canvas = updated_canvas
+        self.optimize_plot_layout.addWidget(self.o_toolbar)
+        self.optimize_plot_layout.addWidget(self.o_canvas)
 
         # Build undeformed crane with updated values
         nodes, beams = crane.get_crane()
@@ -257,7 +269,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         o_deformed_nodes = self.o_U * multiplier + nodes
 
         plotter_manager.create_plots(nodes, deformed_nodes, o_deformed_nodes, beams, self.area_per_rod,
-                                     self.o_area_per_rod, self.canvas.fig, self.N, self.o_N)
+                                     self.o_area_per_rod, self.u_canvas.fig, self.o_canvas.fig, self.N, self.o_N)
 
         self.output.appendPlainText("Jib displacement at front where forces are applied")
         self.output.appendPlainText(
