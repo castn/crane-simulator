@@ -21,7 +21,11 @@ class Dims():
     TOWER_END = 0
     JIB_END = 0
     COUNTERJIB_END = 0
+    length_of_each_beam = 0
 
+
+def get_length_of_each_beam():
+    return Dims.length_of_each_beam
 
 kN = 1e3
 

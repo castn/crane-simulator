@@ -1,8 +1,10 @@
 import sys
 
 import PySide6.QtWidgets
+import numpy as np
 
 from craneSimulator.gui.plotting.plotter import PlotterManager
+from craneSimulator.simulation import analysis
 from craneSimulator.truss.crane import Crane
 from craneSimulator.util import file_handler
 from craneSimulator.util.file_handler import FileHandler
@@ -193,13 +195,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                           "<b>Crane Simulator 2024</b><br> is a software written in Python which was developed in the "
                           "context of a project course at the TU Darmstadt. The source code is available on Github.")
 
-    def update_debug_tree_widget(self, nodes, beams, def_nodes, area_per_rod):
+    def update_debug_tree_widget(self, nodes, beams, def_nodes, area_per_rod, o_area_per_rod):
         """Updates node and beam tree in 'Debug' tab"""
         self.debug_treeWidget.clear()
         tree_items = [create_tree_item(nodes, "Coordinates of Nodes", ""),
                       create_tree_item(beams, "Nodes per Beam", ""),
                       create_tree_item(def_nodes, "Coordinates of deformed Nodes", ""),
-                      create_tree_item(area_per_rod, "Cross sectional area per Rod", "mm\u00B2")]
+                      create_tree_item(area_per_rod, "Cross sectional area per Rod (Unoptimized)", "mm\u00B2"),
+                      create_tree_item(o_area_per_rod, "Cross sectional area per Rod (Optimized)", "mm\u00B2")]
         self.debug_treeWidget.insertTopLevelItems(0, tree_items)
 
     def update_fem_tree_widget(self, N, R, U):
@@ -321,7 +324,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             self.update_plot()
             nodes, beams = crane.get_crane()
-            self.update_debug_tree_widget(nodes, beams, nodes + self.U, self.area_per_rod)
+            self.update_debug_tree_widget(nodes, beams, nodes + self.U, self.area_per_rod, self.o_area_per_rod)
             self.update_info()
 
             if self.fem_settings.isChecked():
@@ -333,7 +336,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """Updates infobox in the bottom left"""
         total_length = crane.get_length()
         total_length = total_length / 1000
-        total_volume = total_length * self.crane.A
+        total_volume = np.sum(self.o_area_per_rod * (analysis.get_length_of_each_beam()/ 1000))
         total_mass = total_volume * self.crane.DENSITY
         total_cost = total_mass / 1000 * 1000
         self.total_length.setText(f'{(total_length):.3f} m')
