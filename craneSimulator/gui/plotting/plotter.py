@@ -24,6 +24,12 @@ class PlotterManager:
         ax_tr.set_title("Cross section area (Unoptimized)")
         ax_bl.set_title("Deformation (Optimized)")
         ax_br.set_title("Cross section area (Optimized)")
+        # Set view point (camera angle)
+        # Here set to display z,x plane
+        ax_tl.view_init(0, -90, 0)
+        ax_tr.view_init(0, -90, 0)
+        ax_bl.view_init(0, -90, 0)
+        ax_br.view_init(0, -90, 0)
 
         # Plot unoptimized crane
         plot(nodes, beams, "grey", "--", "Undeformed", ax_tl, fig)
