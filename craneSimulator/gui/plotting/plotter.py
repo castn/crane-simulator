@@ -9,27 +9,35 @@ from matplotlib import pyplot as plt
 LINE_WIDTH = 1
 
 
+def set_default_settings(ax, title):
+    # Set view point (camera angle)
+    # Here set to display z,x plane
+    ax.view_init(0, -90, 0)
+    # Set labels for axis
+    ax.set_xlabel("X - Achse")
+    # ax.set_ylabel("Y - Achse")
+    ax.set_zlabel("Z - Achse")
+    # Set title of subplot
+    ax.set_title(title)
+    ax.set_yticks([])
+
+
 class PlotterManager:
     def __init__(self, has_gradient, cmap_deformation, cmap_area):
         self.has_gradient = has_gradient
         self.cmap_deformation = cmap_deformation
         self.cmap_area = cmap_area
 
-    def create_plots(self, nodes, deformed_nodes, o_deformed_nodes, beams, area_per_rod, o_area_per_rod, u_fig,o_fig,  N, o_N):
+    def create_plots(self, nodes, deformed_nodes, o_deformed_nodes, beams, area_per_rod, o_area_per_rod, u_fig, o_fig,
+                     N, o_N):
         u_ax_l = u_fig.add_subplot(1, 2, 1, projection='3d')
         u_ax_r = u_fig.add_subplot(1, 2, 2, projection='3d')
         o_ax_l = o_fig.add_subplot(1, 2, 1, projection='3d')
         o_ax_r = o_fig.add_subplot(1, 2, 2, projection='3d')
-        u_ax_l.set_title("Deformation (Unoptimized)")
-        u_ax_r.set_title("Cross section area (Unoptimized)")
-        o_ax_l.set_title("Deformation (Optimized)")
-        o_ax_r.set_title("Cross section area (Optimized)")
-        # Set view point (camera angle)
-        # Here set to display z,x plane
-        u_ax_l.view_init(0, -90, 0)
-        u_ax_r.view_init(0, -90, 0)
-        o_ax_l.view_init(0, -90, 0)
-        o_ax_r.view_init(0, -90, 0)
+        set_default_settings(u_ax_l, "Deformation")
+        set_default_settings(u_ax_r, "Cross section area")
+        set_default_settings(o_ax_l, "Deformation")
+        set_default_settings(o_ax_r, "Cross section area")
 
         # Plot unoptimized crane
         plot(nodes, beams, "grey", "--", "Undeformed", u_ax_l, u_fig)
@@ -39,6 +47,8 @@ class PlotterManager:
         plot(nodes, beams, "grey", "--", "Undeformed", o_ax_l, u_fig)
         plot_deformation_with_grad(o_deformed_nodes, beams, '-', o_ax_l, u_fig, o_N, self.cmap_deformation)
         plot_area_with_grad(nodes, beams, '-', o_ax_r, u_fig, o_area_per_rod, self.cmap_area)
+        #print(u_ax_l.get_xticklabels())
+        #u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
 
 
 def plot(nodes, beams, color, line_style, label, axes, fig):
