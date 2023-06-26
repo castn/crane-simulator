@@ -49,6 +49,8 @@ class PlotterManager:
         plot_area_with_grad(nodes, beams, '-', o_ax_r, u_fig, o_area_per_rod, self.cmap_area)
         #print(u_ax_l.get_xticklabels())
         #u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
+        #u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
+
 
 
 def plot(nodes, beams, color, line_style, label, axes, fig):
