@@ -97,6 +97,7 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forc
                        linewidth=LINE_WIDTH)
         line = line[0]
     line.set_label("Deformed")
+    ax.set_aspect("equal")
     # ax.legend(handles=create_colormap_gradient(axial_forces, cmap), prop={'size': 0}, loc='upper left',
     #            title='Absolute axial forces')
 

@@ -291,7 +291,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             str(optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - nodes[crane.Dims.JIB_NUM_NODES - 2]))
         self.output.appendPlainText(
             str(optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1] - nodes[crane.Dims.JIB_NUM_NODES - 1]))
-        
+
         self.output.appendPlainText("[Unoptimized] Counter Jib displacement")
         self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 2] - nodes[len(nodes) - 2]))
         self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 1] - nodes[len(nodes) - 1]))
