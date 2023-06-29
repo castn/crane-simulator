@@ -81,7 +81,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.crane = Crane()
         self.dims = Dims()
         self.set_crane_dimensions()
-        self.apply_configuration()
+        #self.apply_configuration()
 
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
