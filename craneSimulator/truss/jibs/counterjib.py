@@ -263,51 +263,13 @@ def append_beam(start_node, end_node, len_counts):
     Dims.TOTAL_LENGTH += length
 
 
-def get_dims():
-    """Prompts user to enter custom measurements for the counterjib in the console"""
-    length = 0
-    while length < 500 or length > 10000:  # 5000-10000
-        length = float(input('Enter the length of the jib in mm: '))
-    seg_length = 0
-    segs = 0
-    while seg_length < 500 or seg_length > 2000:  # 500-2000
-        segs = int(input('Enter the how many segments you would like: '))
-        seg_length = length / segs
-    height = 0
-    while height < 500 or height > 2000:
-        height = float(input('Enter the height of the truss in mm: '))
-    if np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2) > 2000:
-        print(
-            f'Warning! The diagonal elements will have a length of {np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2):.3f}mm which is greater than the 2000mm allowed!')
-        print('Please adjust the measurements and reenter them.')
-        get_dims()
-
-    Dims.SEGMENTS = segs
-    Dims.SEGMENT_LENGTH = seg_length
-    Dims.HEIGHT = height
-
-    while Dims.SUPPORT_TYPE == Style.NOT_CHOSEN:
-        sup_style = str(input(
-            'What type of support would you like? Options include \'none\', \'truss\', \'single tower\', and \'twin tower\': ')).lower()
-        if sup_style == 'none':
-            Dims.SUPPORT_TYPE = Style.NONE
-        elif sup_style == 'truss':
-            Dims.SUPPORT_TYPE = Style.TRUSS
-        elif sup_style == 'single tower':
-            Dims.SUPPORT_TYPE = Style.ONE_TOWER
-        elif sup_style == 'twin tower':
-            Dims.SUPPORT_TYPE = Style.TWO_TOWER
-        else:
-            print('Sorry, that was not a valid input. Try again.')
-
-
 def set_dims(length, height, segs, sup_style):
     """Sets dimensions of the counterjib to passed-through values"""
     Comps.nodes = []
     Comps.beams = []
     Dims.TOTAL_LENGTH = 0
     Dims.LONGEST_BEAM = 0
-    
+
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height

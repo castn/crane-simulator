@@ -176,30 +176,6 @@ def get_longest_beam():
     return Dims.LONGEST_BEAM
 
 
-def get_dims():
-    """Prompts user to enter custom measurements for the jib in the console"""
-    length = 0
-    while length < 500 or length > 10000:  # 5000-10000
-        length = float(input('Enter the length of the jib in mm: '))
-    seg_length = 0
-    segs = 0
-    while seg_length < 500 or seg_length > 2000:  # 500-2000
-        segs = int(input('Enter the how many segments you would like: '))
-        seg_length = length / segs
-    height = 0
-    while height < 500 or height > 2000:
-        height = float(input('Enter the height of the truss in mm: '))
-    if np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2) > 2000:
-        print(
-            f'Warning! The diagonal elements will have a length of {np.sqrt(height ** 2 + (1/2 * np.sqrt(seg_length ** 2 + Dims.TOWER_WIDTH ** 2)) ** 2):.3f}mm which is greater than the 2000mm allowed!')
-        print('Please adjust the measurements and reenter them.')
-        get_dims()
-
-    Dims.SEGMENTS = segs
-    Dims.SEGMENT_LENGTH = seg_length
-    Dims.HEIGHT = height
-
-
 def set_dims(length, height, segs, sup_type):
     """Sets dimensions of the jib to passed-through values"""
     Comps.nodes = []

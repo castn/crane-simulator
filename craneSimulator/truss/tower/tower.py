@@ -218,36 +218,13 @@ def get_longest_beam():
     return Dims.LONGEST_BEAM
 
 
-def get_dims():
-    """Prompts user to enter custom measurements for the tower in the console"""
-    height = 0
-    while height < 500 or height > 10000: # 5000-10000
-        height = float(input('Enter the height of the tower in mm: '))
-    seg_height = 0
-    segs = 0
-    while seg_height < 500 or seg_height > 2000: # 500-2000
-        segs = int(input('Enter the how many segments you would like: '))
-        seg_height = height / segs
-    width = 0
-    while width < 500 or width > 2000: # 500-2000
-        width = float(input('Enter the width of the crane in mm: '))
-    if np.sqrt(seg_height ** 2 + width ** 2) > 2000:
-        print(f'Warning! The diagonal elements will have a length of {np.sqrt(seg_height ** 2 + width ** 2):.3f}mm which is greater than the 2000mm allowed!')
-        print('Please adjust the measurements and reenter them.')
-        get_dims()
-
-    Dims.SEGMENT_HEIGHT = seg_height
-    Dims.SEGMENT_WIDTH = width
-    Dims.SEGMENTS = segs
-
-
 def set_dims(height, width, segs, sup_style):
     """Sets dimensions of the tower to passed-through values"""
     Comps.nodes = []
     Comps.beams = []
     Dims.TOTAL_LENGTH = 0
     Dims.LONGEST_BEAM = 0
-    
+
     Dims.SEGMENT_HEIGHT = height / segs
     Dims.SEGMENT_WIDTH = width
     Dims.SEGMENTS = segs
