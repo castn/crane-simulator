@@ -281,14 +281,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         plotter_manager.update_optimized_plots(nodes, optim_deformed_nodes, beams, self.optim_axial_forces,
                                                self.optim_axial_forces)
 
-        self.output.appendPlainText("Jib displacement at front where forces are applied")
+        self.output.appendPlainText("[Unoptimized] Jib displacement")
         self.output.appendPlainText(
             str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - nodes[crane.Dims.JIB_NUM_NODES - 2]))
         self.output.appendPlainText(
             str(deformed_nodes[crane.Dims.JIB_NUM_NODES - 1] - nodes[crane.Dims.JIB_NUM_NODES - 1]))
-        self.output.appendPlainText("\nCounter Jib displacement at back where forces are applied")
+        self.output.appendPlainText("[Optimized] Jib displacement")
+        self.output.appendPlainText(
+            str(optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - nodes[crane.Dims.JIB_NUM_NODES - 2]))
+        self.output.appendPlainText(
+            str(optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1] - nodes[crane.Dims.JIB_NUM_NODES - 1]))
+        
+        self.output.appendPlainText("[Unoptimized] Counter Jib displacement")
         self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 2] - nodes[len(nodes) - 2]))
         self.output.appendPlainText(str(deformed_nodes[len(deformed_nodes) - 1] - nodes[len(nodes) - 1]))
+        self.output.appendPlainText("[Optimized] Counter Jib displacement")
+        self.output.appendPlainText(str(optim_deformed_nodes[len(deformed_nodes) - 2] - nodes[len(nodes) - 2]))
+        self.output.appendPlainText(str(optim_deformed_nodes[len(deformed_nodes) - 1] - nodes[len(nodes) - 1]))
         self.output.appendPlainText('\n')
 
     def apply_configuration(self):
