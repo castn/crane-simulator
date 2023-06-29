@@ -166,7 +166,7 @@ class Crane:
         axial_force, reaction_force, deformation = analysis.analyze(nodes.copy(), beams.copy(),
                                                                     self.E, self.DENSITY)
 
-        return axial_force, reaction_force, deformation, analysis.get_area_per_rod()
+        return axial_force, reaction_force, deformation, analysis.get_area_per_beam()
 
     def optimize(self):
         """Optimizes the crane to try to be within given specifications"""
