@@ -23,46 +23,50 @@ def set_default_settings(ax, title):
 
 
 class PlotterManager:
-    def __init__(self, has_gradient, cmap_deformation, cmap_area):
+    def __init__(self, has_gradient, cmap_deformation, cmap_area, u_fig, o_fig):
         self.has_gradient = has_gradient
         self.cmap_deformation = cmap_deformation
         self.cmap_area = cmap_area
+        self.unoptim_fig = u_fig
+        self.optim_fig = o_fig
+        self.unoptim_ax_l = u_fig.add_subplot(1, 2, 1, projection='3d')
+        self.unoptim_ax_r = u_fig.add_subplot(1, 2, 2, projection='3d')
+        self.optim_ax_l = o_fig.add_subplot(1, 2, 1, projection='3d')
+        self.optim_ax_r = o_fig.add_subplot(1, 2, 2, projection='3d')
+        set_default_settings(self.unoptim_ax_l, "Deformation")
+        set_default_settings(self.unoptim_ax_r, "Cross section area")
+        set_default_settings(self.optim_ax_l, "Deformation")
+        set_default_settings(self.optim_ax_r, "Cross section area")
 
-    def create_plots(self, nodes, deformed_nodes, o_deformed_nodes, beams, area_per_rod, o_area_per_rod, u_fig, o_fig,
-                     N, o_N):
-        u_ax_l = u_fig.add_subplot(1, 2, 1, projection='3d')
-        u_ax_r = u_fig.add_subplot(1, 2, 2, projection='3d')
-        o_ax_l = o_fig.add_subplot(1, 2, 1, projection='3d')
-        o_ax_r = o_fig.add_subplot(1, 2, 2, projection='3d')
-        set_default_settings(u_ax_l, "Deformation")
-        set_default_settings(u_ax_r, "Cross section area")
-        set_default_settings(o_ax_l, "Deformation")
-        set_default_settings(o_ax_r, "Cross section area")
-
+    def update_unoptimized_plots(self, nodes, deformed_nodes, beams, area_per_rod, N):
         # Plot unoptimized crane
-        plot(nodes, beams, "grey", "--", "Undeformed", u_ax_l, u_fig)
-        plot_deformation_with_grad(deformed_nodes, beams, '-', u_ax_l, u_fig, N, self.cmap_deformation)
-        plot_area_with_grad(nodes, beams, '-', u_ax_r, u_fig, area_per_rod, self.cmap_area)
+        simple_plot(nodes, beams, "grey", "--", "Undeformed", self.unoptim_ax_l)
+        plot_deformation_with_grad(deformed_nodes, beams, '-', self.unoptim_ax_l, N, self.cmap_deformation)
+        plot_area_with_grad(nodes, beams, '-', self.unoptim_ax_r, self.unoptim_fig, area_per_rod)
+        # print(u_ax_l.get_xticklabels())
+        # u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
+        # u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
+
+    def update_optimized_plots(self, nodes, o_deformed_nodes, beams, o_area_per_rod, o_N):
         # Plot optimized crane
-        plot(nodes, beams, "grey", "--", "Undeformed", o_ax_l, u_fig)
-        plot_deformation_with_grad(o_deformed_nodes, beams, '-', o_ax_l, u_fig, o_N, self.cmap_deformation)
-        plot_area_with_grad(nodes, beams, '-', o_ax_r, u_fig, o_area_per_rod, self.cmap_area)
-        #print(u_ax_l.get_xticklabels())
-        #u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
-        #u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
+        simple_plot(nodes, beams, "grey", "--", "Undeformed", self.optim_ax_l)
+        plot_deformation_with_grad(o_deformed_nodes, beams, '-', self.optim_ax_l, o_N, self.cmap_deformation)
+        plot_area_with_grad(nodes, beams, '-', self.optim_ax_r, self.optim_fig, o_area_per_rod)
+        # print(u_ax_l.get_xticklabels())
+        # u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
+        # u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
 
 
-
-def plot(nodes, beams, color, line_style, label, axes, fig):
+def simple_plot(nodes, beams, color, line_style, label, axes):
     """
-    Plot nodes using matplotlib
-    :param nodes: Numpy array containing the coordinates of each node in three-dimensional space
-    :param beams: Array containing the nodes each beam is connected to
-    :param color: Color of the edge
-    :param line_style: Style of the edge
-    :param pen_width: Width of the edge
-    :param label: Name of the edge and what it should represent
-    """
+        Plot nodes using matplotlib
+        :param nodes: Numpy array containing the coordinates of each node in three-dimensional space
+        :param beams: Array containing the nodes each beam is connected to
+        :param color: Color of the edge
+        :param line_style: Style of the edge
+        :param pen_width: Width of the edge
+        :param label: Name of the edge and what it should represent
+        """
 
     for i in range(len(beams)):
         # Create initial and final coordinates
@@ -79,7 +83,7 @@ def plot(nodes, beams, color, line_style, label, axes, fig):
     axes.legend(prop={'size': 10})
 
 
-def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, fig, axial_forces, cmap_type):
+def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forces, cmap_type):
     axial_forces = np.absolute(axial_forces)
     norm = mpl.colors.Normalize(min(axial_forces), max(axial_forces))
     cmap = cm.get_cmap(cmap_type.currentText())
@@ -93,11 +97,12 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, fig, axial
                        linewidth=LINE_WIDTH)
         line = line[0]
     line.set_label("Deformed")
+    ax.set_aspect("equal")
     # ax.legend(handles=create_colormap_gradient(axial_forces, cmap), prop={'size': 0}, loc='upper left',
     #            title='Absolute axial forces')
 
 
-def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod, cmap_type):
+def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod):
     norm = mpl.colors.Normalize(min(area_per_rod), max(area_per_rod))
     cmap = cm.get_cmap("rainbow")
     for i in range(len(beams)):
