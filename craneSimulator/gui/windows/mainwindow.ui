@@ -826,13 +826,6 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="optimize_button">
-             <property name="text">
-              <string>Optimize</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QProgressBar" name="progressBar">
              <property name="value">
               <number>0</number>
@@ -881,7 +874,7 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="unoptimizedPlot" native="true">
+         <widget class="QWidget" name="unoptimizedPlot">
           <attribute name="title">
            <string>Unoptimized</string>
           </attribute>
