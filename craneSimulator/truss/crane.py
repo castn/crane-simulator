@@ -94,18 +94,6 @@ def get_length():
     return tower.get_length() + jib.get_length() + counterjib.get_length()
 
 
-def should_have_tower(boolean):
-    has_tower = boolean
-
-
-def should_have_jib(boolean):
-    has_jib = boolean
-
-
-def should_have_counter_jib(boolean):
-    has_counter_jib = boolean
-
-
 def create_crane():
     """Creates all elements of the crane connected to each other"""
     create_tower()
@@ -136,6 +124,7 @@ def set_default_dims():
 
 
 class Crane:
+    """Contains all features needed to adjust the crane"""
     def __init__(self):
         self.E = 210e9  # Youngs module (210GPa)
         self.A = 0.0025  # Cross-section of beams (0.0025-0.0625m^2)
@@ -158,8 +147,8 @@ class Crane:
     def enable_gravity(self, window):
         """Applies gravity to nodes"""
         analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES)
-        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams), self.A, self.DENSITY,
-                               self.GRAVITY_CONSTANT)
+        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams),
+                               self.A, self.DENSITY, self.GRAVITY_CONSTANT)
 
     def reset_forces(self, window):
         """Resets forces on all nodes"""
@@ -167,19 +156,24 @@ class Crane:
 
     def enable_wind(self, direc, force):
         """Applies wind in given direction with given force"""
-        analysis.apply_wind(direc.lower(), force, counterjib.get_support_type(), counterjib.get_end_cj())
+        analysis.apply_wind(direc.lower(), force, counterjib.get_support_type(),
+                            counterjib.get_end_cj())
 
     def analyze(self):
         """Performs the analysis of the crane"""
         nodes, beams = get_crane()
         analysis.generate_conditions(nodes, beams)
-        axial_force, reaction_force, deformation = analysis.analyze(nodes.copy(), beams.copy(), self.E, self.DENSITY)
+        axial_force, reaction_force, deformation = analysis.analyze(nodes.copy(), beams.copy(),
+                                                                    self.E, self.DENSITY)
 
         return axial_force, reaction_force, deformation, analysis.get_area_per_rod()
 
     def optimize(self):
+        """Optimizes the crane to try to be within given specifications"""
         nodes, beams = get_crane()
         analysis.generate_conditions(nodes, beams)
-        axial_force, reaction_force, deformation, area_per_rod = analysis.optimize(nodes.copy(), beams.copy(), self.E,
+        axial_force, reaction_force, deformation, area_per_rod = analysis.optimize(nodes.copy(),
+                                                                                   beams.copy(),
+                                                                                   self.E,
                                                                                    self.DENSITY)
         return axial_force, reaction_force, deformation, area_per_rod

@@ -326,19 +326,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.set_crane_dimensions()
         # Will always generate a tower
-        crane.should_have_tower(True)
         crane.set_tower_dims(self.dims.get_tower_height(),
                              self.dims.get_tower_width(),
                              self.dims.get_tower_segments(),
                              self.dims.get_tower_support_type())
         # Will always generate a jib
-        crane.should_have_jib(True)
         crane.set_jib_dims(self.dims.get_jib_length(),
                            self.dims.get_jib_height(),
                            self.dims.get_jib_segments(),
                            self.dims.get_jib_support_type())
         # Will always generate a counter jib
-        crane.should_have_counter_jib(True)
         crane.set_counterjib_dims(self.dims.get_counter_jib_length(),
                                   self.dims.get_counter_jib_height(),
                                   self.dims.get_counter_jib_segments(),

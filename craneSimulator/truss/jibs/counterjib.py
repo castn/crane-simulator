@@ -206,6 +206,23 @@ def create_cable_support(one_node):
         append_beam(cable_start + 1, cable_start - 1, False)
 
 
+def append_beam(start_node, end_node, len_counts):
+    """
+    Creates a beam between 2 given points and adds the length to a running total
+
+    Args:
+    :param start_node: start node of the beam
+    :param end_node: end node of the beam
+    """
+    Comps.beams.append([start_node, end_node])
+    start_float = np.array(Comps.nodes[start_node]).astype(float)
+    end_float = np.array(Comps.nodes[end_node]).astype(float)
+    length = np.linalg.norm(end_float - start_float)
+    if len_counts:
+        Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
+    Dims.TOTAL_LENGTH += length
+
+
 def get_nodes():
     """Return the nodes of the tower as numpy array of type float64"""
     return np.array(Comps.nodes).astype(float)
@@ -244,23 +261,6 @@ def get_support_type():
 def get_end_cj():
     """Returns end of counterjib where support starts (if applicable)"""
     return Dims.END_CJ
-
-
-def append_beam(start_node, end_node, len_counts):
-    """
-    Creates a beam between 2 given points and adds the length to a running total
-
-    Args:
-    :param start_node: start node of the beam
-    :param end_node: end node of the beam
-    """
-    Comps.beams.append([start_node, end_node])
-    start_float = np.array(Comps.nodes[start_node]).astype(float)
-    end_float = np.array(Comps.nodes[end_node]).astype(float)
-    length = np.linalg.norm(end_float - start_float)
-    if len_counts:
-        Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
-    Dims.TOTAL_LENGTH += length
 
 
 def set_dims(length, height, segs, sup_style):

@@ -130,6 +130,22 @@ def create_diagonal_beams(val_to_add):
     append_beam(3 + val_to_add, 2 + val_to_add)
 
 
+def append_beam(start_node, end_node):
+    """
+    Creates a beam between 2 given points and adds the length to a running total
+
+    Args:
+    :param start_node: start node of the beam
+    :param end_node: end node of the beam
+    """
+    Comps.beams.append([start_node, end_node])
+    start_float = np.array(Comps.nodes[start_node]).astype(float)
+    end_float = np.array(Comps.nodes[end_node]).astype(float)
+    length = np.linalg.norm(end_float - start_float)
+    Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
+    Dims.TOTAL_LENGTH += length
+
+
 def get_nodes():
     """Return the nodes of jib as numpy array of type float64"""
     return np.array(Comps.nodes).astype(float)
@@ -148,22 +164,6 @@ def get_beams():
 def get_beams_raw():
     """Returns the beams of the tower in original format"""
     return Comps.beams
-
-
-def append_beam(start_node, end_node):
-    """
-    Creates a beam between 2 given points and adds the length to a running total
-
-    Args:
-    :param start_node: start node of the beam
-    :param end_node: end node of the beam
-    """
-    Comps.beams.append([start_node, end_node])
-    start_float = np.array(Comps.nodes[start_node]).astype(float)
-    end_float = np.array(Comps.nodes[end_node]).astype(float)
-    length = np.linalg.norm(end_float - start_float)
-    Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
-    Dims.TOTAL_LENGTH += length
 
 
 def get_length():

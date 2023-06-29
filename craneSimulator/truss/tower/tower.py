@@ -172,6 +172,22 @@ def create_segment_nodes(elevation):
     Comps.nodes.append([Dims.SEGMENT_WIDTH, Dims.SEGMENT_WIDTH, elevation])
 
 
+def append_bar(start_node, end_node):
+    """
+    Creates a beam between 2 given points and adds the length to a running total
+    
+    Args:
+    :param start_node: start node of the beam
+    :param end_node: end node of the beam
+    """
+    Comps.beams.append([start_node, end_node])
+    start_float = np.array(Comps.nodes[start_node]).astype(float)
+    end_float = np.array(Comps.nodes[end_node]).astype(float)
+    length = np.linalg.norm(end_float - start_float)
+    Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
+    Dims.TOTAL_LENGTH += length
+
+
 def get_nodes():
     """Return the nodes of tower as numpy array of type float64"""
     return np.array(Comps.nodes).astype(float)
@@ -192,22 +208,6 @@ def get_beams_raw():
     return Comps.beams
 
 
-def append_bar(start_node, end_node):
-    """
-    Creates a beam between 2 given points and adds the length to a running total
-    
-    Args:
-    :param start_node: start node of the beam
-    :param end_node: end node of the beam
-    """
-    Comps.beams.append([start_node, end_node])
-    start_float = np.array(Comps.nodes[start_node]).astype(float)
-    end_float = np.array(Comps.nodes[end_node]).astype(float)
-    length = np.linalg.norm(end_float - start_float)
-    Dims.LONGEST_BEAM = max(length, Dims.LONGEST_BEAM)
-    Dims.TOTAL_LENGTH += length
-
-
 def get_length():
     """Returns total length of material used in tower"""
     return Dims.TOTAL_LENGTH
@@ -216,6 +216,11 @@ def get_length():
 def get_longest_beam():
     """Returns length of longest beam"""
     return Dims.LONGEST_BEAM
+
+
+def get_height_width():
+    """Gets the height and width of the tower"""
+    return Dims.SEGMENT_HEIGHT * Dims.SEGMENTS, Dims.SEGMENT_WIDTH
 
 
 def set_dims(height, width, segs, sup_style):
@@ -243,8 +248,3 @@ def default_dims():
     Dims.SEGMENT_HEIGHT = 1000
     Dims.SEGMENT_WIDTH = 1000
     Dims.SEGMENTS = 2
-
-
-def get_height_width():
-    """Gets the height and width of the tower"""
-    return Dims.SEGMENT_HEIGHT * Dims.SEGMENTS, Dims.SEGMENT_WIDTH
