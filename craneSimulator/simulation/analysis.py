@@ -240,6 +240,8 @@ def analyze(nodes, beams, E, DENSITY):
     deformation = Conditions.dof_condition.astype(float).flatten()                                          # Contains all the deformation data
     deformation[free_dof] = Uf                                                                              # Deformation of all nodes that are free to move
     deformation[support_dof] = Conditions.Ur                                                                # Deformation of all nodes that are fixed
+    # Uf: deformation of all nodes allowed to deform (new coords) -> def_free_nodes
+    # Ur: coords of nodes that aren't allowed to move (same coords) -> def_fixed_nodes
     deformation = deformation.reshape(number_of_nodes, dof)                                                 # Deformation vector for each node
     u = np.concatenate((deformation[beams[:, 0]], deformation[beams[:, 1]]), axis=1)                        # Deformed nodes for each beam? https://youtu.be/Y-ILnLMZYMw?t=3013
     axial_force = (E * Conditions.area_per_rod / L[:]) * (transformation_vector[:] * u[:]).sum(axis=1)      # Axial forces for each beam
