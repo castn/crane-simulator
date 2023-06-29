@@ -81,7 +81,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
-        self.optimize_button.clicked.connect(self.optimize_crane)
 
     def create_actions(self):
         self.actionOpen.triggered.connect(self.open)
@@ -335,8 +334,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.update_debug_tree_widget(nodes, beams, nodes + self.U, self.area_per_rod, self.optim_area_per_rod)
             self.update_info()
 
-            if self.fem_settings.isChecked():
-                self.update_fem_tree_widget(self.N, self.R, self.U)
+            self.update_fem_tree_widget(self.N, self.R, self.U)
 
         self.is_analysed = True
         self.progressBar.setValue(100)
