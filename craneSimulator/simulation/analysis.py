@@ -53,12 +53,12 @@ def generate_conditions(nodes, beams):
     Conditions.area_per_beam = np.full((len(beams)), 0.0025)
 
 
-def apply_forces(window, nodes, end_tower, end_jib):
+def apply_forces(window, nodes, end_tower, end_jib, end_cj_base):
     """Applies user-entered forces"""
     Comps.nodes = nodes
     Dims.TOWER_END = end_tower
     Dims.JIB_END = end_jib
-    Dims.COUNTERJIB_END = len(nodes)
+    Dims.COUNTERJIB_END = end_cj_base
 
     # Applied forces
     p = np.zeros_like(nodes)

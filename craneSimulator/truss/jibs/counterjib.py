@@ -36,6 +36,7 @@ class Dims:
     END_NODE_TOWER = 0
     END_NODE_JIB = 2
     END_CJ = 0
+    END_CJ_BASE = 0
 
     IS_CONNECTED = False
 
@@ -72,6 +73,7 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
 
     create_segments()
     create_beams()
+    Dims.END_CJ_BASE = len(Comps.nodes)
     create_support()
 
 
@@ -256,6 +258,10 @@ def get_longest_beam():
 def get_support_type():
     """Returns support type of counterjib"""
     return Dims.SUPPORT_TYPE
+
+
+def get_end_cj_base():
+    return Dims.END_CJ_BASE
 
 
 def get_end_cj():

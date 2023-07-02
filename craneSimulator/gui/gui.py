@@ -250,19 +250,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.reset_plots()
         # Get undeformed crane with updated values
         nodes, beams = crane.get_crane()
+        end_crane_parts = crane.get_end_parts()
         # Create new plot manager to manage the different plots
-        plotter_manager = PlotterManager(self.axial_coloring.isChecked(), self.cmap, self.cmap, self.unoptim_canvas.fig,
-                                         self.optim_canvas.fig)
+        plotter_manager = PlotterManager(self.axial_coloring.isChecked(), self.cmap, self.cmap,
+                                         self.unoptim_canvas.fig, self.optim_canvas.fig)
 
         # Update plots for unoptimized tab
         multiplier = self.multiplierSpinBox.value()
         self.axial_forces, self.reaction_forces, self.deformation, self.area_per_rod = self.crane.analyze()
         deformed_nodes = self.deformation * multiplier + nodes
-        plotter_manager.update_unoptimized_plots(nodes, deformed_nodes, beams, self.area_per_rod, self.axial_forces)
+        plotter_manager.update_unoptimized_plots(nodes, deformed_nodes, beams, self.area_per_rod, self.axial_forces, end_crane_parts)
         # Update plots for optimized tab
         self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize()
         optim_deformed_nodes = self.optim_deformations * multiplier + nodes
-        plotter_manager.update_optimized_plots(nodes, optim_deformed_nodes, beams, self.optim_axial_forces,
+        plotter_manager.update_optimized_plots(nodes, optim_deformed_nodes, beams,
+                                               self.optim_axial_forces,
                                                self.optim_axial_forces)
 
         # Display displacement of crane at points where forces are applied
