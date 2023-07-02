@@ -826,13 +826,6 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="optimize_button">
-             <property name="text">
-              <string>Optimize</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QProgressBar" name="progressBar">
              <property name="value">
               <number>0</number>
@@ -881,13 +874,21 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="unoptimizedPlot" native="true">
+         <widget class="QWidget" name="unoptimizedPlot">
           <attribute name="title">
            <string>Unoptimized</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_10">
            <item>
-            <layout class="QVBoxLayout" name="unoptimized_plot_layout"/>
+            <layout class="QVBoxLayout" name="unoptimized_plot_layout">
+             <item alignment="Qt::AlignHCenter">
+              <widget class="QLabel" name="unoptimized_no_data_label">
+               <property name="text">
+                <string>No available data. Click Apply to plot the crane defined via the Options</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -897,7 +898,15 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
-            <layout class="QVBoxLayout" name="optimize_plot_layout"/>
+            <layout class="QVBoxLayout" name="optimize_plot_layout">
+             <item alignment="Qt::AlignHCenter">
+              <widget class="QLabel" name="optimized_no_data_label">
+               <property name="text">
+                <string>No available data. Click Apply to plot the crane defined via the Options</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>

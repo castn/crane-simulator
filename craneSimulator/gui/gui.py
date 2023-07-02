@@ -81,7 +81,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.crane = Crane()
         self.dims = Dims()
         self.set_crane_dimensions()
-        self.apply_configuration()
+        #self.apply_configuration()
 
         # Perform action on press of apply button
         self.apply_button.clicked.connect(self.apply_configuration)
@@ -308,6 +308,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.optimize_plot_layout.addWidget(self.optim_canvas)
 
     def remove_current_plots(self):
+        # Hide NO DATA label because we will now display a plot
+        if not self.unoptimized_no_data_label.isHidden():
+            self.unoptimized_no_data_label.hide()
+        if not self.optimized_no_data_label.isHidden():
+            self.optimized_no_data_label.hide()
+
         # Remove toolbars and canvas of matplotlib view
         # Unoptimized tab
         self.remove_current_widget(self.unoptim_toolbar)
