@@ -243,15 +243,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.fem_unoptimized_treeWidget.clear()
         self.fem_optimized_treeWidget.clear()
         unoptim_tree_items = [
-            create_tree_item(self.axial_forces.round(decimals=4), "Axial Forces (positive = tension, negative = compression)", ""),
+            create_tree_item(self.axial_forces.round(decimals=2), "Axial Forces (positive = tension, negative = compression)", ""),
             create_tree_item(self.reaction_forces.round(decimals=2), "Reaction Forces (positive = upward, negative = downward)", ""),
-            create_tree_item(self.deformation.round(decimals=4), "Deformation at nodes", "")]
+            create_tree_item(self.deformation.round(decimals=2), "Deformation at nodes", "")]
         optim_tree_items = [
-            create_tree_item(self.optim_axial_forces.round(decimals=4),
+            create_tree_item(self.optim_axial_forces.round(decimals=2),
                              "Axial Forces (positive = tension, negative = compression)", ""),
             create_tree_item(self.optim_reaction_forces.round(decimals=2),
                              "Reaction Forces (positive = upward, negative = downward)", ""),
-            create_tree_item(self.optim_deformations.round(decimals=4), "Deformation at nodes", "")]
+            create_tree_item(self.optim_deformations.round(decimals=2), "Deformation at nodes", "")]
         self.fem_unoptimized_treeWidget.insertTopLevelItems(0, unoptim_tree_items)
         self.fem_optimized_treeWidget.insertTopLevelItems(0, optim_tree_items)
 
