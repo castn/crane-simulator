@@ -957,9 +957,18 @@
           <attribute name="title">
            <string>FEM</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QTreeWidget" name="fem_treeWidget">
+            <widget class="QTreeWidget" name="fem_unoptimized_treeWidget">
+             <column>
+              <property name="text">
+               <string notr="true">1</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTreeWidget" name="fem_optimized_treeWidget">
              <column>
               <property name="text">
                <string notr="true">1</string>
@@ -973,9 +982,9 @@
           <attribute name="title">
            <string>Debug</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_11">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QTreeWidget" name="debug_treeWidget">
+            <widget class="QTreeWidget" name="debug_unoptimized_treeWidget">
              <attribute name="headerVisible">
               <bool>true</bool>
              </attribute>
@@ -991,6 +1000,15 @@
              <attribute name="headerStretchLastSection">
               <bool>true</bool>
              </attribute>
+             <column>
+              <property name="text">
+               <string notr="true">1</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTreeWidget" name="debug_optimized_treeWidget">
              <column>
               <property name="text">
                <string notr="true">1</string>
@@ -1089,8 +1107,8 @@
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
-     <y>723</y>
+     <x>999</x>
+     <y>1171</y>
     </hint>
     <hint type="destinationlabel">
      <x>774</x>
