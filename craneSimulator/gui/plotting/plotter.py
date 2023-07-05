@@ -23,20 +23,25 @@ def set_default_settings(ax, title):
 
 
 class PlotterManager:
-    def __init__(self, has_gradient, cmap_deformation, cmap_area, u_fig, opt_fig):
+    def __init__(self, has_gradient, cmap_deformation, cmap_area, u_fig, opt_fig, diff_fig):
         self.has_gradient = has_gradient
         self.cmap_deformation = cmap_deformation
         self.cmap_area = cmap_area
         self.unoptim_fig = u_fig
         self.optim_fig = opt_fig
+        self.diff_fig = diff_fig
         self.unoptim_ax_l = u_fig.add_subplot(1, 2, 1, projection='3d')
         self.unoptim_ax_r = u_fig.add_subplot(1, 2, 2, projection='3d')
         self.optim_ax_l = opt_fig.add_subplot(1, 2, 1, projection='3d')
         self.optim_ax_r = opt_fig.add_subplot(1, 2, 2, projection='3d')
+        self.diff_ax_l = diff_fig.add_subplot(1, 2, 1, projection='3d')
+        self.diff_ax_r = diff_fig.add_subplot(1, 2, 2, projection='3d')
         set_default_settings(self.unoptim_ax_l, "Deformation")
         set_default_settings(self.unoptim_ax_r, "Cross section area")
         set_default_settings(self.optim_ax_l, "Deformation")
         set_default_settings(self.optim_ax_r, "Cross section area")
+        set_default_settings(self.diff_ax_l, "Comparison base (old)")
+        set_default_settings(self.diff_ax_r, "Current (new)")
 
     def update_unoptimized_plots(self, nodes, deformed_nodes, beams, area_per_rod, N, end_crane_parts):
         # Plot unoptimized crane
@@ -55,6 +60,20 @@ class PlotterManager:
         # print(u_ax_l.get_xticklabels())
         # u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
         # u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
+
+    def update_diff_plot(self, base_nodes, base_opt_deformed_nodes, base_beams, base_opt_N, current_nodes,
+                         current_opt_deformed_nodes, current_beams, current_opt_N):
+        # Comparison base
+        if not type(base_nodes) == type(None) or not type(base_opt_deformed_nodes) == type(None) or not type(
+                base_beams) == type(None) or not type(base_opt_N) == type(None):
+            simple_plot(base_nodes, base_beams, "grey", "--", "Undeformed", self.diff_ax_l, 5, 5)
+            plot_deformation_with_grad(base_opt_deformed_nodes, base_beams, '-', self.diff_ax_l, base_opt_N,
+                                       self.cmap_deformation)
+        # Current
+        # TODO here we could use reuse the current instead of plotting it again saves time
+        simple_plot(current_nodes, current_beams, "grey", "--", "Undeformed", self.diff_ax_r, 5, 5)
+        plot_deformation_with_grad(current_opt_deformed_nodes, current_beams, '-', self.diff_ax_r, current_opt_N,
+                                   self.cmap_deformation)
 
 
 def simple_plot(nodes, beams, color, line_style, label, axes, end_jib, end_cj):

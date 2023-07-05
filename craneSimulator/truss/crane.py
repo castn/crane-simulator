@@ -141,6 +141,7 @@ class Crane:
         self.has_tower = True
         self.has_jib = True
         self.has_counter_jib = True
+        self.is_build = False
 
     def build_crane(self):
         """Builds crane from previosuly inputted parameters"""
@@ -150,6 +151,8 @@ class Crane:
             create_jib()
         if self.has_counter_jib:
             create_counterjib()
+        self.is_build = True
+
 
     def enable_gravity(self, window):
         """Applies gravity to nodes"""
