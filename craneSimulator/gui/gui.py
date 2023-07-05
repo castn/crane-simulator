@@ -510,6 +510,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.base_beams = self.beams
             self.base_optim_area_per_rod = self.optim_area_per_rod
             self.base_optim_axial_forces = self.optim_axial_forces
+            QMessageBox.information(self, "Success", "Successfully created a base version of your current crane. Click apply again to display them")
 
     def display_waring(self, type, longest_beam):
         QMessageBox.critical(self, 'Specification Violation',
