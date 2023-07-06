@@ -1,11 +1,8 @@
 import sys
 
 import numpy as np
-from PySide6 import QtCore, QtGui, QtWidgets, QtUiTools
-from PySide6.QtCore import QFile
+from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMessageBox, QTreeWidgetItem, QFileDialog
-from PySide6.QtUiTools import QUiLoader
-
 
 from craneSimulator.gui.plotting.plotter import PlotterManager
 from craneSimulator.gui.windows.Ui_MainWindow import Ui_MainWindow
@@ -513,7 +510,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.base_beams = self.beams
             self.base_optim_area_per_rod = self.optim_area_per_rod
             self.base_optim_axial_forces = self.optim_axial_forces
-            QMessageBox.information(self, "Success", "Successfully created a base version of your current crane. Click apply again to display them")
+            QMessageBox.information(self, "Success",
+                                    "Successfully created a base version of your current crane. Click apply again to display them")
 
     def display_waring(self, type, longest_beam):
         QMessageBox.critical(self, 'Specification Violation',
