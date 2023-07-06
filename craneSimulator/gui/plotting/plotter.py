@@ -52,28 +52,33 @@ class PlotterManager:
         # u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
         # u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
 
-    def update_optimized_plots(self, nodes, opt_deformed_nodes, beams, opt_area_per_rod, optm_axial_forces):
+    def update_optimized_plots(self, nodes, opt_deformed_nodes, beams, opt_area_per_rod, optm_axial_forces,
+                               end_crane_parts):
         # Plot optimized crane
-        simple_plot(nodes, beams, "grey", "--", "Undeformed", self.optim_ax_l, 5, 5)
-        plot_deformation_with_grad(opt_deformed_nodes, beams, '-', self.optim_ax_l, optm_axial_forces, self.cmap_deformation)
+        simple_plot(nodes, beams, "grey", "--", "Undeformed", self.optim_ax_l, end_crane_parts[1], end_crane_parts[2])
+        plot_deformation_with_grad(opt_deformed_nodes, beams, '-', self.optim_ax_l, optm_axial_forces,
+                                   self.cmap_deformation)
         plot_area_with_grad(nodes, beams, '-', self.optim_ax_r, self.optim_fig, opt_area_per_rod)
         # print(u_ax_l.get_xticklabels())
         # u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
         # u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
 
     def update_diff_plot(self, base_nodes, base_opt_deformed_nodes, base_beams, base_optm_axial_forces, current_nodes,
-                         current_opt_deformed_nodes, current_beams, current_optm_axial_forces):
+                         current_opt_deformed_nodes, current_beams, current_optm_axial_forces, base_end_crane_parts,
+                         current_end_crane_parts):
         # Comparison base
         if not type(base_nodes) == type(None) or not type(base_opt_deformed_nodes) == type(None) or not type(
                 base_beams) == type(None) or not type(base_optm_axial_forces) == type(None):
-            simple_plot(base_nodes, base_beams, "grey", "--", "Undeformed", self.diff_ax_l, 5, 5)
+            simple_plot(base_nodes, base_beams, "grey", "--", "Undeformed", self.diff_ax_l, base_end_crane_parts[1],
+                        base_end_crane_parts[2])
             plot_deformation_with_grad(base_opt_deformed_nodes, base_beams, '-', self.diff_ax_l, base_optm_axial_forces,
                                        self.cmap_deformation)
         # Current
         # TODO here we could use reuse the current instead of plotting it again saves time
-        simple_plot(current_nodes, current_beams, "grey", "--", "Undeformed", self.diff_ax_r, 5, 5)
-        plot_deformation_with_grad(current_opt_deformed_nodes, current_beams, '-', self.diff_ax_r, current_optm_axial_forces,
-                                   self.cmap_deformation)
+        simple_plot(current_nodes, current_beams, "grey", "--", "Undeformed", self.diff_ax_r,
+                    current_end_crane_parts[1], current_end_crane_parts[2])
+        plot_deformation_with_grad(current_opt_deformed_nodes, current_beams, '-', self.diff_ax_r,
+                                   current_optm_axial_forces, self.cmap_deformation)
 
 
 def simple_plot(nodes, beams, color, line_style, label, axes, end_jib, end_cj):
