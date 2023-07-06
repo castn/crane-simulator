@@ -332,7 +332,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         plotter_manager.update_diff_plot(self.base_nodes, self.base_optim_deformed_nodes, self.base_beams,
                                          self.base_optim_axial_forces, self.nodes, self.optim_deformed_nodes,
-                                         self.beams, self.optim_axial_forces, self.base_end_crane_parts, self.end_crane_parts)
+                                         self.beams, self.optim_axial_forces, self.base_end_crane_parts,
+                                         self.end_crane_parts)
 
     def display_in_console(self):
         # Display displacement of crane at points where forces are applied
@@ -394,20 +395,29 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self.ui.diff_no_data_label.isHidden():
             self.ui.diff_no_data_label.hide()
 
+        # TODO here are some code duplications guess this can be done more elegant, but currently most trivial fix
         # Remove toolbars and canvas of matplotlib view
         # Unoptimized tab
-        self.remove_current_widget(self.unoptim_toolbar)
-        self.remove_current_widget(self.unoptim_canvas)
+        self.remove_plot_from_unoptimized(self.unoptim_toolbar)
+        self.remove_plot_from_unoptimized(self.unoptim_canvas)
         # Optimized tab
-        self.remove_current_widget(self.optim_toolbar)
-        self.remove_current_widget(self.optim_canvas)
+        self.remove_plot_from_optimized(self.optim_toolbar)
+        self.remove_plot_from_optimized(self.optim_canvas)
         # Diff tab
-        self.remove_current_widget(self.diff_toolbar)
-        self.remove_current_widget(self.diff_canvas)
+        self.remove_plot_from_diff(self.diff_toolbar)
+        self.remove_plot_from_diff(self.diff_canvas)
 
-    def remove_current_widget(self, widget):
+    def remove_plot_from_unoptimized(self, widget):
         if not type(widget) == type(None):
             self.ui.unoptimized_plot_layout.removeWidget(widget)
+
+    def remove_plot_from_optimized(self, widget):
+        if not type(widget) == type(None):
+            self.ui.optimize_plot_layout.removeWidget(widget)
+
+    def remove_plot_from_diff(self, widget):
+        if not type(widget) == type(None):
+            self.ui.diff_plot_layout.removeWidget(widget)
 
     def apply_configuration(self):
         """Updates crane configuration"""
