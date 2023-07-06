@@ -30,12 +30,12 @@ class PlotterManager:
         self.unoptim_fig = u_fig
         self.optim_fig = opt_fig
         self.diff_fig = diff_fig
-        self.unoptim_ax_l = u_fig.add_subplot(1, 2, 1, projection='3d')
-        self.unoptim_ax_r = u_fig.add_subplot(1, 2, 2, projection='3d')
-        self.optim_ax_l = opt_fig.add_subplot(1, 2, 1, projection='3d')
-        self.optim_ax_r = opt_fig.add_subplot(1, 2, 2, projection='3d')
-        self.diff_ax_l = diff_fig.add_subplot(1, 2, 1, projection='3d')
-        self.diff_ax_r = diff_fig.add_subplot(1, 2, 2, projection='3d')
+        self.unoptim_ax_l = self.unoptim_fig.add_subplot(1, 2, 1, projection='3d')
+        self.unoptim_ax_r = self.unoptim_fig.add_subplot(1, 2, 2, projection='3d')
+        self.optim_ax_l = self.optim_fig.add_subplot(1, 2, 1, projection='3d')
+        self.optim_ax_r = self.optim_fig.add_subplot(1, 2, 2, projection='3d')
+        self.diff_ax_l = self.diff_fig.add_subplot(1, 2, 1, projection='3d')
+        self.diff_ax_r = self.diff_fig.add_subplot(1, 2, 2, projection='3d')
         set_default_settings(self.unoptim_ax_l, "Deformation")
         set_default_settings(self.unoptim_ax_r, "Cross section area")
         set_default_settings(self.optim_ax_l, "Deformation")
