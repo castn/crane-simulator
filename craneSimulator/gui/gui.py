@@ -327,7 +327,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                                  end_crane_parts)
         # Update plots for optimized tab
         plotter_manager.update_optimized_plots(self.nodes, self.optim_deformed_nodes, self.beams,
-                                               self.optim_axial_forces,
+                                               self.optim_area_per_rod,
                                                self.optim_axial_forces)
 
         plotter_manager.update_diff_plot(self.base_nodes, self.base_optim_deformed_nodes, self.base_beams,
