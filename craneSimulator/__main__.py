@@ -3,5 +3,11 @@ sys.path.append('./')
 
 from craneSimulator.gui import gui
 
-if __name__ == '__main__':
+
+def main():
+    # Raises the GUI
     gui
+
+
+if __name__ == '__main__':
+    main()
