@@ -71,18 +71,21 @@ def apply_forces(window, nodes, end_tower, end_jib, end_cj_base):
     Conditions.forces = p
 
 
-def apply_gravity(nodes, beams, A, density, grav_const):
+def apply_gravity(nodes, beams, density, grav_const):
     """Applies gravity to each node"""
     for i in range(len(nodes)):
-        fitting_beams_lc = np.where(beams[:, 0] == i)[0]
-        fitting_beams_rc = np.where(beams[:, 1] == i)[0]
-        fitting_beams = np.concatenate((fitting_beams_lc, fitting_beams_rc), axis=None)
-        length = 0
-        for j in range(len(fitting_beams)):
-            start_float = np.array(beams[fitting_beams[j], 0]).astype(float)
-            end_float = np.array(beams[fitting_beams[j], 1]).astype(float)
-            length += np.linalg.norm(end_float - start_float)
-        Conditions.forces[i, 2] += - ((length / 2) / 1000 * A * density * grav_const) * kN
+        # Gets all beams connected to a specific node
+        beams_conn_to_node_lc = np.where(beams[:, 0] == i)[0]
+        beams_conn_to_node_rc = np.where(beams[:, 1] == i)[0]
+        beams_conn_to_node = np.concatenate((beams_conn_to_node_lc, beams_conn_to_node_rc), axis=None)
+        print(f'Beams len: {len(beams_conn_to_node)}')
+        print(f'ApB len: {len(Conditions.area_per_beam)}')
+        volume = 0
+        for j in range(len(beams_conn_to_node)):
+            start_float = np.array(beams[beams_conn_to_node[j], 0]).astype(float)
+            end_float = np.array(beams[beams_conn_to_node[j], 1]).astype(float)
+            volume += (np.linalg.norm(end_float - start_float) / 2) / 1000 * Conditions.area_per_beam[beams_conn_to_node[j]]
+        Conditions.forces[i, 2] += - (volume * density * grav_const) * kN
 
 
 def apply_wind(direc, force, cj_sup_type, cj_end):
