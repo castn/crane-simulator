@@ -73,7 +73,7 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
 
     create_segments()
     create_beams()
-    # Dims.END_CJ_BASE = len(Comps.nodes)
+    Dims.END_CJ_BASE = len(Comps.nodes)
     create_support()
     Dims.END_CJ = len(Comps.nodes)
 
@@ -86,7 +86,6 @@ def create_segments():
             Comps.nodes.append([- Dims.SEGMENT_LENGTH * i, 0, Dims.START_HEIGHT])
             Comps.nodes.append([- Dims.SEGMENT_LENGTH * i,
                          Dims.TOWER_WIDTH, Dims.START_HEIGHT])
-    Dims.END_CJ_BASE = len(Comps.nodes)
 
 
 def create_beams():
@@ -129,13 +128,29 @@ def create_diag_beams(i, start_node_cj, val_to_add):
 def create_support():
     """Creates appropriate support structure for the counterjib"""
     if Dims.SUPPORT_TYPE == Style.NONE:
-        return
+        create_none_support()
     elif Dims.SUPPORT_TYPE == Style.TRUSS:
         create_truss_support()
     elif Dims.SUPPORT_TYPE == Style.ONE_TOWER:
         create_cable_support(True)
     elif Dims.SUPPORT_TYPE == Style.TWO_TOWER:
         create_cable_support(False)
+
+
+def create_none_support():
+    """Creates support of style 'none'"""
+    #add pyramid on tower
+    Comps.nodes.append([1/2 * Dims.TOWER_WIDTH,
+                        1/2 * Dims.TOWER_WIDTH,
+                        Dims.START_HEIGHT + Dims.HEIGHT])
+    append_beam(Dims.END_NODE_TOWER + 4, Dims.END_CJ_BASE, True)
+    append_beam(0 + Dims.END_NODE_TOWER, Dims.END_CJ_BASE, True)
+    append_beam(1 + Dims.END_NODE_TOWER, Dims.END_CJ_BASE, True)
+    append_beam(2 + Dims.END_NODE_TOWER, Dims.END_CJ_BASE, True)
+    append_beam(3 + Dims.END_NODE_TOWER, Dims.END_CJ_BASE, True)
+    #reinforce base
+    append_beam(Dims.END_NODE_TOWER + 1, Dims.END_CJ_BASE - 2, False)
+    append_beam(Dims.END_NODE_TOWER, Dims.END_CJ_BASE - 1, False)
 
 
 def create_truss_support():
@@ -176,10 +191,10 @@ def create_truss_support():
             append_beam(3 + start_node + val_to_add, support_start + i, True)
 
 
-def create_cable_support(one_node):
+def create_cable_support(one_tower):
     """Creates a cable style support for the counterjib"""
-    cable_start = len(Comps.nodes)
-    if one_node:
+    cable_start = Dims.END_CJ_BASE
+    if one_tower:
         Comps.nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH /
                      2, Dims.START_HEIGHT + Dims.TOWER_WIDTH])
         # tower to new top
@@ -207,6 +222,9 @@ def create_cable_support(one_node):
         # new tops to end counterjib
         append_beam(cable_start, cable_start - 2, False)
         append_beam(cable_start + 1, cable_start - 1, False)
+    #reinforce base
+    append_beam(Dims.END_NODE_TOWER + 1, Dims.END_CJ_BASE - 2, False)
+    append_beam(Dims.END_NODE_TOWER, Dims.END_CJ_BASE - 1, False)
 
 
 def append_beam(start_node, end_node, len_counts):

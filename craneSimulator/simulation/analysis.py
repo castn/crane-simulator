@@ -101,46 +101,8 @@ def apply_wind(direc, force, cj_sup_type):
 
 
 def apply_wind_from_front(force, cj_sup_type):
-    # force in north dir
-    # y dir
-    # tower: all odd nodes
-    for t_n in range(int(Dims.TOWER_END / 2)):
-        Conditions.forces[(1 + 2 * t_n), 1] += force * kN
-    # jib: 0+3n (top), 2+3n (bot)
-    for j_n in range(int(Dims.TOWER_END), int(Dims.JIB_END / 3)):
-        Conditions.forces[(0 + 3 * j_n), 1] += force * kN
-        Conditions.forces[(2 + 3 * j_n), 1] += force * kN
-    # counterjib: top center for 1-2 towers, rest just for truss
-    for cj_n in range(int(Dims.JIB_END), int(Dims.COUNTERJIB_BASE_END / 2)):
-        Conditions.forces[Dims.JIB_END + (1 + 2 * cj_n), 1] += force * kN
-    if cj_sup_type == 'Truss':
-        for cj_n in range(int(Dims.COUNTERJIB_BASE_END), Dims.COUNTERJIB_END):
-            Conditions.forces[cj_n, 1] += force * kN
-        # Conditions.forces[Dims.COUNTERJIB_END - 2, 1] += force * kN
-        # Conditions.forces[Dims.COUNTERJIB_END - 1, 1] += force * kN
-        # Conditions.forces[cj_end, 1] += force * kN
-    elif cj_sup_type == 'Single tower':
-        Conditions.forces[Dims.COUNTERJIB_END, 1] += force * kN
-    elif cj_sup_type == 'Twin towers':
-        Conditions.forces[Dims.COUNTERJIB_END - 1, 1] += force * kN
-
-
-def apply_wind_from_right(force):
-    # force in west dir
-    # -x
-    # tower: 2+4n, 3+4n
-    for t_n in range(int(Dims.TOWER_END / 4) - 1):
-        Conditions.forces[(2 + 4 * t_n), 0] += - force * kN
-        Conditions.forces[(3 + 4 * t_n), 0] += - force * kN
-    # jib: last 3
-    for j_n in range(int(Dims.JIB_END) - 3, int(Dims.JIB_END)):
-        Conditions.forces[j_n, 0] += - force * kN
-    # counterjib: none
-
-
-def apply_wind_from_back(force, cj_sup_type):
-    # force in south dir
-    # -y dir
+    """Applies wind coming from the front to the crane"""
+    # force in north dir -> -y dir
     # tower: all even nodes
     for t_n in range(Dims.TOWER_END):
         Conditions.forces[2 * t_n, 1] += - force * kN
@@ -158,9 +120,44 @@ def apply_wind_from_back(force, cj_sup_type):
         Conditions.forces[int(Dims.COUNTERJIB_BASE_END), 1] += - force * kN
 
 
+def apply_wind_from_right(force):
+    """Applies wind coming from the right to the crane"""
+    # force in west dir -> -x
+    # tower: 2+4n, 3+4n
+    for t_n in range(int(Dims.TOWER_END / 4) - 1):
+        Conditions.forces[(2 + 4 * t_n), 0] += - force * kN
+        Conditions.forces[(3 + 4 * t_n), 0] += - force * kN
+    # jib: last 3
+    for j_n in range(int(Dims.JIB_END) - 3, int(Dims.JIB_END)):
+        Conditions.forces[j_n, 0] += - force * kN
+    # counterjib: none
+
+
+def apply_wind_from_back(force, cj_sup_type):
+    """Applies wind coming from the back to the crane"""
+    # force in south dir -> -y dir
+    # tower: all odd nodes
+    for t_n in range(int(Dims.TOWER_END / 2)):
+        Conditions.forces[(1 + 2 * t_n), 1] += force * kN
+    # jib: 0+3n (top), 2+3n (bot)
+    for j_n in range(int(Dims.TOWER_END), int(Dims.JIB_END / 3)):
+        Conditions.forces[(0 + 3 * j_n), 1] += force * kN
+        Conditions.forces[(2 + 3 * j_n), 1] += force * kN
+    # counterjib: top center for 1-2 towers, rest just for truss
+    for cj_n in range(int(Dims.JIB_END), int(Dims.COUNTERJIB_BASE_END / 2)):
+        Conditions.forces[Dims.JIB_END + (1 + 2 * cj_n), 1] += force * kN
+    if cj_sup_type == 'Truss':
+        for cj_n in range(int(Dims.COUNTERJIB_BASE_END), Dims.COUNTERJIB_END):
+            Conditions.forces[cj_n, 1] += force * kN
+    elif cj_sup_type == 'Single tower':
+        Conditions.forces[Dims.COUNTERJIB_END, 1] += force * kN
+    elif cj_sup_type == 'Twin towers':
+        Conditions.forces[Dims.COUNTERJIB_END - 1, 1] += force * kN
+
+
 def apply_wind_from_left(force, cj_sup_type):
-    # force in east dir
-    # +x dir
+    """Applies wind coming from the left to the crane"""
+    # force in east dir -> +x dir
     # tower: 2+4n, 3+4n
     for t_n in range(int(Dims.TOWER_END / 4) - 1):
         Conditions.forces[(0 + 4 * t_n), 0] += force * kN
