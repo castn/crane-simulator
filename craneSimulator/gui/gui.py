@@ -42,7 +42,7 @@ def update_debug_treeWidget(widget, nodes, deformed_nodes, beams, area_per_rod):
     widget.clear()
     optim_tree_items = [create_tree_item(nodes, "XYZ-Coordinates of undeformed Nodes", ""),
                         create_tree_item(deformed_nodes, "XYZ-Coordinates of deformed Nodes", ""),
-                        create_tree_item(beams, "Nodes per Beam", ""),
+                        create_tree_item(beams, "Beams (start and end nodes)", ""),
                         create_tree_item(area_per_rod, "Cross sectional area per Rod", "m\u00B2")]
     widget.insertTopLevelItems(0, optim_tree_items)
     return widget
@@ -243,14 +243,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.debug_unoptimized_treeWidget.clear()
         optim_tree_items = [create_tree_item(self.nodes, "XYZ-Coordinates of undeformed Nodes", ""),
                             create_tree_item(self.deformed_nodes, "XYZ-Coordinates of deformed Nodes", ""),
-                            create_tree_item(self.beams, "Nodes per Beam", ""),
+                            create_tree_item(self.beams, "Beams (start and end nodes)", ""),
                             create_tree_item(self.area_per_rod, "Cross sectional area per Rod", "m\u00B2")]
         self.ui.debug_unoptimized_treeWidget.insertTopLevelItems(0, optim_tree_items)
 
         self.ui.debug_optimized_treeWidget.clear()
         optim_tree_items = [create_tree_item(self.nodes, "XYZ-Coordinates of undeformed Nodes", ""),
                             create_tree_item(self.optim_deformed_nodes, "XYZ-Coordinates of deformed Nodes", ""),
-                            create_tree_item(self.beams, "Nodes per Beam", ""),
+                            create_tree_item(self.beams, "Beams (start and end nodes)", ""),
                             create_tree_item(self.optim_area_per_rod, "Cross sectional area per Rod", "m\u00B2")]
         self.ui.debug_optimized_treeWidget.insertTopLevelItems(0, optim_tree_items)
 
@@ -260,16 +260,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.fem_optimized_treeWidget.clear()
         unoptim_tree_items = [
             create_tree_item(self.axial_forces.round(decimals=2),
-                             "Axial Forces (positive = tension, negative = compression)", ""),
+                             "Axial Forces (positive = tension, negative = compression)", "N"),
             create_tree_item(self.reaction_forces.round(decimals=2),
-                             "Reaction Forces (positive = upward, negative = downward)", ""),
-            create_tree_item(self.deformation.round(decimals=2), "Deformation at nodes", "")]
+                             "Reaction Forces (positive = upward, negative = downward)", "N"),
+            create_tree_item(self.deformation.round(decimals=2), "Deformation at nodes", "mm")]
         optim_tree_items = [
             create_tree_item(self.optim_axial_forces.round(decimals=2),
-                             "Axial Forces (positive = tension, negative = compression)", ""),
+                             "Axial Forces (positive = tension, negative = compression)", "N"),
             create_tree_item(self.optim_reaction_forces.round(decimals=2),
-                             "Reaction Forces (positive = upward, negative = downward)", ""),
-            create_tree_item(self.optim_deformations.round(decimals=2), "Deformation at nodes", "")]
+                             "Reaction Forces (positive = upward, negative = downward)", "N"),
+            create_tree_item(self.optim_deformations.round(decimals=2), "Deformation at nodes", "mm")]
         self.ui.fem_unoptimized_treeWidget.insertTopLevelItems(0, unoptim_tree_items)
         self.ui.fem_optimized_treeWidget.insertTopLevelItems(0, optim_tree_items)
 
@@ -279,7 +279,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         current_tree_items = [create_tree_item(self.nodes, "XYZ-Coordinates of undeformed Nodes", ""),
                               create_tree_item(self.optim_deformed_nodes, "XYZ-Coordinates of deformed Nodes", ""),
-                              create_tree_item(self.beams, "Nodes per Beam", ""),
+                              create_tree_item(self.beams, "Beams (start and end nodes)", ""),
                               create_tree_item(self.optim_area_per_rod, "Cross sectional area per Rod", "m\u00B2")]
         self.ui.current_treeWidget.insertTopLevelItems(0, current_tree_items)
 
@@ -289,7 +289,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                           create_tree_item(self.base_optim_deformed_nodes,
                                                            "XYZ-Coordinates of deformed Nodes",
                                                            ""),
-                                          create_tree_item(self.base_beams, "Nodes per Beam", ""),
+                                          create_tree_item(self.base_beams, "Beams (start and end nodes)", ""),
                                           create_tree_item(self.base_optim_area_per_rod, "Cross sectional area per Rod",
                                                            "m\u00B2")]
             self.ui.comparison_base_treeWidget.insertTopLevelItems(0, comparison_base_tree_items)
@@ -341,24 +341,24 @@ class MainWindow(QtWidgets.QMainWindow):
         """Display displacement of crane at points where forces are applied"""
         self.ui.output.appendPlainText("[Unoptimized] Jib displacement")
         self.ui.output.appendPlainText(
-            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)))
+            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)) + ' mm')
         self.ui.output.appendPlainText(
-            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)))
+            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)) + ' mm')
         self.ui.output.appendPlainText("[Optimized] Jib displacement")
         self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)))
+            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)) + ' mm')
         self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)))
+            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)) + ' mm')
         self.ui.output.appendPlainText("[Unoptimized] Counter Jib displacement")
         self.ui.output.appendPlainText(
-            str(self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)))
+            str(self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)) + ' mm')
         self.ui.output.appendPlainText(
-            str(self.deformed_nodes[len(self.deformed_nodes) - 1].round(decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)))
+            str(self.deformed_nodes[len(self.deformed_nodes) - 1].round(decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)) + ' mm')
         self.ui.output.appendPlainText("[Optimized] Counter Jib displacement")
         self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)))
+            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)) + ' mm')
         self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 1].round(decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)))
+            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 1].round(decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)) + ' mm')
         self.ui.output.appendPlainText('\n')
 
     def reset_plots(self):

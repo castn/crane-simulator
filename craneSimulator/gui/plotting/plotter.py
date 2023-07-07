@@ -141,8 +141,8 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forc
         line = line[0]
     axial_forces_list = axial_forces
     axial_forces_list.sort()
-    # ax.legend(handles=create_colormap_gradient(axial_forces_list, cmap, "Pa"), prop={'size': 10},
-            #   loc='upper right', draggable=True, title='Axial forces per rod')
+    ax.legend(handles=create_colormap_gradient(axial_forces_list, cmap, "Pa"), prop={'size': 10},
+              loc='upper right', draggable=True, title='Axial forces per rod')
 
     line.set_label("Deformed")
     ax.set_aspect("equal")
@@ -173,15 +173,27 @@ def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod):
     fig.gca().set_aspect('equal')
 
 
-def create_colormap_gradient(list, cmap, suffix):
+def create_colormap_gradient(sorted_axial_forces, cmap, suffix):
     """Generates a gradient of a colormap"""
     cmap_legend = []
-    idx = np.round(np.linspace(0, len(list) - 1, 6)).astype(int)
-    for i in idx:
-        value = list[i]
+    select_axial_forces = np.round(np.linspace(0, len(sorted_axial_forces) - 1, 6)).astype(int)
+    for i in range(len(select_axial_forces)):
+        value = sorted_axial_forces[i]
         a = norm(value)
-        cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(norm(value)), label=f'{value.round(decimals=1)} {suffix}'))
+        cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(0.2 * i), lw=4, label=num_with_units(sorted_axial_forces[select_axial_forces[i]].round(decimals=1))))
+        # cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(norm(value)), label=f'{value.round(decimals=1)} {suffix}'))
     return cmap_legend
+
+
+def num_with_units(num, suffix="Pa"):
+    """Shortens axial force and applies correct prefix\n
+    https://stackoverflow.com/questions/1094841/get-human-readable-version-of-file-size
+    """
+    for unit in ("", "k", "M", "G"):
+        if abs(num) < 1000.0:
+            return f"{num:3.1f} {unit}{suffix}"
+        num /= 1000.0
+    return f"{num}Yi{suffix}"
 
 
 def create_colormap_gradient_area_per_rod(dictionary, cmap, suffix):
