@@ -119,6 +119,7 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forc
     axial_forces = np.absolute(axial_forces)
     norm = mpl.colors.Normalize(min(axial_forces), max(axial_forces))
     cmap = cm.get_cmap(cmap_type.currentText())
+    values_listed_in_legend = {}
     for i in range(len(beams)):
         # Deformed nodes
         dxi, dxf = deformed_nodes[beams[i, 0], 0], deformed_nodes[beams[i, 1], 0]
@@ -127,7 +128,14 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forc
 
         line = ax.plot([dxi, dxf], [dyi, dyf], [dzi, dzf], color=cmap(norm(axial_forces[i])), linestyle=line_style,
                        linewidth=LINE_WIDTH)
+        value = axial_forces[i].round(decimals=0)
+        value_as_norm = norm(value)
+        if not value_as_norm in values_listed_in_legend:
+            values_listed_in_legend[value] = value_as_norm
         line = line[0]
+    ax.legend(handles=create_colormap_gradient(values_listed_in_legend, cmap, "m\u00B2"), prop={'size': 10},
+              loc='upper right',
+              title='Cross sectional area per rod')
     line.set_label("Deformed")
     ax.set_aspect("equal")
     # ax.legend(handles=create_colormap_gradient(axial_forces, cmap), prop={'size': 0}, loc='upper left',
@@ -137,6 +145,7 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forc
 def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod):
     norm = mpl.colors.Normalize(min(area_per_rod), max(area_per_rod))
     cmap = cm.get_cmap("rainbow")
+    values_listed_in_legend = {}
     for i in range(len(beams)):
         # Undeformed nodes
         xi, xf = nodes[beams[i, 0], 0], nodes[beams[i, 1], 0]
@@ -145,25 +154,20 @@ def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod):
 
         line = ax.plot([xi, xf], [yi, yf], [zi, zf], color=cmap(norm(area_per_rod[i])), linestyle=line_style,
                        linewidth=LINE_WIDTH)
+        value_as_norm = norm(area_per_rod[i])
+        if not value_as_norm in values_listed_in_legend.values():
+            values_listed_in_legend[area_per_rod[i]] = value_as_norm
         line = line[0]
-    # ax.legend(handles=create_colormap_gradient(area_per_rod, cmap), prop={'size': 0}, loc='upper left',
-    #            title='Absolute area')
+    ax.legend(handles=create_colormap_gradient(values_listed_in_legend, cmap, "m\u00B2"), prop={'size': 10},
+              loc='upper right', title='Cross sectional area per rod')
     fig.gca().set_aspect('equal')
 
 
-def create_colormap_gradient(value, cmap):
-    gradient = np.linspace(0, 1, 256)
+def create_colormap_gradient(dictionary, cmap, suffix):
     cmap_legend = []
-    for i in range(len(gradient)):
-        if i == 0:
-            cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(i), label=f'Low ({min(value):.0f})'))
-        elif i == 255:
-            cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(i), label=f'High ({max(value):.0f})'))
-        else:
-            cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(i)))
-    # cmap_legend = [mpl.lines.Line2D([0], [0], color=cmap(0.), lw=4, label=f'Low ({min(axial_forces):.0f})'),
-    #                mpl.lines.Line2D([0], [0], color=cmap(.5), lw=4, label='Medium'),
-    #                mpl.lines.Line2D([0], [0], color=cmap(1.), lw=4, label=f'High ({max(axial_forces):.0f})')]
+    for value in dictionary:
+        value_as_norm = dictionary[value]
+        cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(value_as_norm), label=f'{value} {suffix}'))
     return cmap_legend
 
 
