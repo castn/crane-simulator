@@ -176,9 +176,9 @@ def apply_wind_from_left(force, cj_sup_type):
     elif cj_sup_type == 'Single tower' or cj_sup_type == 'Truss':
         # start_cj_n = int(Dims.COUNTERJIB_END) - 2
         Conditions.forces[Dims.COUNTERJIB_END - 1, 0] += force * kN
-    else:
-        # start_cj_n = int(Dims.COUNTERJIB_END) - 3
-        print('Doing nothing')
+    # else:
+    #     # start_cj_n = int(Dims.COUNTERJIB_END) - 3
+    #     print('Doing nothing')
     # for cj_n in range(start_cj_n, int(Dims.COUNTERJIB_END)):
     #     Conditions.forces[cj_n, 0] = force * kN
 

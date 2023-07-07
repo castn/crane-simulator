@@ -339,24 +339,24 @@ class MainWindow(QtWidgets.QMainWindow):
         # Display displacement of crane at points where forces are applied
         self.ui.output.appendPlainText("[Unoptimized] Jib displacement")
         self.ui.output.appendPlainText(
-            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - self.nodes[crane.Dims.JIB_NUM_NODES - 2]))
+            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)))
         self.ui.output.appendPlainText(
-            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 1] - self.nodes[crane.Dims.JIB_NUM_NODES - 1]))
+            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)))
         self.ui.output.appendPlainText("[Optimized] Jib displacement")
         self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2] - self.nodes[crane.Dims.JIB_NUM_NODES - 2]))
+            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)))
         self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1] - self.nodes[crane.Dims.JIB_NUM_NODES - 1]))
+            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)))
         self.ui.output.appendPlainText("[Unoptimized] Counter Jib displacement")
         self.ui.output.appendPlainText(
-            str(self.deformed_nodes[len(self.deformed_nodes) - 2] - self.nodes[len(self.nodes) - 2]))
+            str(self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)))
         self.ui.output.appendPlainText(
-            str(self.deformed_nodes[len(self.deformed_nodes) - 1] - self.nodes[len(self.nodes) - 1]))
+            str(self.deformed_nodes[len(self.deformed_nodes) - 1].round(decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)))
         self.ui.output.appendPlainText("[Optimized] Counter Jib displacement")
         self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 2] - self.nodes[len(self.nodes) - 2]))
+            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)))
         self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 1] - self.nodes[len(self.nodes) - 1]))
+            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 1].round(decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)))
         self.ui.output.appendPlainText('\n')
 
     def reset_plots(self):
