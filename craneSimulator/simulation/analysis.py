@@ -54,7 +54,7 @@ def generate_conditions(nodes, beams):
     Conditions.area_per_beam = np.full((len(beams)), 0.0025)
 
 
-def apply_forces(window, nodes, end_tower, end_jib, end_cj_base, end_cj):
+def apply_forces(window, nodes, end_tower, end_jib, end_jib_base, end_cj_base, end_cj):
     """Applies user-entered forces"""
     Comps.nodes = nodes
     Dims.TOWER_END = end_tower
@@ -65,11 +65,13 @@ def apply_forces(window, nodes, end_tower, end_jib, end_cj_base, end_cj):
     # Applied forces
     p = np.zeros_like(nodes)
     # Force on jib
-    p[Dims.JIB_END - 2, 2] = window.jib_left_spinBox.value() * kN
-    p[Dims.JIB_END - 1, 2] = window.jib_right_spinBox.value() * kN
+    # p[Dims.JIB_END - 2, 2] = window.jib_left_spinBox.value() * kN
+    # p[Dims.JIB_END - 1, 2] = window.jib_right_spinBox.value() * kN
+    p[end_jib_base - 2, 2] += window.jib_left_spinBox.value() * kN
+    p[end_jib_base - 1, 2] += window.jib_right_spinBox.value() * kN
     # Force on counter jib
-    p[Dims.COUNTERJIB_BASE_END - 2, 2] = window.counterjib_left_spinBox.value() * kN
-    p[Dims.COUNTERJIB_BASE_END - 1, 2] = window.counterjib_left_spinBox.value() * kN
+    p[Dims.COUNTERJIB_BASE_END - 2, 2] += window.counterjib_left_spinBox.value() * kN
+    p[Dims.COUNTERJIB_BASE_END - 1, 2] += window.counterjib_left_spinBox.value() * kN
     Conditions.forces = p
 
 

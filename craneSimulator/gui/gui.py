@@ -284,7 +284,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.current_treeWidget.insertTopLevelItems(0, current_tree_items)
 
         # Check if comparison base exists
-        if not type(self.comparison_base) == type(None):  # Might need to check all types in list below
+        if type(self.comparison_base) != type(None):  # Might need to check all types in list below
             comparison_base_tree_items = [create_tree_item(self.base_nodes, "XYZ-Coordinates of undeformed Nodes", ""),
                                           create_tree_item(self.base_optim_deformed_nodes,
                                                            "XYZ-Coordinates of deformed Nodes",
@@ -325,18 +325,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Update plots for unoptimized tab
         plotter_manager.update_unoptimized_plots(self.nodes, self.deformed_nodes, self.beams, self.area_per_rod,
-                                                 self.axial_forces, self.end_crane_parts)
+                                                 self.axial_forces, self.end_crane_parts,
+                                                 [self.ui.jib_left_spinBox.value(), self.ui.counterjib_left_spinBox.value()])
         # Update plots for optimized tab
-        plotter_manager.update_optimized_plots(self.nodes, self.optim_deformed_nodes, self.beams,
-                                               self.optim_area_per_rod, self.optim_axial_forces, self.end_crane_parts)
+        plotter_manager.update_optimized_plots(self.nodes, self.optim_deformed_nodes, self.beams, self.optim_area_per_rod,
+                                               self.optim_axial_forces, self.end_crane_parts,
+                                               [self.ui.jib_left_spinBox.value(), self.ui.counterjib_left_spinBox.value()])
 
         plotter_manager.update_diff_plot(self.base_nodes, self.base_optim_deformed_nodes, self.base_beams,
                                          self.base_optim_axial_forces, self.nodes, self.optim_deformed_nodes,
                                          self.beams, self.optim_axial_forces, self.base_end_crane_parts,
-                                         self.end_crane_parts)
+                                         self.end_crane_parts, [self.ui.jib_left_spinBox.value(), self.ui.counterjib_left_spinBox.value()])
 
     def display_in_console(self):
-        # Display displacement of crane at points where forces are applied
+        """Display displacement of crane at points where forces are applied"""
         self.ui.output.appendPlainText("[Unoptimized] Jib displacement")
         self.ui.output.appendPlainText(
             str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)))
@@ -463,6 +465,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.update_diff_treeWidget()
             self.display_in_console()
             self.end_crane_parts = crane.get_end_parts()
+            
             # plot as last so all values are set before plots so user only can see delay in plot update
             self.update_plot()
 

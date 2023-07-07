@@ -14,6 +14,7 @@ class Dims:
     TOWER_HEIGHT = 0
     TOWER_WIDTH = 0
     TOWER_NUM_NODES = 0
+    JIB_BASE_NUM_NODES = 0
     JIB_NUM_NODES = 0
     CJ_BASE_NUM_NODES = 0
     CJ_NUM_NODES = 0
@@ -49,6 +50,7 @@ def create_jib():
     jib.create_connected(tower.get_nodes_raw().copy(), tower.get_beams_raw().copy(),
                          Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH)
     Dims.JIB_NUM_NODES = len(jib.get_nodes())
+    Dims.JIB_BASE_NUM_NODES = jib.get_end_base()
     Comps.nodes = jib.get_nodes_raw().copy()
     Comps.beams = jib.get_beams_raw().copy()
 
@@ -129,7 +131,7 @@ def set_default_dims():
 
 def get_end_parts():
     """Returns last node of the tower, jib, and counter-jib"""
-    return Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES, Dims.CJ_BASE_NUM_NODES
+    return Dims.TOWER_NUM_NODES, Dims.JIB_BASE_NUM_NODES, Dims.CJ_BASE_NUM_NODES
 
 
 class Crane:
@@ -160,14 +162,15 @@ class Crane:
 
     def enable_gravity(self, window):
         """Applies gravity to nodes"""
-        analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES, Dims.CJ_BASE_NUM_NODES, Dims.CJ_NUM_NODES)
+        analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES,
+                              Dims.JIB_BASE_NUM_NODES, Dims.CJ_BASE_NUM_NODES, Dims.CJ_NUM_NODES)
         analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams),
                                self.DENSITY, self.GRAVITY_CONSTANT)
 
     def reset_forces(self, window):
         """Resets forces on all nodes"""
         analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES,
-                              Dims.CJ_BASE_NUM_NODES, Dims.CJ_NUM_NODES)
+                              Dims.JIB_BASE_NUM_NODES, Dims.CJ_BASE_NUM_NODES, Dims.CJ_NUM_NODES)
 
     def enable_wind(self, direc, force):
         """Applies wind in given direction with given force"""

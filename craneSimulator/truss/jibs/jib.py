@@ -21,6 +21,7 @@ class Dims:
     START_HEIGHT = 0
     TOWER_WIDTH = 0
     INIT_BAR = 0
+    END_BASE = 0
 
     IS_CONNECTED = False
 
@@ -65,7 +66,8 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
     Dims.TOWER_WIDTH = tower_width
     Dims.IS_CONNECTED = True
     Dims.INIT_BAR = max(np.asarray(Comps.beams).astype(
-        int).max() - 1, 0)  # wrapped in max just in case
+        int).max() - 1, 0)
+    Dims.END_BASE = len(tower_nodes)
 
     create_segments()
     create_beams()
@@ -176,10 +178,16 @@ def get_longest_beam():
     return Dims.LONGEST_BEAM
 
 
+def get_end_base():
+    """Returns last node of base of jib"""
+    return len(Comps.nodes) if Dims.SUPPORT_TYPE == 'Truss' else (len(Comps.nodes) - 1)
+
+
 def set_dims(length, height, segs, sup_type):
     """Sets dimensions of the jib to passed-through values"""
     Comps.nodes = []
     Comps.beams = []
+    Dims.END_BASE = 0
     Dims.TOTAL_LENGTH = 0
     Dims.LONGEST_BEAM = 0
 
