@@ -73,8 +73,9 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
 
     create_segments()
     create_beams()
-    Dims.END_CJ_BASE = len(Comps.nodes)
+    # Dims.END_CJ_BASE = len(Comps.nodes)
     create_support()
+    Dims.END_CJ = len(Comps.nodes)
 
 
 def create_segments():
@@ -85,7 +86,7 @@ def create_segments():
             Comps.nodes.append([- Dims.SEGMENT_LENGTH * i, 0, Dims.START_HEIGHT])
             Comps.nodes.append([- Dims.SEGMENT_LENGTH * i,
                          Dims.TOWER_WIDTH, Dims.START_HEIGHT])
-    Dims.END_CJ = len(Comps.nodes)
+    Dims.END_CJ_BASE = len(Comps.nodes)
 
 
 def create_beams():
@@ -139,7 +140,7 @@ def create_support():
 
 def create_truss_support():
     """Creates truss style support structure for the counterjib"""
-    support_start = Dims.END_CJ
+    support_start = Dims.END_CJ_BASE
     for i in range(Dims.SEGMENTS + 1):
         # create required nodes
         if i == 0:
@@ -261,11 +262,12 @@ def get_support_type():
 
 
 def get_end_cj_base():
+    """Returns last node of the base of the counterjib"""
     return Dims.END_CJ_BASE
 
 
 def get_end_cj():
-    """Returns end of counterjib where support starts (if applicable)"""
+    """Returns last node of the counterjib"""
     return Dims.END_CJ
 
 
