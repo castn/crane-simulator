@@ -314,6 +314,17 @@ def get_components_of_global_stiffness(K, free_dof, support_dof):
 
 def optimize(nodes, beams, E, DENSITY):
     """Optimizes the crane to try to be within given specifications"""
+    # This code would be needed if we decide to create an optimale crane that has area_per_beam that is ideal for all 4 wind directions
+    # a = [1, 2, 3]
+    # b = [1, 3, 2]
+    # c = [1, 2, 3]
+    #
+    # merged_list = []
+    # if len(a) == len(b) == len(c):
+    #     for i in range(len(a)):
+    #         highest = max(a[i], b[i], c[i])
+    #         merged_list.append(highest)
+    # print(merged_list)
     for _ in range(4):
         axial_force = analyze(nodes, beams, E, DENSITY)
         adjust_cross_section_area(axial_force[0])
