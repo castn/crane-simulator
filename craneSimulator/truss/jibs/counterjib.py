@@ -225,6 +225,8 @@ def create_cable_support(one_tower):
     #reinforce base
     append_beam(Dims.END_NODE_TOWER + 1, Dims.END_CJ_BASE - 2, False)
     append_beam(Dims.END_NODE_TOWER, Dims.END_CJ_BASE - 1, False)
+    append_beam(Dims.END_NODE_TOWER, Dims.END_CJ_BASE - 2, False)
+    append_beam(Dims.END_NODE_TOWER + 1, Dims.END_CJ_BASE - 1, False)
 
 
 def append_beam(start_node, end_node, len_counts):
