@@ -5,6 +5,7 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 import numpy as np
 from matplotlib import pyplot as plt
+from numpy.linalg import norm
 
 LINE_WIDTH = 1
 
@@ -133,9 +134,11 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forc
         if not value_as_norm in values_listed_in_legend:
             values_listed_in_legend[value] = value_as_norm
         line = line[0]
-    ax.legend(handles=create_colormap_gradient(values_listed_in_legend, cmap, "m\u00B2"), prop={'size': 10},
-              loc='upper right',
-              title='Cross sectional area per rod')
+    list = axial_forces
+    list.sort()
+    ax.legend(handles=create_colormap_gradient(list, cmap, "Pa"), prop={'size': 10},
+              loc='upper right', draggable=True, title='Axial forces per rod')
+
     line.set_label("Deformed")
     ax.set_aspect("equal")
     # ax.legend(handles=create_colormap_gradient(axial_forces, cmap), prop={'size': 0}, loc='upper left',
@@ -158,12 +161,23 @@ def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod):
         if not value_as_norm in values_listed_in_legend.values():
             values_listed_in_legend[area_per_rod[i]] = value_as_norm
         line = line[0]
-    ax.legend(handles=create_colormap_gradient(values_listed_in_legend, cmap, "m\u00B2"), prop={'size': 10},
-              loc='upper right', title='Cross sectional area per rod')
+    ax.legend(handles=create_colormap_gradient_area_per_rod(values_listed_in_legend, cmap, "m\u00B2"),
+              prop={'size': 10},
+              loc='upper right', draggable=True, title='Cross sectional area per rod')
     fig.gca().set_aspect('equal')
 
 
-def create_colormap_gradient(dictionary, cmap, suffix):
+def create_colormap_gradient(list, cmap, suffix):
+    cmap_legend = []
+    idx = np.round(np.linspace(0, len(list) - 1, 6)).astype(int)
+    for i in idx:
+        value = list[i]
+        a = norm(value)
+        cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(norm(value)), label=f'{value.round(decimals=1)} {suffix}'))
+    return cmap_legend
+
+
+def create_colormap_gradient_area_per_rod(dictionary, cmap, suffix):
     cmap_legend = []
     for value in dictionary:
         value_as_norm = dictionary[value]
