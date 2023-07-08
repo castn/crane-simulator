@@ -138,7 +138,6 @@ class Crane:
     """Contains all features needed to adjust the crane"""
     def __init__(self):
         self.E = 210e9  # Youngs module (210GPa)
-        #self.A = 0.0025  # Cross-section of beams (0.0025-0.0625m^2)
         self.DENSITY = 7850
         self.GRAVITY_CONSTANT = 9.81
 

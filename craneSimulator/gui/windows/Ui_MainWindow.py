@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.5.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1022, 1216)
+        MainWindow.resize(1022, 1259)
         MainWindow.setTabShape(QTabWidget.Rounded)
         self.actionOpen = QAction(MainWindow)
         self.actionOpen.setObjectName(u"actionOpen")
@@ -239,8 +239,6 @@ class Ui_MainWindow(object):
         self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.counterJibSegments_spinBox)
 
         self.counterJibSupportType_comboBox = QComboBox(self.counterJibBox)
-        self.counterJibSupportType_comboBox.addItem("")
-        self.counterJibSupportType_comboBox.addItem("")
         self.counterJibSupportType_comboBox.addItem("")
         self.counterJibSupportType_comboBox.addItem("")
         self.counterJibSupportType_comboBox.setObjectName(u"counterJibSupportType_comboBox")
@@ -673,7 +671,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1022, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1022, 25))
         self.menu_File = QMenu(self.menubar)
         self.menu_File.setObjectName(u"menu_File")
         self.menuHelp = QMenu(self.menubar)
@@ -751,9 +749,7 @@ class Ui_MainWindow(object):
         self.counterJibSupportType_label.setText(QCoreApplication.translate("MainWindow", u"Support Type", None))
         self.counterJibSegments_label.setText(QCoreApplication.translate("MainWindow", u"Segments", None))
         self.counterJibSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Truss", None))
-        self.counterJibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"None", None))
-        self.counterJibSupportType_comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Single tower", None))
-        self.counterJibSupportType_comboBox.setItemText(3, QCoreApplication.translate("MainWindow", u"Twin towers", None))
+        self.counterJibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Tower", None))
 
         self.counterJibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Truss", None))
         self.current_as_comparison_base.setText(QCoreApplication.translate("MainWindow", u"Make current as comparison base", None))

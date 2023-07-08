@@ -14,14 +14,12 @@ class Comps:
 
 class Style(Enum):
     """
-    Enum to define a style how the beams of the tower are placed.
-    Can be PARALLEL, CROSS or ZIGZAG
+    Enum to define a style how the support of the counterjib is built
+    Can be TRUSS or TOWER
     """
     NOT_CHOSEN = 0
-    NONE = 1
-    TRUSS = 2
-    ONE_TOWER = 3
-    TWO_TOWER = 4
+    TRUSS = 1
+    TOWER = 2
 
 
 class Dims:
@@ -127,14 +125,10 @@ def create_diag_beams(i, start_node_cj, val_to_add):
 
 def create_support():
     """Creates appropriate support structure for the counterjib"""
-    if Dims.SUPPORT_TYPE == Style.NONE:
-        create_none_support()
-    elif Dims.SUPPORT_TYPE == Style.TRUSS:
+    if Dims.SUPPORT_TYPE == Style.TRUSS:
         create_truss_support()
-    elif Dims.SUPPORT_TYPE == Style.ONE_TOWER:
-        create_cable_support(True)
-    elif Dims.SUPPORT_TYPE == Style.TWO_TOWER:
-        create_cable_support(False)
+    elif Dims.SUPPORT_TYPE == Style.TOWER:
+        create_tower_support()
 
 
 def create_none_support():
@@ -229,6 +223,46 @@ def create_cable_support(one_tower):
     append_beam(Dims.END_NODE_TOWER + 1, Dims.END_CJ_BASE - 1, False)
 
 
+def create_tower_support():
+    """Creates a support in the style of a regular tower crane"""
+    Comps.nodes.append([Dims.TOWER_WIDTH / 2, Dims.TOWER_WIDTH / 2,
+                        Dims.START_HEIGHT + Dims.TOWER_WIDTH * 2])
+    # Truss support
+    support_start = Dims.END_CJ_BASE
+    for i in range(Dims.SEGMENTS + 1):
+        # create required nodes
+        if i != 0:
+            Comps.nodes.append([- Dims.SEGMENT_LENGTH * ((i * 2) - 1) / 2,
+                                1/2 * Dims.TOWER_WIDTH,
+                                Dims.START_HEIGHT + Dims.HEIGHT])
+        # second batch
+        if i == 1:
+            # diagonal sections
+            append_beam(Dims.END_NODE_TOWER, support_start + 1, True)
+            append_beam(Dims.END_NODE_TOWER + 1, support_start + 1, True)
+            append_beam(Dims.END_NODE_JIB, support_start + 1, True)
+            append_beam(Dims.END_NODE_JIB + 1, support_start + 1, True)
+        # the rest
+        else:
+            if i == 0:
+                start_node = Dims.END_NODE_TOWER
+                # append_beam(Dims.END_NODE_TOWER + 4, support_start, True)
+            else:
+                start_node = Dims.END_NODE_JIB - max(i - 2, 0)
+                append_beam(support_start + (i - 1), support_start + i, True)
+            # diagonal sections
+            val_to_add = max(3 * (i - 2), 0)
+            append_beam(0 + start_node + val_to_add, support_start + i, i != 0)
+            append_beam(1 + start_node + val_to_add, support_start + i, i != 0)
+            append_beam(2 + start_node + val_to_add, support_start + i, i != 0)
+            append_beam(3 + start_node + val_to_add, support_start + i, i != 0)
+    # Cables
+    append_beam(support_start, support_start - 3, False)
+    append_beam(support_start, support_start - 4, False)
+    append_beam(support_start, int((Dims.END_NODE_JIB - Dims.END_NODE_TOWER) / 2
+                                   + Dims.END_NODE_TOWER) + 2, False)
+
+
 def append_beam(start_node, end_node, len_counts):
     """
     Creates a beam between 2 given points and adds the length to a running total
@@ -301,14 +335,10 @@ def set_dims(length, height, segs, sup_style):
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height
-    if sup_style == 'None':
-        Dims.SUPPORT_TYPE = Style.NONE
-    elif sup_style == 'Truss':
+    if sup_style == 'Truss':
         Dims.SUPPORT_TYPE = Style.TRUSS
-    elif sup_style == 'Single tower':
-        Dims.SUPPORT_TYPE = Style.ONE_TOWER
-    elif sup_style == 'Twin towers':
-        Dims.SUPPORT_TYPE = Style.TWO_TOWER
+    elif sup_style == 'Tower':
+        Dims.SUPPORT_TYPE = Style.TOWER
 
 
 def default_dims():
