@@ -54,6 +54,22 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         """Initializes main window"""
         super(MainWindow, self).__init__()
+        self.base_optim_displacement_counter_jib = None
+        self.base_unoptim_displacement_counter_jib = None
+        self.base_optim_displacement_jib = None
+        self.base_unoptim_displacement_jib = None
+        self.optim_displacement_counter_jib = None
+        self.unoptim_displacement_counter_jib = None
+        self.optim_displacement_jib = None
+        self.unoptim_displacement_jib = None
+        self.base_total_cost = None
+        self.base_total_mass = None
+        self.base_total_volume = None
+        self.base_total_length = None
+        self.total_cost = None
+        self.total_mass = None
+        self.total_volume = None
+        self.total_length = None
         self.base_end_crane_parts = None
         self.end_crane_parts = None
         self.ui = Ui_MainWindow()
@@ -280,7 +296,15 @@ class MainWindow(QtWidgets.QMainWindow):
         current_tree_items = [create_tree_item(self.nodes, "XYZ-Coordinates of undeformed Nodes", ""),
                               create_tree_item(self.optim_deformed_nodes, "XYZ-Coordinates of deformed Nodes", ""),
                               create_tree_item(self.beams, "Beams (start and end nodes)", ""),
-                              create_tree_item(self.optim_area_per_rod, "Cross sectional area per Rod", "m\u00B2")]
+                              create_tree_item(self.optim_area_per_rod, "Cross sectional area per Rod", "m\u00B2"),
+                              create_tree_item(self.optim_displacement_jib, "Jib displacement of arrows", "mm"),
+                              create_tree_item(self.optim_displacement_counter_jib,
+                                               "Counter Jib displacement of arrows", "mm"),
+                              create_tree_item([self.total_length.round(decimals=3)], "Total length of beams", "m"),
+                              create_tree_item([self.total_volume.round(decimals=3)], "Total volume of beams",
+                                               "m\u00B3"),
+                              create_tree_item([self.total_mass.round(decimals=3)], "Mass", "kg"),
+                              create_tree_item([self.total_cost.round(decimals=2)], "Material costs", "\u20AC")]
         self.ui.current_treeWidget.insertTopLevelItems(0, current_tree_items)
 
         # Check if comparison base exists
@@ -291,7 +315,19 @@ class MainWindow(QtWidgets.QMainWindow):
                                                            ""),
                                           create_tree_item(self.base_beams, "Beams (start and end nodes)", ""),
                                           create_tree_item(self.base_optim_area_per_rod, "Cross sectional area per Rod",
-                                                           "m\u00B2")]
+                                                           "m\u00B2"),
+                                          create_tree_item(self.base_optim_displacement_jib,
+                                                           "Jib displacement of arrows", "mm"),
+                                          create_tree_item(self.base_optim_displacement_counter_jib,
+                                                           "Counter Jib displacement of arrows", "mm"),
+                                          create_tree_item([self.base_total_length.round(decimals=3)],
+                                                           "Total length of beams", "m"),
+                                          create_tree_item([self.base_total_volume.round(decimals=3)],
+                                                           "Total volume of beams", "m\u00B3"),
+                                          create_tree_item([self.base_total_mass.round(decimals=3)], "Mass", "kg"),
+                                          create_tree_item([self.base_total_cost.round(decimals=2)], "Material costs",
+                                                           "\u20AC")
+                                          ]
             self.ui.comparison_base_treeWidget.insertTopLevelItems(0, comparison_base_tree_items)
 
     def set_crane_dimensions(self):
@@ -326,39 +362,61 @@ class MainWindow(QtWidgets.QMainWindow):
         # Update plots for unoptimized tab
         plotter_manager.update_unoptimized_plots(self.nodes, self.deformed_nodes, self.beams, self.area_per_rod,
                                                  self.axial_forces, self.end_crane_parts,
-                                                 [self.ui.jib_left_spinBox.value(), self.ui.counterjib_left_spinBox.value()])
+                                                 [self.ui.jib_left_spinBox.value(),
+                                                  self.ui.counterjib_left_spinBox.value()])
         # Update plots for optimized tab
-        plotter_manager.update_optimized_plots(self.nodes, self.optim_deformed_nodes, self.beams, self.optim_area_per_rod,
+        plotter_manager.update_optimized_plots(self.nodes, self.optim_deformed_nodes, self.beams,
+                                               self.optim_area_per_rod,
                                                self.optim_axial_forces, self.end_crane_parts,
-                                               [self.ui.jib_left_spinBox.value(), self.ui.counterjib_left_spinBox.value()])
+                                               [self.ui.jib_left_spinBox.value(),
+                                                self.ui.counterjib_left_spinBox.value()])
 
         plotter_manager.update_diff_plot(self.base_nodes, self.base_optim_deformed_nodes, self.base_beams,
                                          self.base_optim_axial_forces, self.nodes, self.optim_deformed_nodes,
                                          self.beams, self.optim_axial_forces, self.base_end_crane_parts,
-                                         self.end_crane_parts, [self.ui.jib_left_spinBox.value(), self.ui.counterjib_left_spinBox.value()])
+                                         self.end_crane_parts,
+                                         [self.ui.jib_left_spinBox.value(), self.ui.counterjib_left_spinBox.value()])
 
     def display_in_console(self):
         """Display displacement of crane at points where forces are applied"""
+        # Unoptimized displacement at jib
+        unoptim_displacement_jib_left = self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - \
+                                        self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)
+        unoptim_displacement_jib_right = self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - \
+                                         self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)
+        self.unoptim_displacement_jib = [unoptim_displacement_jib_left, unoptim_displacement_jib_right]
         self.ui.output.appendPlainText("[Unoptimized] Jib displacement")
-        self.ui.output.appendPlainText(
-            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)) + ' mm')
-        self.ui.output.appendPlainText(
-            str(self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)) + ' mm')
+        self.ui.output.appendPlainText(str(unoptim_displacement_jib_left) + ' mm')
+        self.ui.output.appendPlainText(str(unoptim_displacement_jib_right) + ' mm')
+        # Optimized displacement at jib
+        optim_displacement_jib_left = self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - \
+                                      self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)
+        optim_displacement_jib_right = self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - \
+                                       self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)
+        self.optim_displacement_jib = [optim_displacement_jib_left, optim_displacement_jib_right]
         self.ui.output.appendPlainText("[Optimized] Jib displacement")
-        self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)) + ' mm')
-        self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)) + ' mm')
+        self.ui.output.appendPlainText(str(optim_displacement_jib_left) + ' mm')
+        self.ui.output.appendPlainText(str(optim_displacement_jib_right) + ' mm')
+        # Unoptimized displacement at counter jib
+        unoptim_displacement_counter_jib_left = self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - \
+                                                self.nodes[len(self.nodes) - 2].round(decimals=3)
+        unoptim_displacement_counter_jib_right = self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - \
+                                                 self.nodes[len(self.nodes) - 2].round(decimals=3)
+        self.unoptim_displacement_counter_jib = [unoptim_displacement_counter_jib_left,
+                                                 unoptim_displacement_counter_jib_right]
         self.ui.output.appendPlainText("[Unoptimized] Counter Jib displacement")
-        self.ui.output.appendPlainText(
-            str(self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)) + ' mm')
-        self.ui.output.appendPlainText(
-            str(self.deformed_nodes[len(self.deformed_nodes) - 1].round(decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)) + ' mm')
+        self.ui.output.appendPlainText(str(unoptim_displacement_counter_jib_left) + ' mm')
+        self.ui.output.appendPlainText(str(unoptim_displacement_counter_jib_right) + ' mm')
+        # Optimized displacement at counter jib
+        optim_displacement_counter_jib_left = self.optim_deformed_nodes[len(self.deformed_nodes) - 2].round(
+            decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)
+        optim_displacement_counter_jib_right = self.optim_deformed_nodes[len(self.deformed_nodes) - 1].round(
+            decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)
+        self.optim_displacement_counter_jib = [optim_displacement_counter_jib_left,
+                                               optim_displacement_counter_jib_right]
         self.ui.output.appendPlainText("[Optimized] Counter Jib displacement")
-        self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)) + ' mm')
-        self.ui.output.appendPlainText(
-            str(self.optim_deformed_nodes[len(self.deformed_nodes) - 1].round(decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)) + ' mm')
+        self.ui.output.appendPlainText(str(optim_displacement_counter_jib_left) + ' mm')
+        self.ui.output.appendPlainText(str(optim_displacement_counter_jib_right) + ' mm')
         self.ui.output.appendPlainText('\n')
 
     def reset_plots(self):
@@ -460,12 +518,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.nodes, self.beams = crane.get_crane()
             self.do_simulation()
             self.update_info()
+            self.display_in_console()
             self.set_values_debug_treeWidgets()
             self.update_fem_treeWidget()
             self.update_diff_treeWidget()
-            self.display_in_console()
             self.end_crane_parts = crane.get_end_parts()
-            
+
             # plot as last so all values are set before plots so user only can see delay in plot update
             self.update_plot()
 
@@ -485,14 +543,15 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_info(self):
         """Updates infobox in the bottom left"""
         total_length = crane.get_length()
-        total_length = total_length / 1000
-        total_volume = np.sum(self.optim_area_per_rod * (analysis.get_length_of_each_beam() / 1000))
-        total_mass = total_volume * self.crane.DENSITY
-        total_cost = total_mass / 1000 * 1000
-        self.ui.total_length.setText(f'{(total_length):.3f} m')
-        self.ui.total_volume.setText(f'{(total_volume):.3f} m\u00B3')
-        self.ui.total_mass.setText(f'{(total_mass):.3f} kg')
-        self.ui.total_cost.setText(f'{(total_cost):.2f} \u20AC')
+        self.total_length = total_length / 1000
+        self.total_volume = np.sum(self.optim_area_per_rod * (analysis.get_length_of_each_beam() / 1000))
+        self.total_mass = self.total_volume * self.crane.DENSITY
+        self.total_cost = self.total_mass / 1000 * 1000
+        self.total_values = []
+        self.ui.total_length.setText(f'{self.total_length :.3f} m')
+        self.ui.total_volume.setText(f'{self.total_volume :.3f} m\u00B3')
+        self.ui.total_mass.setText(f'{self.total_mass :.3f} kg')
+        self.ui.total_cost.setText(f'{self.total_cost :.2f} \u20AC')
 
     def check_config(self):
         """Checks if all beams are within the required range"""
@@ -524,6 +583,15 @@ class MainWindow(QtWidgets.QMainWindow):
             self.base_optim_area_per_rod = self.optim_area_per_rod
             self.base_optim_axial_forces = self.optim_axial_forces
             self.base_end_crane_parts = self.end_crane_parts
+            self.base_total_length = self.total_length
+            self.base_total_volume = self.total_volume
+            self.base_total_mass = self.total_mass
+            self.base_total_cost = self.total_cost
+            self.base_unoptim_displacement_jib = self.unoptim_displacement_jib
+            self.base_unoptim_displacement_counter_jib = self.unoptim_displacement_counter_jib
+            self.base_optim_displacement_jib = self.optim_displacement_jib
+            self.base_unoptim_displacement_counter_jib = self.unoptim_displacement_counter_jib
+            self.base_optim_displacement_counter_jib = self.optim_displacement_counter_jib
             QMessageBox.information(self, "Success",
                                     "Successfully created a base version of your current crane. Click apply again to display them")
 
