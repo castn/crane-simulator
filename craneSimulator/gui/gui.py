@@ -1,4 +1,5 @@
 import sys
+import time
 
 import numpy as np
 from PySide6 import QtWidgets
@@ -356,24 +357,29 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_plot(self):
         """Updates 3D plot"""
         # Reset plots by removing and readding them again to the gui
+        self.ui.output.appendPlainText("Reset plots")
         self.reset_plots()
 
+        self.ui.output.appendPlainText("Start creating plots ...")
         # Create new plot manager to manage the different plots
         plotter_manager = PlotterManager(self.ui.axial_coloring.isChecked(), self.ui.cmap, self.ui.cmap,
                                          self.unoptim_canvas.fig, self.optim_canvas.fig, self.diff_canvas.fig)
 
         # Update plots for unoptimized tab
+        self.ui.output.appendPlainText("Updating 'Unoptimized' plot")
         plotter_manager.update_unoptimized_plots(self.nodes, self.deformed_nodes, self.beams, self.area_per_rod,
                                                  self.axial_forces, self.end_crane_parts,
                                                  [self.ui.jib_left_spinBox.value(),
                                                   self.ui.counterjib_left_spinBox.value()])
         # Update plots for optimized tab
+        self.ui.output.appendPlainText("Updating 'Optimized' plot")
         plotter_manager.update_optimized_plots(self.nodes, self.optim_deformed_nodes, self.beams,
                                                self.optim_area_per_rod,
                                                self.optim_axial_forces, self.end_crane_parts,
                                                [self.ui.jib_left_spinBox.value(),
                                                 self.ui.counterjib_left_spinBox.value()])
 
+        self.ui.output.appendPlainText("Updating 'Diff' plot")
         plotter_manager.update_diff_plot(self.base_nodes, self.base_optim_deformed_nodes, self.base_beams,
                                          self.base_optim_axial_forces, self.nodes, self.optim_deformed_nodes,
                                          self.beams, self.optim_axial_forces, self.base_end_crane_parts,
@@ -382,7 +388,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def display_in_console(self):
         """Display displacement of crane at points where forces are applied"""
-
 
     def reset_plots(self):
         self.remove_current_plots()
@@ -449,39 +454,48 @@ class MainWindow(QtWidgets.QMainWindow):
         self.is_saved = False
         self.ui.progressBar.reset()
         self.ui.progressBar.setValue(0)
+        start = time.time()
 
+        self.ui.output.appendPlainText("Load parameters from UI")
         self.set_crane_dimensions()
         # Will always generate a tower
+        self.ui.output.appendPlainText("Set new tower dimensions")
         crane.set_tower_dims(self.dims.get_tower_height(),
                              self.dims.get_tower_width(),
                              self.dims.get_tower_segments(),
                              self.dims.get_tower_support_type())
         # Will always generate a jib
+        self.ui.output.appendPlainText("Set new jib dimensions")
         crane.set_jib_dims(self.dims.get_jib_length(),
                            self.dims.get_jib_height(),
                            self.dims.get_jib_segments(),
                            self.dims.get_jib_support_type())
         # Will always generate a counter jib
+        self.ui.output.appendPlainText("Set new counter jib dimensions")
         crane.set_counterjib_dims(self.dims.get_counter_jib_length(),
                                   self.dims.get_counter_jib_height(),
                                   self.dims.get_counter_jib_segments(),
                                   self.dims.get_counter_jib_support_type())
-
+        self.ui.output.appendPlainText("Start building crane from dimensions")
         self.crane.build_crane()
+        self.ui.output.appendPlainText("Finish building crane")
 
         if self.check_config():
             if not self.ui.enable_gravity.isChecked() or not self.ui.wind_settings.isChecked():
                 self.crane.reset_forces(self.ui)
 
             if self.ui.enable_gravity.isChecked():
+                self.ui.output.appendPlainText("Apply gravity forces to crane")
                 self.crane.enable_gravity(self.ui)
 
             if self.ui.wind_settings.isChecked():
+                self.ui.output.appendPlainText("Apply wind forces to crane")
                 self.crane.enable_wind(self.ui.wind_direction.currentText(), self.ui.wind_force.value())
 
             # Get undeformed crane with updated values
             self.nodes, self.beams = crane.get_crane()
             self.do_simulation()
+            self.ui.output.appendPlainText("Update infos in UI")
             self.update_info()
             self.set_values_debug_treeWidgets()
             self.update_fem_treeWidget()
@@ -493,17 +507,23 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.is_analysed = True
         self.ui.progressBar.setValue(100)
+        self.ui.output.appendPlainText(f"took {round(time.time() - start, 2)} s\n")
 
     def do_simulation(self):
+        self.ui.output.appendPlainText("Start simulation ...")
         # Get value set in multiplier
         multiplier = self.ui.multiplierSpinBox.value()
         # Do the analysis for unoptimized crane
         self.axial_forces, self.reaction_forces, self.deformation, self.area_per_rod = self.crane.analyze()
         self.deformed_nodes = self.deformation * multiplier + self.nodes
+        self.ui.output.appendPlainText("Finish simulation")
         # Now do the optimisation
+        self.ui.output.appendPlainText("Start optimization ...")
         self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize()
         self.optim_deformed_nodes = self.optim_deformations * multiplier + self.nodes
+        self.ui.output.appendPlainText("Finish optimization")
 
+        self.ui.output.appendPlainText("Calculate displacement")
         # Unoptimized displacement at jib
         unoptim_displacement_jib_left = self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - \
                                         self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)
@@ -547,6 +567,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def check_config(self):
         """Checks if all beams are within the required range"""
         if not self.ui.ignore_specification.isChecked():
+            self.ui.output.appendPlainText("Search for specifications violations")
             tower_longest = crane.tower.get_longest_beam()
             if tower_longest < 500 or tower_longest > 2000:
                 self.display_waring("Tower", tower_longest)
@@ -567,6 +588,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                  "No data is available to create a comparison base from the current crane. "
                                  "You need to first apply all the settings to perform this action!")
         else:
+            self.ui.output.appendPlainText("Updating base values")
             self.comparison_base = self.crane
             self.base_nodes = self.nodes
             self.base_optim_deformed_nodes = self.optim_deformed_nodes
@@ -583,6 +605,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.base_optim_displacement_jib = self.optim_displacement_jib
             self.base_unoptim_displacement_counter_jib = self.unoptim_displacement_counter_jib
             self.base_optim_displacement_counter_jib = self.optim_displacement_counter_jib
+            self.ui.output.appendPlainText("Successfully updated base values")
             QMessageBox.information(self, "Success",
                                     "Successfully created a base version of your current crane. Click apply again to display them")
 
