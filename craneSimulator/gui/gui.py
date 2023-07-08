@@ -382,45 +382,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def display_in_console(self):
         """Display displacement of crane at points where forces are applied"""
-        # Unoptimized displacement at jib
-        unoptim_displacement_jib_left = self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - \
-                                        self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)
-        unoptim_displacement_jib_right = self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - \
-                                         self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)
-        self.unoptim_displacement_jib = [unoptim_displacement_jib_left, unoptim_displacement_jib_right]
-        self.ui.output.appendPlainText("[Unoptimized] Jib displacement")
-        self.ui.output.appendPlainText(str(unoptim_displacement_jib_left) + ' mm')
-        self.ui.output.appendPlainText(str(unoptim_displacement_jib_right) + ' mm')
-        # Optimized displacement at jib
-        optim_displacement_jib_left = self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - \
-                                      self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)
-        optim_displacement_jib_right = self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - \
-                                       self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)
-        self.optim_displacement_jib = [optim_displacement_jib_left, optim_displacement_jib_right]
-        self.ui.output.appendPlainText("[Optimized] Jib displacement")
-        self.ui.output.appendPlainText(str(optim_displacement_jib_left) + ' mm')
-        self.ui.output.appendPlainText(str(optim_displacement_jib_right) + ' mm')
-        # Unoptimized displacement at counter jib
-        unoptim_displacement_counter_jib_left = self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - \
-                                                self.nodes[len(self.nodes) - 2].round(decimals=3)
-        unoptim_displacement_counter_jib_right = self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - \
-                                                 self.nodes[len(self.nodes) - 2].round(decimals=3)
-        self.unoptim_displacement_counter_jib = [unoptim_displacement_counter_jib_left,
-                                                 unoptim_displacement_counter_jib_right]
-        self.ui.output.appendPlainText("[Unoptimized] Counter Jib displacement")
-        self.ui.output.appendPlainText(str(unoptim_displacement_counter_jib_left) + ' mm')
-        self.ui.output.appendPlainText(str(unoptim_displacement_counter_jib_right) + ' mm')
-        # Optimized displacement at counter jib
-        optim_displacement_counter_jib_left = self.optim_deformed_nodes[len(self.deformed_nodes) - 2].round(
-            decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)
-        optim_displacement_counter_jib_right = self.optim_deformed_nodes[len(self.deformed_nodes) - 1].round(
-            decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)
-        self.optim_displacement_counter_jib = [optim_displacement_counter_jib_left,
-                                               optim_displacement_counter_jib_right]
-        self.ui.output.appendPlainText("[Optimized] Counter Jib displacement")
-        self.ui.output.appendPlainText(str(optim_displacement_counter_jib_left) + ' mm')
-        self.ui.output.appendPlainText(str(optim_displacement_counter_jib_right) + ' mm')
-        self.ui.output.appendPlainText('\n')
+
 
     def reset_plots(self):
         self.remove_current_plots()
@@ -521,7 +483,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.nodes, self.beams = crane.get_crane()
             self.do_simulation()
             self.update_info()
-            self.display_in_console()
             self.set_values_debug_treeWidgets()
             self.update_fem_treeWidget()
             self.update_diff_treeWidget()
@@ -542,6 +503,33 @@ class MainWindow(QtWidgets.QMainWindow):
         # Now do the optimisation
         self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize()
         self.optim_deformed_nodes = self.optim_deformations * multiplier + self.nodes
+
+        # Unoptimized displacement at jib
+        unoptim_displacement_jib_left = self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - \
+                                        self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)
+        unoptim_displacement_jib_right = self.deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - \
+                                         self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)
+        self.unoptim_displacement_jib = [unoptim_displacement_jib_left, unoptim_displacement_jib_right]
+        # Optimized displacement at jib
+        optim_displacement_jib_left = self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3) - \
+                                      self.nodes[crane.Dims.JIB_NUM_NODES - 2].round(decimals=3)
+        optim_displacement_jib_right = self.optim_deformed_nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3) - \
+                                       self.nodes[crane.Dims.JIB_NUM_NODES - 1].round(decimals=3)
+        self.optim_displacement_jib = [optim_displacement_jib_left, optim_displacement_jib_right]
+        # Unoptimized displacement at counter jib
+        unoptim_displacement_counter_jib_left = self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - \
+                                                self.nodes[len(self.nodes) - 2].round(decimals=3)
+        unoptim_displacement_counter_jib_right = self.deformed_nodes[len(self.deformed_nodes) - 2].round(decimals=3) - \
+                                                 self.nodes[len(self.nodes) - 2].round(decimals=3)
+        self.unoptim_displacement_counter_jib = [unoptim_displacement_counter_jib_left,
+                                                 unoptim_displacement_counter_jib_right]
+        # Optimized displacement at counter jib
+        optim_displacement_counter_jib_left = self.optim_deformed_nodes[len(self.deformed_nodes) - 2].round(
+            decimals=3) - self.nodes[len(self.nodes) - 2].round(decimals=3)
+        optim_displacement_counter_jib_right = self.optim_deformed_nodes[len(self.deformed_nodes) - 1].round(
+            decimals=3) - self.nodes[len(self.nodes) - 1].round(decimals=3)
+        self.optim_displacement_counter_jib = [optim_displacement_counter_jib_left,
+                                               optim_displacement_counter_jib_right]
 
     def update_info(self):
         """Updates infobox in the bottom left"""
