@@ -331,7 +331,6 @@ def optimize(nodes, beams, E, DENSITY):
         old_apb = Comps.area_per_beam.copy()
         adjust_cross_section_area(axial_force[0])
         if np.all(Comps.area_per_beam == old_apb):
-            print(f'Completed at attempt {_}')
             break
 
     axial_force, reaction_force, deformation = analyze(nodes, beams, E, DENSITY)
