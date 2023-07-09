@@ -9,12 +9,13 @@ class Conditions:
     def_fixed_nodes = []
     dof_condition = np.ones_like(0)
     forces = np.zeros_like(0)
-    area_per_beam = 0
+    
     abs_max_tension = 2e+8
 
 
 class Comps():
     nodes = []
+    area_per_beam = np.zeros(0)
 
 
 class Dims():
@@ -51,7 +52,7 @@ def generate_conditions(nodes, beams):
     dof_condition[3, :] = 0
     Conditions.dof_condition = dof_condition
 
-    Conditions.area_per_beam = np.full((len(beams)), 0.0025)
+    Comps.area_per_beam = np.full((len(beams)), 0.0025)
 
 
 def apply_forces(window, nodes, end_tower, end_jib, end_jib_base, end_cj_base, end_cj):
@@ -86,7 +87,7 @@ def apply_gravity(nodes, beams, density, grav_const):
         for j in range(len(beams_conn_to_node)):
             start_float = np.array(beams[beams_conn_to_node[j], 0]).astype(float)
             end_float = np.array(beams[beams_conn_to_node[j], 1]).astype(float)
-            volume += (np.linalg.norm(end_float - start_float) / 2) / 1000 * Conditions.area_per_beam[beams_conn_to_node[j]]
+            volume += (np.linalg.norm(end_float - start_float) / 2) / 1000 * Comps.area_per_beam[beams_conn_to_node[j]]
         Conditions.forces[i, 2] += - (volume * density * grav_const) * kN
 
 
@@ -245,13 +246,13 @@ def analyze(nodes, beams, E, DENSITY):
     deformation, u = calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes, support_dof)
     
     # Calculate axial forces for each beam
-    axial_force = (E * Conditions.area_per_beam / L[:]) * (transformation_vector[:] * u[:]).sum(axis=1)
+    axial_force = (E * Comps.area_per_beam / L[:]) * (transformation_vector[:] * u[:]).sum(axis=1)
 
     # Test each beam for euler buckling
     for i in range(number_of_elements):
         n = axial_force[i]
         l = L[i]
-        A = Conditions.area_per_beam[i]
+        A = Comps.area_per_beam[i]
         if is_euler_buckling_rod(E, A, DENSITY, l, n):
             print(f"{i} is euler buckling rod!")
 
@@ -295,7 +296,7 @@ def calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_numbe
     for k in range(number_of_elements):
         tmp = dof * beams[k, :]
         # (Local) Stiffness for each element
-        elem_stiffness = np.dot(transformation_vector[k][np.newaxis].transpose() * E * Conditions.area_per_beam[k],
+        elem_stiffness = np.dot(transformation_vector[k][np.newaxis].transpose() * E * Comps.area_per_beam[k],
                                 transformation_vector[k][np.newaxis]) / L[k]
         # Index where local stiffness should be placed in global stiffness
         index = np.r_[tmp[0]:tmp[0] + dof, tmp[1]:tmp[1] + dof]
@@ -325,21 +326,26 @@ def optimize(nodes, beams, E, DENSITY):
     #         highest = max(a[i], b[i], c[i])
     #         merged_list.append(highest)
     # print(merged_list)
-    for _ in range(4):
+    for _ in range(20):
         axial_force = analyze(nodes, beams, E, DENSITY)
+        old_apb = Comps.area_per_beam.copy()
         adjust_cross_section_area(axial_force[0])
+        if np.all(Comps.area_per_beam == old_apb):
+            print(f'Completed at attempt {_}')
+            break
+
     axial_force, reaction_force, deformation = analyze(nodes, beams, E, DENSITY)
-    return axial_force, reaction_force, deformation, Conditions.area_per_beam
+    return axial_force, reaction_force, deformation, Comps.area_per_beam
 
 
 def get_area_per_beam():
     """Returns array containing the areas of each beam"""
-    return Conditions.area_per_beam
+    return Comps.area_per_beam
 
 
 def adjust_cross_section_area(axial_force):
     """Adjusts cross section of each beam if it violates problem parameters"""
-    for i in range(len(Conditions.area_per_beam)):
-        current_tension = abs(axial_force[i] / Conditions.area_per_beam[i])
+    for i in range(len(Comps.area_per_beam)):
+        current_tension = abs(axial_force[i] / Comps.area_per_beam[i])
         if current_tension > Conditions.abs_max_tension:
-            Conditions.area_per_beam[i] += 3 * Conditions.area_per_beam[i]  # increase side length by 5cm
+            Comps.area_per_beam[i] = ((np.sqrt(Comps.area_per_beam[i]) + 0.01) ** 2).round(decimals=4)  # increase side length by 1cm
