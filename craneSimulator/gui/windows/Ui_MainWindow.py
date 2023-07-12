@@ -186,6 +186,11 @@ class Ui_MainWindow(object):
 
         self.formLayout_2.setWidget(9, QFormLayout.FieldRole, self.jibSupportType_comboBox)
 
+        self.halfDrop = QCheckBox(self.jibBox)
+        self.halfDrop.setObjectName(u"halfDrop")
+
+        self.formLayout_2.setWidget(10, QFormLayout.SpanningRole, self.halfDrop)
+
 
         self.verticalLayout_4.addWidget(self.jibBox)
 
@@ -741,6 +746,7 @@ class Ui_MainWindow(object):
         self.jibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Set-back truss", None))
 
         self.jibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Truss", None))
+        self.halfDrop.setText(QCoreApplication.translate("MainWindow", u"Realistic decrease in height of support", None))
         self.counterJibBox.setTitle(QCoreApplication.translate("MainWindow", u"Counter Jib", None))
         self.counterJibLength_label.setText(QCoreApplication.translate("MainWindow", u"Length", None))
         self.counterJibLength_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))
