@@ -17,6 +17,7 @@ class Dims:
     SEGMENTS = 0
     HEIGHT = 0
     SUPPORT_TYPE = ''
+    DROPDOWN = False
 
     START_HEIGHT = 0
     TOWER_WIDTH = 0
@@ -84,18 +85,25 @@ def create_segments():
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.TOWER_WIDTH,
                                 Dims.START_HEIGHT])
+        height = Dims.HEIGHT * 0.75 if Dims.DROPDOWN and i > Dims.SEGMENTS / 2 else Dims.HEIGHT
         if i < Dims.SEGMENTS:
-            if Dims.SUPPORT_TYPE == 'Truss':
-                x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
-            else:
-                x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i
+            x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2 if Dims.SUPPORT_TYPE == 'Truss' else Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i
+            # if Dims.SUPPORT_TYPE == 'Truss':
+            #     x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
+            # else:
+            #     x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i
+            
+            # if Dims.DROPDOWN and i > Dims.SEGMENTS / 2 + 1:
+            #     height = Dims.HEIGHT * 0.75
+            # else:
+            #     height = Dims.HEIGHT
             Comps.nodes.append([x_coord,
                                 Dims.SEGMENT_LENGTH / 2,
-                                Dims.START_HEIGHT + Dims.HEIGHT])
+                                Dims.START_HEIGHT + height])
         if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != 'Truss':
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
-                                Dims.START_HEIGHT + Dims.HEIGHT])
+                                Dims.START_HEIGHT + height])
 
 
 def create_beams():
@@ -183,7 +191,7 @@ def get_end_base():
     return len(Comps.nodes) if Dims.SUPPORT_TYPE == 'Truss' else (len(Comps.nodes) - 1)
 
 
-def set_dims(length, height, segs, sup_type):
+def set_dims(length, height, segs, sup_type, dropwdown):
     """Sets dimensions of the jib to passed-through values"""
     Comps.nodes = []
     Comps.beams = []
@@ -195,6 +203,7 @@ def set_dims(length, height, segs, sup_type):
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height
     Dims.SUPPORT_TYPE = sup_type
+    Dims.DROPDOWN = dropwdown
 
 
 def default_dims():

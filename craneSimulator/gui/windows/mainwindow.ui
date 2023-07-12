@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1022</width>
-    <height>1259</height>
+    <height>1292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -262,7 +262,7 @@
                    </widget>
                   </item>
                   <item row="10" column="0" colspan="2">
-                   <widget class="QCheckBox" name="halfDrop">
+                   <widget class="QCheckBox" name="jibSupportHalfDrop">
                     <property name="text">
                      <string>Realistic decrease in height of support</string>
                     </property>

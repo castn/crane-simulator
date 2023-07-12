@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1022, 1259)
+        MainWindow.resize(1022, 1292)
         MainWindow.setTabShape(QTabWidget.Rounded)
         self.actionOpen = QAction(MainWindow)
         self.actionOpen.setObjectName(u"actionOpen")
@@ -186,10 +186,10 @@ class Ui_MainWindow(object):
 
         self.formLayout_2.setWidget(9, QFormLayout.FieldRole, self.jibSupportType_comboBox)
 
-        self.halfDrop = QCheckBox(self.jibBox)
-        self.halfDrop.setObjectName(u"halfDrop")
+        self.jibSupportHalfDrop = QCheckBox(self.jibBox)
+        self.jibSupportHalfDrop.setObjectName(u"jibSupportHalfDrop")
 
-        self.formLayout_2.setWidget(10, QFormLayout.SpanningRole, self.halfDrop)
+        self.formLayout_2.setWidget(10, QFormLayout.SpanningRole, self.jibSupportHalfDrop)
 
 
         self.verticalLayout_4.addWidget(self.jibBox)
@@ -746,7 +746,7 @@ class Ui_MainWindow(object):
         self.jibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Set-back truss", None))
 
         self.jibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Truss", None))
-        self.halfDrop.setText(QCoreApplication.translate("MainWindow", u"Realistic decrease in height of support", None))
+        self.jibSupportHalfDrop.setText(QCoreApplication.translate("MainWindow", u"Realistic decrease in height of support", None))
         self.counterJibBox.setTitle(QCoreApplication.translate("MainWindow", u"Counter Jib", None))
         self.counterJibLength_label.setText(QCoreApplication.translate("MainWindow", u"Length", None))
         self.counterJibLength_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))

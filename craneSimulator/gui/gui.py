@@ -291,6 +291,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.fem_optimized_treeWidget.insertTopLevelItems(0, optim_tree_items)
 
     def update_diff_treeWidget(self):
+        """Updates all info in the 'Diff' tab"""
         self.ui.comparison_base_treeWidget.clear()
         self.ui.current_treeWidget.clear()
 
@@ -348,6 +349,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.dims.set_jib_length(self.ui.jibLength_spinBox.value())
         self.dims.set_jib_segments(self.ui.jibSegment_spinBox.value())
         self.dims.set_jib_support_type(self.ui.jibSupportType_comboBox.currentText())
+        self.dims.set_jib_dropdown(self.ui.jibSupportHalfDrop.isChecked())
         # Set all counter jib dimensions
         self.dims.set_counter_jib_height(self.ui.counterJibHeight_spinBox.value())
         self.dims.set_counter_jib_length(self.ui.counterJibLength_spinBox.value())
@@ -469,7 +471,8 @@ class MainWindow(QtWidgets.QMainWindow):
         crane.set_jib_dims(self.dims.get_jib_length(),
                            self.dims.get_jib_height(),
                            self.dims.get_jib_segments(),
-                           self.dims.get_jib_support_type())
+                           self.dims.get_jib_support_type(),
+                           self.dims.get_jib_dropdown())
         # Will always generate a counter jib
         self.ui.output.appendPlainText("Set new counter jib dimensions")
         crane.set_counterjib_dims(self.dims.get_counter_jib_length(),
