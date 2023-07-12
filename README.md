@@ -1,6 +1,6 @@
 # Crane Simulator 2024
 
-![img.png](resources/cover.png)
+![img.png](resources/images/cover.png)
 
 ## Goals
 
