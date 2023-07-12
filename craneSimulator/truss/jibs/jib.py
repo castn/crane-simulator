@@ -84,8 +84,7 @@ def create_segments():
         # linear bend starting at the beginning
         # bot_height = Dims.START_HEIGHT + (Dims.HEIGHT / (2 * Dims.SEGMENTS * Dims.SEGMENT_LENGTH)) * i * 1000 if Dims.BEND else Dims.START_HEIGHT
         # exponential bend starting at the beginning
-        bot_height = Dims.START_HEIGHT + 0.01 * np.power(40, 1/10 * (Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i)) * 1000 if Dims.BEND else Dims.START_HEIGHT
-        print(bot_height)
+        bot_height = Dims.START_HEIGHT + 0.01 * np.power(35, 1/10 * (Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i)) * 1000 if Dims.BEND else Dims.START_HEIGHT
         if not (i == 0 and Dims.IS_CONNECTED):
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 0,
