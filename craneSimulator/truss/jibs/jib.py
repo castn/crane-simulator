@@ -18,6 +18,7 @@ class Dims:
     HEIGHT = 0
     SUPPORT_TYPE = ''
     DROPDOWN = False
+    BEND = False
 
     START_HEIGHT = 0
     TOWER_WIDTH = 0
@@ -78,32 +79,32 @@ def create_segments():
     """Create the segments of a jib"""
     for i in range(Dims.SEGMENTS + 1):
         # skips the first run-through if nodes already exist
+        # linear bend starting at the middle
+        # bot_height = Dims.START_HEIGHT + (Dims.HEIGHT / (Dims.SEGMENTS * Dims.SEGMENT_LENGTH)) * (i - Dims.SEGMENTS / 2) * 1000 if Dims.BEND and i > Dims.SEGMENTS / 2 else Dims.START_HEIGHT
+        # linear bend starting at the beginning
+        # bot_height = Dims.START_HEIGHT + (Dims.HEIGHT / (2 * Dims.SEGMENTS * Dims.SEGMENT_LENGTH)) * i * 1000 if Dims.BEND else Dims.START_HEIGHT
+        # exponential bend starting at the beginning
+        bot_height = Dims.START_HEIGHT + 0.01 * np.power(40, 1/10 * (Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i)) * 1000 if Dims.BEND else Dims.START_HEIGHT
+        print(bot_height)
         if not (i == 0 and Dims.IS_CONNECTED):
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 0,
-                                Dims.START_HEIGHT])
+                                bot_height])
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.TOWER_WIDTH,
-                                Dims.START_HEIGHT])
-        height = Dims.HEIGHT * 0.75 if Dims.DROPDOWN and i > Dims.SEGMENTS / 2 else Dims.HEIGHT
+                                bot_height])
+        top_height = Dims.HEIGHT * 0.77 if Dims.DROPDOWN and i > Dims.SEGMENTS / 2 else Dims.HEIGHT
+        
         if i < Dims.SEGMENTS:
-            x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2 if Dims.SUPPORT_TYPE == 'Truss' else Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i
-            # if Dims.SUPPORT_TYPE == 'Truss':
-            #     x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
-            # else:
-            #     x_coord = Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i
-            
-            # if Dims.DROPDOWN and i > Dims.SEGMENTS / 2 + 1:
-            #     height = Dims.HEIGHT * 0.75
-            # else:
-            #     height = Dims.HEIGHT
-            Comps.nodes.append([x_coord,
+            Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
+                                if Dims.SUPPORT_TYPE == 'Truss'
+                                else Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
-                                Dims.START_HEIGHT + height])
+                                bot_height + top_height])
         if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != 'Truss':
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
-                                Dims.START_HEIGHT + height])
+                                bot_height + top_height])
 
 
 def create_beams():
@@ -191,7 +192,7 @@ def get_end_base():
     return len(Comps.nodes) if Dims.SUPPORT_TYPE == 'Truss' else (len(Comps.nodes) - 1)
 
 
-def set_dims(length, height, segs, sup_type, dropwdown):
+def set_dims(length, height, segs, sup_type, dropwdown, bend):
     """Sets dimensions of the jib to passed-through values"""
     Comps.nodes = []
     Comps.beams = []
@@ -204,6 +205,7 @@ def set_dims(length, height, segs, sup_type, dropwdown):
     Dims.HEIGHT = height
     Dims.SUPPORT_TYPE = sup_type
     Dims.DROPDOWN = dropwdown
+    Dims.BEND = bend
 
 
 def default_dims():

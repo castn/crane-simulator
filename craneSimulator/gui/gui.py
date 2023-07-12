@@ -350,6 +350,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.dims.set_jib_segments(self.ui.jibSegment_spinBox.value())
         self.dims.set_jib_support_type(self.ui.jibSupportType_comboBox.currentText())
         self.dims.set_jib_dropdown(self.ui.jibSupportHalfDrop.isChecked())
+        self.dims.set_jib_bend(self.ui.jibBend.isChecked())
         # Set all counter jib dimensions
         self.dims.set_counter_jib_height(self.ui.counterJibHeight_spinBox.value())
         self.dims.set_counter_jib_length(self.ui.counterJibLength_spinBox.value())
@@ -472,7 +473,8 @@ class MainWindow(QtWidgets.QMainWindow):
                            self.dims.get_jib_height(),
                            self.dims.get_jib_segments(),
                            self.dims.get_jib_support_type(),
-                           self.dims.get_jib_dropdown())
+                           self.dims.get_jib_dropdown(),
+                           self.dims.get_jib_bend())
         # Will always generate a counter jib
         self.ui.output.appendPlainText("Set new counter jib dimensions")
         crane.set_counterjib_dims(self.dims.get_counter_jib_length(),

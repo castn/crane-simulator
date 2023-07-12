@@ -13,6 +13,7 @@ class Dims:
     JIB_SEGMENTS = 0
     JIB_SUP_TYPE = 0
     JIB_DROPDOWN = 0
+    JIB_BEND = 0
 
     COUNTERJIB_HEIGHT = 0
     COUNTERJIB_LENGTH = 0
@@ -95,6 +96,9 @@ class Dims:
     def get_jib_dropdown(self):
         return self.JIB_DROPDOWN
 
+    def get_jib_bend(self):
+        return self.JIB_BEND
+
     def set_jib_height(self, height):
         self.JIB_HEIGHT = height
 
@@ -109,6 +113,9 @@ class Dims:
 
     def set_jib_dropdown(self, dropdown):
         self.JIB_DROPDOWN = dropdown
+
+    def set_jib_bend(self, bend):
+        self.JIB_BEND = bend
 
 
     # Counter Jib

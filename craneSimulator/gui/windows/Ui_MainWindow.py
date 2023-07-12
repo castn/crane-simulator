@@ -82,7 +82,7 @@ class Ui_MainWindow(object):
         self.towerHeight_spinbox.setObjectName(u"towerHeight_spinbox")
         self.towerHeight_spinbox.setMinimum(1)
         self.towerHeight_spinbox.setMaximum(1000000)
-        self.towerHeight_spinbox.setValue(2000)
+        self.towerHeight_spinbox.setValue(10000)
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.towerHeight_spinbox)
 
@@ -123,7 +123,7 @@ class Ui_MainWindow(object):
         self.towerSegment_spinbox.setObjectName(u"towerSegment_spinbox")
         self.towerSegment_spinbox.setMinimum(1)
         self.towerSegment_spinbox.setMaximum(1000000)
-        self.towerSegment_spinbox.setValue(2)
+        self.towerSegment_spinbox.setValue(10)
 
         self.formLayout.setWidget(6, QFormLayout.FieldRole, self.towerSegment_spinbox)
 
@@ -144,7 +144,7 @@ class Ui_MainWindow(object):
         self.jibLength_spinBox.setObjectName(u"jibLength_spinBox")
         self.jibLength_spinBox.setMinimum(1)
         self.jibLength_spinBox.setMaximum(1000000)
-        self.jibLength_spinBox.setValue(2000)
+        self.jibLength_spinBox.setValue(10000)
 
         self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.jibLength_spinBox)
 
@@ -170,7 +170,7 @@ class Ui_MainWindow(object):
         self.jibSegment_spinBox.setObjectName(u"jibSegment_spinBox")
         self.jibSegment_spinBox.setMinimum(1)
         self.jibSegment_spinBox.setMaximum(1000000)
-        self.jibSegment_spinBox.setValue(2)
+        self.jibSegment_spinBox.setValue(10)
 
         self.formLayout_2.setWidget(6, QFormLayout.FieldRole, self.jibSegment_spinBox)
 
@@ -185,6 +185,11 @@ class Ui_MainWindow(object):
         self.jibSupportType_comboBox.setObjectName(u"jibSupportType_comboBox")
 
         self.formLayout_2.setWidget(9, QFormLayout.FieldRole, self.jibSupportType_comboBox)
+
+        self.jibBend = QCheckBox(self.jibBox)
+        self.jibBend.setObjectName(u"jibBend")
+
+        self.formLayout_2.setWidget(11, QFormLayout.SpanningRole, self.jibBend)
 
         self.jibSupportHalfDrop = QCheckBox(self.jibBox)
         self.jibSupportHalfDrop.setObjectName(u"jibSupportHalfDrop")
@@ -208,7 +213,7 @@ class Ui_MainWindow(object):
         self.counterJibLength_spinBox.setObjectName(u"counterJibLength_spinBox")
         self.counterJibLength_spinBox.setMinimum(1)
         self.counterJibLength_spinBox.setMaximum(1000000)
-        self.counterJibLength_spinBox.setValue(1000)
+        self.counterJibLength_spinBox.setValue(4000)
 
         self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.counterJibLength_spinBox)
 
@@ -239,7 +244,7 @@ class Ui_MainWindow(object):
         self.counterJibSegments_spinBox.setObjectName(u"counterJibSegments_spinBox")
         self.counterJibSegments_spinBox.setMinimum(1)
         self.counterJibSegments_spinBox.setMaximum(1000000)
-        self.counterJibSegments_spinBox.setValue(2)
+        self.counterJibSegments_spinBox.setValue(5)
 
         self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.counterJibSegments_spinBox)
 
@@ -269,6 +274,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.enable_gravity = QCheckBox(self.settings)
         self.enable_gravity.setObjectName(u"enable_gravity")
+        self.enable_gravity.setChecked(True)
 
         self.verticalLayout_6.addWidget(self.enable_gravity)
 
@@ -356,7 +362,7 @@ class Ui_MainWindow(object):
         self.counterjib_left_spinBox.setObjectName(u"counterjib_left_spinBox")
         self.counterjib_left_spinBox.setMinimum(-5000)
         self.counterjib_left_spinBox.setMaximum(5000)
-        self.counterjib_left_spinBox.setValue(-100)
+        self.counterjib_left_spinBox.setValue(-250)
 
         self.formLayout_6.setWidget(2, QFormLayout.FieldRole, self.counterjib_left_spinBox)
 
@@ -374,7 +380,7 @@ class Ui_MainWindow(object):
         self.counterjib_right_spinBox.setObjectName(u"counterjib_right_spinBox")
         self.counterjib_right_spinBox.setMinimum(-5000)
         self.counterjib_right_spinBox.setMaximum(5000)
-        self.counterjib_right_spinBox.setValue(-100)
+        self.counterjib_right_spinBox.setValue(-250)
 
         self.formLayout_6.setWidget(3, QFormLayout.FieldRole, self.counterjib_right_spinBox)
 
@@ -746,6 +752,7 @@ class Ui_MainWindow(object):
         self.jibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Set-back truss", None))
 
         self.jibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Truss", None))
+        self.jibBend.setText(QCoreApplication.translate("MainWindow", u"Realistic upward bend", None))
         self.jibSupportHalfDrop.setText(QCoreApplication.translate("MainWindow", u"Realistic decrease in height of support", None))
         self.counterJibBox.setTitle(QCoreApplication.translate("MainWindow", u"Counter Jib", None))
         self.counterJibLength_label.setText(QCoreApplication.translate("MainWindow", u"Length", None))
