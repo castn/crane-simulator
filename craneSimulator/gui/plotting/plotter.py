@@ -50,7 +50,7 @@ class PlotterManager:
                     end_crane_parts[1], end_crane_parts[2], loads[0], loads[1])
         plot_deformation_with_grad(deformed_nodes, beams, '-', self.unoptim_ax_l,
                                    axial_forces, self.cmap_deformation)
-        plot_area_with_grad(nodes, beams, '-', self.unoptim_ax_r, self.unoptim_fig, area_per_rod)
+        plot_area_with_grad(nodes, beams, '-', self.unoptim_ax_r, self.unoptim_fig, area_per_rod, 1)
         # print(u_ax_l.get_xticklabels())
         # u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
         # u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
@@ -62,7 +62,7 @@ class PlotterManager:
                     end_crane_parts[1], end_crane_parts[2], loads[0], loads[1])
         plot_deformation_with_grad(opt_deformed_nodes, beams, '-', self.optim_ax_l,
                                    optm_axial_forces, self.cmap_deformation)
-        plot_area_with_grad(nodes, beams, '-', self.optim_ax_r, self.optim_fig, opt_area_per_rod)
+        plot_area_with_grad(nodes, beams, '-', self.optim_ax_r, self.optim_fig, opt_area_per_rod, 6)
         # print(u_ax_l.get_xticklabels())
         # u_ax_l.set_xticklabels(u_ax_l.get_xticklabels(), rotation=45)
         # u_ax_l.set_zticklabels(u_ax_l.get_zticklabels(), rotation=45)
@@ -141,8 +141,8 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forc
         line = line[0]
     axial_forces_list = axial_forces
     axial_forces_list.sort()
-    ax.legend(handles=create_colormap_gradient(axial_forces_list, cmap, "Pa"), prop={'size': 10},
-              loc='upper right', draggable=True, title='Axial forces per rod')
+    ax.legend(handles=create_colormap_gradient(axial_forces_list, cmap), prop={'size': 10},
+              loc='lower right', draggable=True, title='Axial forces per rod')
 
     line.set_label("Deformed")
     ax.set_aspect("equal")
@@ -150,7 +150,7 @@ def plot_deformation_with_grad(deformed_nodes, beams, line_style, ax, axial_forc
     #            title='Absolute axial forces')
 
 
-def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod):
+def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod, vals_to_disp):
     """Plots crane with colors representing the cross section area of individual beams"""
     norm = mpl.colors.Normalize(min(area_per_rod), max(area_per_rod))
     cmap = cm.get_cmap("rainbow")
@@ -167,21 +167,20 @@ def plot_area_with_grad(nodes, beams, line_style, ax, fig, area_per_rod):
         if not value_as_norm in values_listed_in_legend.values():
             values_listed_in_legend[area_per_rod[i]] = value_as_norm
         line = line[0]
-    ax.legend(handles=create_colormap_gradient_area_per_rod(values_listed_in_legend, cmap, "m\u00B2"),
+    values_listed_in_legend_list = list(values_listed_in_legend.keys())
+    values_listed_in_legend_list.sort()
+    ax.legend(handles=create_colormap_gradient_area_per_rod(values_listed_in_legend_list, cmap, "m\u00B2", min(vals_to_disp, len(values_listed_in_legend_list))),
               prop={'size': 10},
-              loc='upper right', draggable=True, title='Cross sectional area per rod')
+              loc='lower right', draggable=True, title='Cross sectional area per rod')
     fig.gca().set_aspect('equal')
 
 
-def create_colormap_gradient(sorted_axial_forces, cmap, suffix):
+def create_colormap_gradient(sorted_axial_forces, cmap):
     """Generates a gradient of a colormap"""
     cmap_legend = []
     select_axial_forces = np.round(np.linspace(0, len(sorted_axial_forces) - 1, 6)).astype(int)
     for i in range(len(select_axial_forces)):
-        value = sorted_axial_forces[i]
-        a = norm(value)
         cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(0.2 * i), lw=4, label=num_with_units(sorted_axial_forces[select_axial_forces[i]].round(decimals=1))))
-        # cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(norm(value)), label=f'{value.round(decimals=1)} {suffix}'))
     return cmap_legend
 
 
@@ -196,13 +195,17 @@ def num_with_units(num, suffix="Pa"):
     return f"{num}Yi{suffix}"
 
 
-def create_colormap_gradient_area_per_rod(dictionary, cmap, suffix):
+def create_colormap_gradient_area_per_rod(areas_per_beam, cmap, suffix, vals_to_disp):
     """Generates a gradient of a colormap specifically for the cross section area"""
     cmap_legend = []
-    for value in dictionary:
-        value_as_norm = dictionary[value]
-        cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(value_as_norm), label=f'{value} {suffix}'))
+    select_areas = np.round(np.linspace(0, len(areas_per_beam) - 1, 6)).astype(int)
+    for i in range(vals_to_disp):
+        cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(0.2 * i), lw=4, label=f'{areas_per_beam[select_areas[i]].round(decimals=4)} {suffix}'))
     return cmap_legend
+    # for value in dictionary:
+    #     value_as_norm = dictionary[value]
+    #     cmap_legend.append(mpl.lines.Line2D([0], [0], color=cmap(value_as_norm), label=f'{value} {suffix}'))
+    # return cmap_legend
 
 
 def display():

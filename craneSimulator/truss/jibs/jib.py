@@ -94,7 +94,7 @@ def create_segments():
                                 Dims.TOWER_WIDTH,
                                 bot_height])
         top_height = Dims.HEIGHT * 0.77 if Dims.DROPDOWN and i > Dims.SEGMENTS / 2 else Dims.HEIGHT
-        
+
         if i < Dims.SEGMENTS:
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
                                 if Dims.SUPPORT_TYPE == 'Truss'
