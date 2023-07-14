@@ -12,6 +12,8 @@
             <height>1000</height>
             <segments>10</segments>
             <type>Diagonal</type>
+            <halfdrop>False</halfdrop>
+            <bend>False</bend>
         </jib>
         <counterjib>
             <length>4000</length>

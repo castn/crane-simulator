@@ -12,6 +12,8 @@
             <height>2450</height>
             <segments>41</segments>
             <type>Truss</type>
+            <halfdrop>False</halfdrop>
+            <bend>False</bend>
         </jib>
         <counterjib>
             <length>17900</length>
