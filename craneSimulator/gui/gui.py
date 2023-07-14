@@ -166,6 +166,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.jibHeight_spinBox.setValue(int(jib.get("height")))
         self.ui.jibSegment_spinBox.setValue(int(jib.get("segments")))
         self.ui.jibSupportType_comboBox.setCurrentText(jib.get("type"))
+        self.ui.jibSupportHalfDrop.setChecked(string_to_boolean(jib.get("halfdrop")))
+        self.ui.jibBend.setChecked(string_to_boolean(jib.get("bend")))
         counterjib = config.get("counterjib")
         self.ui.counterJibLength_spinBox.setValue(int(counterjib.get("length")))
         self.ui.counterJibHeight_spinBox.setValue(int(counterjib.get("height")))
@@ -212,6 +214,8 @@ class MainWindow(QtWidgets.QMainWindow):
         jib["height"] = self.ui.jibHeight_spinBox.value()
         jib["segments"] = self.ui.jibSegment_spinBox.value()
         jib["type"] = self.ui.jibSupportType_comboBox.currentText()
+        jib["halfdrop"] = self.ui.jibSupportHalfDrop.isChecked()
+        jib["bend"] = self.ui.jibBend.isChecked()
         dictionary["jib"] = jib
         counterjib = dict()
         counterjib["length"] = self.ui.counterJibLength_spinBox.value()
@@ -237,6 +241,7 @@ class MainWindow(QtWidgets.QMainWindow):
         ignorespec = dict()
         ignorespec["enabled"] = self.ui.ignore_specification.isChecked()
         dictionary["ignorespec"] = ignorespec
+
         self.is_saved = True
         return dictionary
 
