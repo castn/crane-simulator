@@ -137,11 +137,13 @@ def get_end_parts():
 
 class Crane:
     """Contains all features needed to adjust the crane"""
+
     def __init__(self):
         self.E = 210e9  # Youngs module (210GPa)
         self.DENSITY = 7850
         self.GRAVITY_CONSTANT = 9.81
 
+        self.wind = 0
         self.has_tower = True
         self.has_jib = True
         self.has_counter_jib = True
@@ -159,7 +161,6 @@ class Crane:
         nodes, beams = get_crane()
         analysis.generate_conditions(nodes, beams)
 
-
     def enable_gravity(self, window):
         """Applies gravity to nodes"""
         analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES,
@@ -174,6 +175,7 @@ class Crane:
 
     def enable_wind(self, direc, force):
         """Applies wind in given direction with given force"""
+        self.wind = force
         analysis.apply_wind(direc.lower(), force, counterjib.get_support_type())
 
     def analyze(self):
@@ -192,5 +194,6 @@ class Crane:
         axial_force, reaction_force, deformation, area_per_rod = analysis.optimize(nodes.copy(),
                                                                                    beams.copy(),
                                                                                    self.E,
-                                                                                   self.DENSITY)
+                                                                                   self.DENSITY, self.wind,
+                                                                                   counterjib.get_support_type())
         return axial_force, reaction_force, deformation, area_per_rod

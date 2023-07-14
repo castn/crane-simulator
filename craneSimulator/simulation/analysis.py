@@ -9,7 +9,7 @@ class Conditions:
     def_fixed_nodes = []
     dof_condition = np.ones_like(0)
     forces = np.zeros_like(0)
-    
+
     abs_max_tension = 2e+8
 
 
@@ -39,9 +39,9 @@ def generate_conditions(nodes, beams):
 
     # Support Displacement
     Conditions.def_fixed_nodes = [0, 0, 0,
-                     0, 0, 0,
-                     0, 0, 0,
-                     0, 0, 0]  # nodes 0-4 in xyz
+                                  0, 0, 0,
+                                  0, 0, 0,
+                                  0, 0, 0]  # nodes 0-4 in xyz
 
     # Condition of DOF (0 = fixed, 1 = free)
     dof_condition = np.ones_like(nodes).astype(int)
@@ -230,21 +230,22 @@ def analyze(nodes, beams, E, DENSITY):
     free_dof, support_dof = get_DOFs()
 
     # Structural analysis
-    distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]                                            # Distance between joints of the beam
-    L = np.sqrt((distance ** 2).sum(axis=1))                                                            # Length of each beam in meters
+    distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]  # Distance between joints of the beam
+    L = np.sqrt((distance ** 2).sum(axis=1))  # Length of each beam in meters
     Dims.length_of_each_beam = L
-    rotation = distance.transpose() / L                                                                 # rotation matrix
-    transformation_vector = np.concatenate((- rotation.transpose(), rotation.transpose()), axis=1)      # Transformation vector
+    rotation = distance.transpose() / L  # rotation matrix
+    transformation_vector = np.concatenate((- rotation.transpose(), rotation.transpose()),
+                                           axis=1)  # Transformation vector
 
     # Stiffness
     K = calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_number_of_dof, transformation_vector)
     K_bottomleft, K_bottomright, K_topleft = get_components_of_global_stiffness(K, free_dof, support_dof)
 
     # Deformation
-    forces_flatten = Conditions.forces.flatten()[free_dof]                                              # Flatten only free_dof
-    def_free_nodes = np.linalg.lstsq(K_topleft, forces_flatten, rcond=None)[0]                          # Deformation at all nodes with free DOF
+    forces_flatten = Conditions.forces.flatten()[free_dof]  # Flatten only free_dof
+    def_free_nodes = np.linalg.lstsq(K_topleft, forces_flatten, rcond=None)[0]  # Deformation at all nodes with free DOF
     deformation, u = calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes, support_dof)
-    
+
     # Calculate axial forces for each beam
     axial_force = (E * Comps.area_per_beam / L[:]) * (transformation_vector[:] * u[:]).sum(axis=1)
 
@@ -266,25 +267,28 @@ def analyze(nodes, beams, E, DENSITY):
 
 def get_DOFs():
     """Returns the free and fixed degrees of freedom"""
-    free_dof = Conditions.dof_condition.flatten().nonzero()[0]              # Get all DOF that are NOT defined as zero (can move)
-    support_dof = (Conditions.dof_condition.flatten() == 0).nonzero()[0]    # Get all DOF that are defined as zero (can't move; manully defined above)
+    free_dof = Conditions.dof_condition.flatten().nonzero()[0]  # Get all DOF that are NOT defined as zero (can move)
+    support_dof = (Conditions.dof_condition.flatten() == 0).nonzero()[
+        0]  # Get all DOF that are defined as zero (can't move; manully defined above)
     return free_dof, support_dof
 
 
 def calculate_reaction_forces(K_bottomleft, K_bottomright, def_free_nodes, dof):
     """Calculates reaction forces in fixed nodes caused by deformation"""
-    reaction_force = (K_bottomleft[:] * def_free_nodes).sum(axis=1) + (K_bottomright[:] * Conditions.def_fixed_nodes).sum(axis=1)    # Reaction forces in fixed nodes
+    reaction_force = (K_bottomleft[:] * def_free_nodes).sum(axis=1) + (
+            K_bottomright[:] * Conditions.def_fixed_nodes).sum(axis=1)  # Reaction forces in fixed nodes
     reaction_force = reaction_force.reshape(4, dof)
     return reaction_force
 
 
 def calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes, support_dof):
     """Combines individual deformations into a single matrix"""
-    deformation = Conditions.dof_condition.astype(float).flatten()                      # Matrix containing all the deformation data
-    deformation[free_dof] = def_free_nodes                                              # Deformation of all nodes that are free to move
-    deformation[support_dof] = Conditions.def_fixed_nodes                               # Deformation of all nodes that are fixed
-    deformation = deformation.reshape(number_of_nodes, dof)                             # Deformation vector for each node
-    u = np.concatenate((deformation[beams[:, 0]], deformation[beams[:, 1]]), axis=1)    # Deformed nodes for each beam? https://youtu.be/Y-ILnLMZYMw?t=3013
+    deformation = Conditions.dof_condition.astype(float).flatten()  # Matrix containing all the deformation data
+    deformation[free_dof] = def_free_nodes  # Deformation of all nodes that are free to move
+    deformation[support_dof] = Conditions.def_fixed_nodes  # Deformation of all nodes that are fixed
+    deformation = deformation.reshape(number_of_nodes, dof)  # Deformation vector for each node
+    u = np.concatenate((deformation[beams[:, 0]], deformation[beams[:, 1]]),
+                       axis=1)  # Deformed nodes for each beam? https://youtu.be/Y-ILnLMZYMw?t=3013
     return deformation, u
 
 
@@ -306,35 +310,46 @@ def calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_numbe
 
 def get_components_of_global_stiffness(K, free_dof, support_dof):
     """Splits up the global stiffness matrix into 4 components"""
-    K_topleft = K[np.ix_(free_dof, free_dof)]               # Part of global stiffness matrix
-    K_topright = K[np.ix_(free_dof, support_dof)]           # See K_topleft
-    K_bottomleft = K_topright.transpose()                   # See K_topleft
-    K_bottomright = K[np.ix_(support_dof, support_dof)]     # See K_topleft
+    K_topleft = K[np.ix_(free_dof, free_dof)]  # Part of global stiffness matrix
+    K_topright = K[np.ix_(free_dof, support_dof)]  # See K_topleft
+    K_bottomleft = K_topright.transpose()  # See K_topleft
+    K_bottomright = K[np.ix_(support_dof, support_dof)]  # See K_topleft
     return K_bottomleft, K_bottomright, K_topleft
 
 
-def optimize(nodes, beams, E, DENSITY):
+def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
     """Optimizes the crane to try to be within given specifications"""
     # This code would be needed if we decide to create an optimale crane that has area_per_beam that is ideal for all 4 wind directions
     # a = [1, 2, 3]
     # b = [1, 3, 2]
     # c = [1, 2, 3]
     #
-    # merged_list = []
-    # if len(a) == len(b) == len(c):
-    #     for i in range(len(a)):
-    #         highest = max(a[i], b[i], c[i])
-    #         merged_list.append(highest)
-    # print(merged_list)
-    for _ in range(20):
-        axial_force = analyze(nodes, beams, E, DENSITY)
-        old_apb = Comps.area_per_beam.copy()
-        adjust_cross_section_area(axial_force[0])
-        if np.all(Comps.area_per_beam == old_apb):
-            break
 
+    optim_apb_per_wind = []
+    directions = ["front", "right", "back", "left"]
+
+    # optimize for all wind directions
+    for direction in directions:
+        apply_wind(direction, wind, cj_sup_type)
+        # optimize for one wind direction
+        for _ in range(20):
+            axial_force = analyze(nodes, beams, E, DENSITY)
+            old_apb = Comps.area_per_beam.copy()
+            adjust_cross_section_area(axial_force[0])
+            if np.all(Comps.area_per_beam == old_apb):
+                break
+        optim_apb_per_wind.append(Comps.area_per_beam)
+
+    merged_list = []
+    if len(optim_apb_per_wind[0]) == len(optim_apb_per_wind[1]) == len(optim_apb_per_wind[2]) == len(
+            optim_apb_per_wind[3]):
+        for i in range(len(optim_apb_per_wind[0])):
+            highest = max(optim_apb_per_wind[0][i], optim_apb_per_wind[1][i], optim_apb_per_wind[2][i],
+                          optim_apb_per_wind[3][i])
+            merged_list.append(highest)
+    a = Comps.area_per_beam
     axial_force, reaction_force, deformation = analyze(nodes, beams, E, DENSITY)
-    return axial_force, reaction_force, deformation, Comps.area_per_beam
+    return axial_force, reaction_force, deformation, merged_list
 
 
 def get_area_per_beam():
@@ -347,4 +362,5 @@ def adjust_cross_section_area(axial_force):
     for i in range(len(Comps.area_per_beam)):
         current_tension = abs(axial_force[i] / Comps.area_per_beam[i])
         if current_tension > Conditions.abs_max_tension:
-            Comps.area_per_beam[i] = ((np.sqrt(Comps.area_per_beam[i]) + 0.01) ** 2).round(decimals=4)  # increase side length by 1cm
+            Comps.area_per_beam[i] = ((np.sqrt(Comps.area_per_beam[i]) + 0.01) ** 2).round(
+                decimals=4)  # increase side length by 1cm
