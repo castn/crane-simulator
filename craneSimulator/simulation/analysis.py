@@ -207,14 +207,14 @@ def is_euler_buckling_rod(E, A, DENSITY, length, force):
     I_end = (1 / 3) * mass * length ** 2
     flexural_strength = E * I_mid
 
-    if force >= first_euler_buckling_case(length, flexural_strength):
-        return True
-    elif force >= second_euler_buckling_case(length, flexural_strength):
+    # if force >= first_euler_buckling_case(length, flexural_strength):
+    #     return True
+    if force >= second_euler_buckling_case(length, flexural_strength):
         return True
     elif force >= third_euler_buckling_case(length, flexural_strength):
         return True
-    elif force >= fourth_euler_buckling_case(length, flexural_strength):
-        return True
+    # elif force >= fourth_euler_buckling_case(length, flexural_strength):
+    #     return True
     else:
         return False
 
