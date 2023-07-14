@@ -84,7 +84,8 @@ def create_segments():
         # linear bend starting at the beginning
         # bot_height = Dims.START_HEIGHT + (Dims.HEIGHT / (2 * Dims.SEGMENTS * Dims.SEGMENT_LENGTH)) * i * 1000 if Dims.BEND else Dims.START_HEIGHT
         # exponential bend starting at the beginning
-        bot_height = Dims.START_HEIGHT + 0.01 * np.power(35, 1/(Dims.SEGMENTS * Dims.SEGMENT_LENGTH / 1000) * (Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i)) * 1000 if Dims.BEND else Dims.START_HEIGHT
+        jib_length = (Dims.SEGMENTS * Dims.SEGMENT_LENGTH / 1000)
+        bot_height = Dims.START_HEIGHT + 0.01 * np.power(35, 1/jib_length * (Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i)) * 1000 if Dims.BEND else Dims.START_HEIGHT
         if not (i == 0 and Dims.IS_CONNECTED):
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 0,
@@ -189,6 +190,11 @@ def get_longest_beam():
 def get_end_base():
     """Returns last node of base of jib"""
     return len(Comps.nodes) if Dims.SUPPORT_TYPE == 'Truss' else (len(Comps.nodes) - 1)
+
+
+def get_segments():
+    """Returns nuber of segments"""
+    return Dims.SEGMENTS
 
 
 def set_dims(length, height, segs, sup_type, dropwdown, bend):

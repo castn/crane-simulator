@@ -35,6 +35,7 @@ class Dims:
     END_NODE_JIB = 2
     END_CJ = 0
     END_CJ_BASE = 0
+    JIB_SEGMENTS = 0
 
     IS_CONNECTED = False
 
@@ -49,7 +50,7 @@ def create():
     create_support()
 
 
-def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes):
+def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_num_nodes, jib_segments):
     """
     Creates a counterjib with desired dimensions connected to the rest of the crane
 
@@ -68,6 +69,7 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width, tower_
     Dims.IS_CONNECTED = True
     Dims.END_NODE_TOWER = tower_num_nodes - 4
     Dims.END_NODE_JIB = len(crane_nodes)
+    Dims.JIB_SEGMENTS = jib_segments
 
     create_segments()
     create_beams()
@@ -260,7 +262,8 @@ def create_tower_support():
     append_beam(support_start, support_start - 3, False)
     append_beam(support_start, support_start - 4, False)
     append_beam(support_start, int((Dims.END_NODE_JIB - Dims.END_NODE_TOWER) / 2
-                                   + Dims.END_NODE_TOWER) + 2, False)
+                                   + Dims.END_NODE_TOWER) + (2 if Dims.JIB_SEGMENTS % 2 == 0 else 4),
+                False)
 
 
 def append_beam(start_node, end_node, len_counts):
