@@ -28,7 +28,10 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1022, 1292)
+        MainWindow.resize(1022, 1325)
+        icon = QIcon()
+        icon.addFile(u"../../../resources/images/crane.ico", QSize(), QIcon.Normal, QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         MainWindow.setTabShape(QTabWidget.Rounded)
         self.actionOpen = QAction(MainWindow)
         self.actionOpen.setObjectName(u"actionOpen")

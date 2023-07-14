@@ -7,11 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>1022</width>
-    <height>1292</height>
+    <height>1325</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../resources/images/crane.ico</normaloff>../../../resources/images/crane.ico</iconset>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
