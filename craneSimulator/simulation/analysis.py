@@ -247,7 +247,7 @@ def analyze(nodes, beams, E, DENSITY):
     deformation, u = calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes, support_dof)
 
     # Calculate axial forces for each beam
-    axial_force = (E * Comps.area_per_beam / L[:]) * (transformation_vector[:] * u[:]).sum(axis=1)
+    axial_force = np.multiply(np.multiply(E, Comps.area_per_beam / L[:]), np.multiply(transformation_vector[:], u[:]).sum(axis=1))
 
     # Test each beam for euler buckling
     for i in range(number_of_elements):
@@ -348,9 +348,10 @@ def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
             highest = max(optim_apb_per_wind[0][i], optim_apb_per_wind[1][i], optim_apb_per_wind[2][i],
                           optim_apb_per_wind[3][i])
             merged_list.append(highest)
+    Comps.area_per_beam = merged_list.copy()
 
     axial_force, reaction_force, deformation = analyze(nodes, beams, E, DENSITY)
-    return axial_force, reaction_force, deformation, merged_list
+    return axial_force, reaction_force, deformation, Comps.area_per_beam
 
 
 def get_area_per_beam():
