@@ -327,9 +327,9 @@ def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
 
     optim_apb_per_wind = []
     directions = ["front", "right", "back", "left"]
-
     # optimize for all wind directions
     for direction in directions:
+        # Reset apb
         apply_wind(direction, wind, cj_sup_type)
         # optimize for one wind direction
         for _ in range(20):
@@ -339,6 +339,7 @@ def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
             if np.all(Comps.area_per_beam == old_apb):
                 break
         optim_apb_per_wind.append(Comps.area_per_beam)
+        Comps.area_per_beam = np.full((len(beams)), 0.0025)
 
     merged_list = []
     if len(optim_apb_per_wind[0]) == len(optim_apb_per_wind[1]) == len(optim_apb_per_wind[2]) == len(
@@ -347,7 +348,7 @@ def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
             highest = max(optim_apb_per_wind[0][i], optim_apb_per_wind[1][i], optim_apb_per_wind[2][i],
                           optim_apb_per_wind[3][i])
             merged_list.append(highest)
-    a = Comps.area_per_beam
+
     axial_force, reaction_force, deformation = analyze(nodes, beams, E, DENSITY)
     return axial_force, reaction_force, deformation, merged_list
 
