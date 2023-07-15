@@ -3,19 +3,21 @@
     <config>
         <tower>
             <height>10000</height>
-            <width>1000</width>
+            <width>1200</width>
             <segments>6</segments>
-            <type>Zigzag</type>
+            <type>Cross</type>
         </tower>
         <jib>
             <length>10000</length>
             <height>1000</height>
             <segments>9</segments>
             <type>Truss</type>
+            <halfdrop>False</halfdrop>
+            <bend>True</bend>
         </jib>
         <counterjib>
             <length>4000</length>
-            <height>800</height>
+            <height>600</height>
             <segments>3</segments>
             <type>Tower</type>
         </counterjib>
@@ -27,15 +29,15 @@
             <scale>1</scale>
         </fem>
         <wind>
-            <enabled>False</enabled>
+            <enabled>True</enabled>
             <direction>Front</direction>
-            <force>1</force>
+            <force>50</force>
         </wind>
         <gravity>
             <enabled>True</enabled>
         </gravity>
         <ignorespec>
-            <enabled>False</enabled>
+            <enabled>True</enabled>
         </ignorespec>
     </config>
 </data>
