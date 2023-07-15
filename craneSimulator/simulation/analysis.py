@@ -327,6 +327,7 @@ def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
 
     optim_apb_per_wind = []
     directions = ["front", "right", "back", "left"]
+    Comps.area_per_beam = np.full((len(beams)), 0.0025)
     # optimize for all wind directions
     for direction in directions:
         # Reset apb
