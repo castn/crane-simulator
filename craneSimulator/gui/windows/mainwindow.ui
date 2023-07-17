@@ -470,15 +470,15 @@
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QSpinBox" name="wind_force">
+                   <widget class="QDoubleSpinBox" name="wind_force">
                     <property name="suffix">
                      <string> kN</string>
                     </property>
                     <property name="maximum">
-                     <number>500</number>
+                     <double>50.000000000000000</double>
                     </property>
                     <property name="value">
-                     <number>50</number>
+                     <double>50.000000000000000</double>
                     </property>
                    </widget>
                   </item>
@@ -524,58 +524,10 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1">
-                   <widget class="QSpinBox" name="jib_left_spinBox">
-                    <property name="suffix">
-                     <string> kN</string>
-                    </property>
-                    <property name="minimum">
-                     <number>-5000</number>
-                    </property>
-                    <property name="maximum">
-                     <number>5000</number>
-                    </property>
-                    <property name="value">
-                     <number>-250</number>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="label_jib_right">
                     <property name="text">
                      <string>Jib Right</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QSpinBox" name="jib_right_spinBox">
-                    <property name="suffix">
-                     <string> kN</string>
-                    </property>
-                    <property name="minimum">
-                     <number>-5000</number>
-                    </property>
-                    <property name="maximum">
-                     <number>5000</number>
-                    </property>
-                    <property name="value">
-                     <number>-250</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QSpinBox" name="counterjib_left_spinBox">
-                    <property name="suffix">
-                     <string> kN</string>
-                    </property>
-                    <property name="minimum">
-                     <number>-5000</number>
-                    </property>
-                    <property name="maximum">
-                     <number>5000</number>
-                    </property>
-                    <property name="value">
-                     <number>-250</number>
                     </property>
                    </widget>
                   </item>
@@ -593,19 +545,70 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="1">
-                   <widget class="QSpinBox" name="counterjib_right_spinBox">
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="jib_left_spinBox">
+                    <property name="prefix">
+                     <string/>
+                    </property>
                     <property name="suffix">
                      <string> kN</string>
                     </property>
                     <property name="minimum">
-                     <number>-5000</number>
+                     <double>-250.000000000000000</double>
                     </property>
                     <property name="maximum">
-                     <number>5000</number>
+                     <double>0.000000000000000</double>
                     </property>
                     <property name="value">
-                     <number>-250</number>
+                     <double>-250.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="jib_right_spinBox">
+                    <property name="suffix">
+                     <string> kN</string>
+                    </property>
+                    <property name="minimum">
+                     <double>-250.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>0.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>-250.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QDoubleSpinBox" name="counterjib_left_spinBox">
+                    <property name="suffix">
+                     <string> kN</string>
+                    </property>
+                    <property name="minimum">
+                     <double>-250.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>0.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>-250.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QDoubleSpinBox" name="counterjib_right_spinBox">
+                    <property name="suffix">
+                     <string> kN</string>
+                    </property>
+                    <property name="minimum">
+                     <double>-250.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>0.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>-250.000000000000000</double>
                     </property>
                    </widget>
                   </item>

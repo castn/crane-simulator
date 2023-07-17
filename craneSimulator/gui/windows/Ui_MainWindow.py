@@ -16,13 +16,13 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
-    QGridLayout, QGroupBox, QHBoxLayout, QHeaderView,
-    QLabel, QLineEdit, QMainWindow, QMenu,
-    QMenuBar, QPlainTextEdit, QProgressBar, QPushButton,
-    QSizePolicy, QSpacerItem, QSpinBox, QSplitter,
-    QStatusBar, QTabWidget, QTreeWidget, QTreeWidgetItem,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
+    QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
+    QHeaderView, QLabel, QLineEdit, QMainWindow,
+    QMenu, QMenuBar, QPlainTextEdit, QProgressBar,
+    QPushButton, QSizePolicy, QSpacerItem, QSpinBox,
+    QSplitter, QStatusBar, QTabWidget, QTreeWidget,
+    QTreeWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -306,10 +306,10 @@ class Ui_MainWindow(object):
 
         self.formLayout_7.setWidget(1, QFormLayout.LabelRole, self.wind_force_label)
 
-        self.wind_force = QSpinBox(self.wind_settings)
+        self.wind_force = QDoubleSpinBox(self.wind_settings)
         self.wind_force.setObjectName(u"wind_force")
-        self.wind_force.setMaximum(500)
-        self.wind_force.setValue(50)
+        self.wind_force.setMaximum(50.000000000000000)
+        self.wind_force.setValue(50.000000000000000)
 
         self.formLayout_7.setWidget(1, QFormLayout.FieldRole, self.wind_force)
 
@@ -340,34 +340,10 @@ class Ui_MainWindow(object):
 
         self.formLayout_6.setWidget(0, QFormLayout.LabelRole, self.lable_jib_left)
 
-        self.jib_left_spinBox = QSpinBox(self.fem_settings)
-        self.jib_left_spinBox.setObjectName(u"jib_left_spinBox")
-        self.jib_left_spinBox.setMinimum(-5000)
-        self.jib_left_spinBox.setMaximum(5000)
-        self.jib_left_spinBox.setValue(-250)
-
-        self.formLayout_6.setWidget(0, QFormLayout.FieldRole, self.jib_left_spinBox)
-
         self.label_jib_right = QLabel(self.fem_settings)
         self.label_jib_right.setObjectName(u"label_jib_right")
 
         self.formLayout_6.setWidget(1, QFormLayout.LabelRole, self.label_jib_right)
-
-        self.jib_right_spinBox = QSpinBox(self.fem_settings)
-        self.jib_right_spinBox.setObjectName(u"jib_right_spinBox")
-        self.jib_right_spinBox.setMinimum(-5000)
-        self.jib_right_spinBox.setMaximum(5000)
-        self.jib_right_spinBox.setValue(-250)
-
-        self.formLayout_6.setWidget(1, QFormLayout.FieldRole, self.jib_right_spinBox)
-
-        self.counterjib_left_spinBox = QSpinBox(self.fem_settings)
-        self.counterjib_left_spinBox.setObjectName(u"counterjib_left_spinBox")
-        self.counterjib_left_spinBox.setMinimum(-5000)
-        self.counterjib_left_spinBox.setMaximum(5000)
-        self.counterjib_left_spinBox.setValue(-250)
-
-        self.formLayout_6.setWidget(2, QFormLayout.FieldRole, self.counterjib_left_spinBox)
 
         self.label_counter_jib_left = QLabel(self.fem_settings)
         self.label_counter_jib_left.setObjectName(u"label_counter_jib_left")
@@ -379,11 +355,35 @@ class Ui_MainWindow(object):
 
         self.formLayout_6.setWidget(3, QFormLayout.LabelRole, self.label_counter_jib_right)
 
-        self.counterjib_right_spinBox = QSpinBox(self.fem_settings)
+        self.jib_left_spinBox = QDoubleSpinBox(self.fem_settings)
+        self.jib_left_spinBox.setObjectName(u"jib_left_spinBox")
+        self.jib_left_spinBox.setMinimum(-250.000000000000000)
+        self.jib_left_spinBox.setMaximum(0.000000000000000)
+        self.jib_left_spinBox.setValue(-250.000000000000000)
+
+        self.formLayout_6.setWidget(0, QFormLayout.FieldRole, self.jib_left_spinBox)
+
+        self.jib_right_spinBox = QDoubleSpinBox(self.fem_settings)
+        self.jib_right_spinBox.setObjectName(u"jib_right_spinBox")
+        self.jib_right_spinBox.setMinimum(-250.000000000000000)
+        self.jib_right_spinBox.setMaximum(0.000000000000000)
+        self.jib_right_spinBox.setValue(-250.000000000000000)
+
+        self.formLayout_6.setWidget(1, QFormLayout.FieldRole, self.jib_right_spinBox)
+
+        self.counterjib_left_spinBox = QDoubleSpinBox(self.fem_settings)
+        self.counterjib_left_spinBox.setObjectName(u"counterjib_left_spinBox")
+        self.counterjib_left_spinBox.setMinimum(-250.000000000000000)
+        self.counterjib_left_spinBox.setMaximum(0.000000000000000)
+        self.counterjib_left_spinBox.setValue(-250.000000000000000)
+
+        self.formLayout_6.setWidget(2, QFormLayout.FieldRole, self.counterjib_left_spinBox)
+
+        self.counterjib_right_spinBox = QDoubleSpinBox(self.fem_settings)
         self.counterjib_right_spinBox.setObjectName(u"counterjib_right_spinBox")
-        self.counterjib_right_spinBox.setMinimum(-5000)
-        self.counterjib_right_spinBox.setMaximum(5000)
-        self.counterjib_right_spinBox.setValue(-250)
+        self.counterjib_right_spinBox.setMinimum(-250.000000000000000)
+        self.counterjib_right_spinBox.setMaximum(0.000000000000000)
+        self.counterjib_right_spinBox.setValue(-250.000000000000000)
 
         self.formLayout_6.setWidget(3, QFormLayout.FieldRole, self.counterjib_right_spinBox)
 
@@ -782,12 +782,13 @@ class Ui_MainWindow(object):
         self.fem_settings.setTitle(QCoreApplication.translate("MainWindow", u"FEM", None))
         self.multiplier_label.setText(QCoreApplication.translate("MainWindow", u"Multiplier", None))
         self.lable_jib_left.setText(QCoreApplication.translate("MainWindow", u"Jib Left", None))
-        self.jib_left_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" kN", None))
         self.label_jib_right.setText(QCoreApplication.translate("MainWindow", u"Jib Right", None))
-        self.jib_right_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" kN", None))
-        self.counterjib_left_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" kN", None))
         self.label_counter_jib_left.setText(QCoreApplication.translate("MainWindow", u"Counter Jib Left", None))
         self.label_counter_jib_right.setText(QCoreApplication.translate("MainWindow", u"Counter Jib Right", None))
+        self.jib_left_spinBox.setPrefix("")
+        self.jib_left_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" kN", None))
+        self.jib_right_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" kN", None))
+        self.counterjib_left_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" kN", None))
         self.counterjib_right_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" kN", None))
         self.ignore_specification.setText(QCoreApplication.translate("MainWindow", u"Ignore specifications of the project task", None))
         self.axial_coloring.setTitle(QCoreApplication.translate("MainWindow", u"Axial forces visibility", None))
