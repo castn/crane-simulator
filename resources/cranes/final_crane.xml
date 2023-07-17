@@ -4,7 +4,7 @@
         <tower>
             <height>10000</height>
             <width>1200</width>
-            <segments>6</segments>
+            <segments>7</segments>
             <type>Cross</type>
         </tower>
         <jib>
@@ -37,7 +37,7 @@
             <enabled>True</enabled>
         </gravity>
         <ignorespec>
-            <enabled>True</enabled>
+            <enabled>False</enabled>
         </ignorespec>
     </config>
 </data>

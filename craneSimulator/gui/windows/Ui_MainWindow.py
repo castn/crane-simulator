@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.1
+## Created by: Qt User Interface Compiler version 6.5.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -98,7 +98,7 @@ class Ui_MainWindow(object):
         self.towerWidth_spinbox.setObjectName(u"towerWidth_spinbox")
         self.towerWidth_spinbox.setMinimum(1)
         self.towerWidth_spinbox.setMaximum(1000000)
-        self.towerWidth_spinbox.setValue(1000)
+        self.towerWidth_spinbox.setValue(1200)
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.towerWidth_spinbox)
 
@@ -116,7 +116,6 @@ class Ui_MainWindow(object):
         self.towerSupportType_comboBox.addItem("")
         self.towerSupportType_comboBox.addItem("")
         self.towerSupportType_comboBox.addItem("")
-        self.towerSupportType_comboBox.addItem("")
         self.towerSupportType_comboBox.setObjectName(u"towerSupportType_comboBox")
         self.towerSupportType_comboBox.setAutoFillBackground(False)
 
@@ -126,7 +125,7 @@ class Ui_MainWindow(object):
         self.towerSegment_spinbox.setObjectName(u"towerSegment_spinbox")
         self.towerSegment_spinbox.setMinimum(1)
         self.towerSegment_spinbox.setMaximum(1000000)
-        self.towerSegment_spinbox.setValue(10)
+        self.towerSegment_spinbox.setValue(7)
 
         self.formLayout.setWidget(6, QFormLayout.FieldRole, self.towerSegment_spinbox)
 
@@ -173,7 +172,7 @@ class Ui_MainWindow(object):
         self.jibSegment_spinBox.setObjectName(u"jibSegment_spinBox")
         self.jibSegment_spinBox.setMinimum(1)
         self.jibSegment_spinBox.setMaximum(1000000)
-        self.jibSegment_spinBox.setValue(10)
+        self.jibSegment_spinBox.setValue(9)
 
         self.formLayout_2.setWidget(6, QFormLayout.FieldRole, self.jibSegment_spinBox)
 
@@ -191,6 +190,7 @@ class Ui_MainWindow(object):
 
         self.jibBend = QCheckBox(self.jibBox)
         self.jibBend.setObjectName(u"jibBend")
+        self.jibBend.setChecked(True)
 
         self.formLayout_2.setWidget(11, QFormLayout.SpanningRole, self.jibBend)
 
@@ -229,7 +229,7 @@ class Ui_MainWindow(object):
         self.counterJibHeight_spinBox.setObjectName(u"counterJibHeight_spinBox")
         self.counterJibHeight_spinBox.setMinimum(1)
         self.counterJibHeight_spinBox.setMaximum(1000000)
-        self.counterJibHeight_spinBox.setValue(800)
+        self.counterJibHeight_spinBox.setValue(600)
 
         self.formLayout_3.setWidget(3, QFormLayout.FieldRole, self.counterJibHeight_spinBox)
 
@@ -247,7 +247,7 @@ class Ui_MainWindow(object):
         self.counterJibSegments_spinBox.setObjectName(u"counterJibSegments_spinBox")
         self.counterJibSegments_spinBox.setMinimum(1)
         self.counterJibSegments_spinBox.setMaximum(1000000)
-        self.counterJibSegments_spinBox.setValue(5)
+        self.counterJibSegments_spinBox.setValue(3)
 
         self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.counterJibSegments_spinBox)
 
@@ -284,7 +284,7 @@ class Ui_MainWindow(object):
         self.wind_settings = QGroupBox(self.settings)
         self.wind_settings.setObjectName(u"wind_settings")
         self.wind_settings.setCheckable(True)
-        self.wind_settings.setChecked(False)
+        self.wind_settings.setChecked(True)
         self.formLayout_7 = QFormLayout(self.wind_settings)
         self.formLayout_7.setObjectName(u"formLayout_7")
         self.direction_label = QLabel(self.wind_settings)
@@ -309,7 +309,7 @@ class Ui_MainWindow(object):
         self.wind_force = QSpinBox(self.wind_settings)
         self.wind_force.setObjectName(u"wind_force")
         self.wind_force.setMaximum(500)
-        self.wind_force.setValue(1)
+        self.wind_force.setValue(50)
 
         self.formLayout_7.setWidget(1, QFormLayout.FieldRole, self.wind_force)
 
@@ -685,7 +685,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1022, 25))
+        self.menubar.setGeometry(QRect(0, 0, 1022, 19))
         self.menu_File = QMenu(self.menubar)
         self.menu_File.setObjectName(u"menu_File")
         self.menuHelp = QMenu(self.menubar)
@@ -738,12 +738,11 @@ class Ui_MainWindow(object):
         self.towerWidth_spinbox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))
         self.towerSegment_label.setText(QCoreApplication.translate("MainWindow", u"Segments", None))
         self.towerSupportType_label.setText(QCoreApplication.translate("MainWindow", u"Support Type", None))
-        self.towerSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Zigzag", None))
-        self.towerSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"None", None))
-        self.towerSupportType_comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Cross", None))
-        self.towerSupportType_comboBox.setItemText(3, QCoreApplication.translate("MainWindow", u"Diagonal", None))
+        self.towerSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Cross", None))
+        self.towerSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Zigzag", None))
+        self.towerSupportType_comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Diagonal", None))
 
-        self.towerSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Zigzag", None))
+        self.towerSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Cross", None))
         self.jibBox.setTitle(QCoreApplication.translate("MainWindow", u"Jib", None))
         self.jibLength_label.setText(QCoreApplication.translate("MainWindow", u"Length", None))
         self.jibLength_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))
@@ -764,10 +763,10 @@ class Ui_MainWindow(object):
         self.counterJibHeight_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))
         self.counterJibSupportType_label.setText(QCoreApplication.translate("MainWindow", u"Support Type", None))
         self.counterJibSegments_label.setText(QCoreApplication.translate("MainWindow", u"Segments", None))
-        self.counterJibSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Truss", None))
-        self.counterJibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Tower", None))
+        self.counterJibSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Tower", None))
+        self.counterJibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Truss", None))
 
-        self.counterJibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Truss", None))
+        self.counterJibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Tower", None))
         self.current_as_comparison_base.setText(QCoreApplication.translate("MainWindow", u"Make current as comparison base", None))
         self.Settings.setTabText(self.Settings.indexOf(self.crane), QCoreApplication.translate("MainWindow", u"Crane", None))
         self.enable_gravity.setText(QCoreApplication.translate("MainWindow", u"Gravity", None))
