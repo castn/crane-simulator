@@ -91,19 +91,19 @@ def apply_gravity(nodes, beams, density, grav_const):
         Conditions.forces[i, 2] += - (volume * density * grav_const) * kN
 
 
-def apply_wind(direc, force, cj_sup_type):
+def apply_horizontal_force(direc, force, cj_sup_type):
     """Applies wind in specified direction with specified force to the crane"""
     if direc == 'front':
-        apply_wind_from_front(force, cj_sup_type)
+        apply_horizontal_force_from_front(force, cj_sup_type)
     elif direc == 'right':
-        apply_wind_from_right(force)
+        apply_horizontal_force_from_right(force)
     elif direc == 'back':
-        apply_wind_from_back(force, cj_sup_type)
+        apply_horizontal_force_from_back(force, cj_sup_type)
     elif direc == 'left':
-        apply_wind_from_left(force, cj_sup_type)
+        apply_horizontal_force_from_left(force, cj_sup_type)
 
 
-def apply_wind_from_front(force, cj_sup_type):
+def apply_horizontal_force_from_front(force, cj_sup_type):
     """Applies wind coming from the front to the crane"""
     # force in north dir -> -y dir
     # tower: all even nodes
@@ -123,7 +123,7 @@ def apply_wind_from_front(force, cj_sup_type):
         Conditions.forces[int(Dims.COUNTERJIB_BASE_END), 1] += - force * kN
 
 
-def apply_wind_from_right(force):
+def apply_horizontal_force_from_right(force):
     """Applies wind coming from the right to the crane"""
     # force in west dir -> -x
     # tower: 2+4n, 3+4n
@@ -136,7 +136,7 @@ def apply_wind_from_right(force):
     # counterjib: none
 
 
-def apply_wind_from_back(force, cj_sup_type):
+def apply_horizontal_force_from_back(force, cj_sup_type):
     """Applies wind coming from the back to the crane"""
     # force in south dir -> -y dir
     # tower: all odd nodes
@@ -158,7 +158,7 @@ def apply_wind_from_back(force, cj_sup_type):
         Conditions.forces[Dims.COUNTERJIB_END - 1, 1] += force * kN
 
 
-def apply_wind_from_left(force, cj_sup_type):
+def apply_horizontal_force_from_left(force, cj_sup_type):
     """Applies wind coming from the left to the crane"""
     # force in east dir -> +x dir
     # tower: 2+4n, 3+4n
@@ -247,7 +247,8 @@ def analyze(nodes, beams, E, DENSITY):
     deformation, u = calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes, support_dof)
 
     # Calculate axial forces for each beam
-    axial_force = np.multiply(np.multiply(E, Comps.area_per_beam / L[:]), np.multiply(transformation_vector[:], u[:]).sum(axis=1))
+    axial_force = np.multiply(np.multiply(E, Comps.area_per_beam / L[:]),
+                              np.multiply(transformation_vector[:], u[:]).sum(axis=1))
 
     # Test each beam for euler buckling
     for i in range(number_of_elements):
@@ -288,7 +289,7 @@ def calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes,
     deformation[support_dof] = Conditions.def_fixed_nodes  # Deformation of all nodes that are fixed
     deformation = deformation.reshape(number_of_nodes, dof)  # Deformation vector for each node
     u = np.concatenate((deformation[beams[:, 0]], deformation[beams[:, 1]]),
-                       axis=1)  # Deformed nodes for each beam? https://youtu.be/Y-ILnLMZYMw?t=3013
+                       axis=1)  # Deformed nodes for each beam
     return deformation, u
 
 
@@ -319,11 +320,6 @@ def get_components_of_global_stiffness(K, free_dof, support_dof):
 
 def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
     """Optimizes the crane to try to be within given specifications"""
-    # This code would be needed if we decide to create an optimale crane that has area_per_beam that is ideal for all 4 wind directions
-    # a = [1, 2, 3]
-    # b = [1, 3, 2]
-    # c = [1, 2, 3]
-    #
 
     optim_apb_per_wind = []
     directions = ["front", "right", "back", "left"]
@@ -331,7 +327,7 @@ def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
     # optimize for all wind directions
     for direction in directions:
         # Reset apb
-        apply_wind(direction, wind, cj_sup_type)
+        apply_horizontal_force(direction, wind, cj_sup_type)
         # optimize for one wind direction
         for _ in range(20):
             axial_force = analyze(nodes, beams, E, DENSITY)
