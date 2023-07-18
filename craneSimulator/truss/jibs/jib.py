@@ -89,14 +89,11 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
 def create_segments():
     """Create the segments of a jib"""
     for i in range(Dims.SEGMENTS + 1):
+        jib_length = Dims.SEGMENTS * Dims.SEGMENT_LENGTH / 1000
+        len_in_m = Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i
+        bend_grad = 0.01 * np.power(35, 1/jib_length * len_in_m) * 1000
+        bot_height = Dims.START_HEIGHT + bend_grad if Dims.BEND else Dims.START_HEIGHT
         # skips the first run-through if nodes already exist
-        # linear bend starting at the middle
-        # bot_height = Dims.START_HEIGHT + (Dims.HEIGHT / (Dims.SEGMENTS * Dims.SEGMENT_LENGTH)) * (i - Dims.SEGMENTS / 2) * 1000 if Dims.BEND and i > Dims.SEGMENTS / 2 else Dims.START_HEIGHT
-        # linear bend starting at the beginning
-        # bot_height = Dims.START_HEIGHT + (Dims.HEIGHT / (2 * Dims.SEGMENTS * Dims.SEGMENT_LENGTH)) * i * 1000 if Dims.BEND else Dims.START_HEIGHT
-        # exponential bend starting at the beginning
-        jib_length = (Dims.SEGMENTS * Dims.SEGMENT_LENGTH / 1000)
-        bot_height = Dims.START_HEIGHT + 0.01 * np.power(35, 1/jib_length * (Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i)) * 1000 if Dims.BEND else Dims.START_HEIGHT
         if not (i == 0 and Dims.IS_CONNECTED):
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 0,
@@ -105,13 +102,14 @@ def create_segments():
                                 Dims.TOWER_WIDTH,
                                 bot_height])
         top_height = Dims.HEIGHT * 0.77 if Dims.DROPDOWN and i > Dims.SEGMENTS / 2 else Dims.HEIGHT
-
+        # adds top nodes
         if i < Dims.SEGMENTS:
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
                                 if Dims.SUPPORT_TYPE == Style.TRUSS
                                 else Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
                                 bot_height + top_height])
+        # adds last top node for set-back support style
         if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != Style.TRUSS:
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
@@ -141,7 +139,7 @@ def create_horizontal_beams(i, val_to_add):
     append_beam(1 + val_to_add, 4 + val_to_add)
     append_beam(4 + val_to_add, 3 + val_to_add)
     append_beam(3 + val_to_add, 0 + val_to_add)
-    append_beam(1 + val_to_add, 3 + val_to_add)  # bottom diagonal beam
+    append_beam(1 + val_to_add, 3 + val_to_add)     # bottom diagonal beam
 
 
 def create_diagonal_beams(val_to_add):
