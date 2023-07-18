@@ -69,7 +69,7 @@ def create_counterjib():
     """Creates a counterjib connected to the other elements of the crane"""
     counterjib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(),
                                 Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES,
-                                jib.get_segments())
+                                jib.get_segments(), jib.get_support_type())
     Dims.CJ_BASE_NUM_NODES = counterjib.get_end_cj_base()
     Dims.CJ_NUM_NODES = len(counterjib.get_nodes())
     Comps.nodes = counterjib.get_nodes_raw().copy()
@@ -194,6 +194,7 @@ class Crane:
         axial_force, reaction_force, deformation, area_per_rod = analysis.optimize(nodes.copy(),
                                                                                    beams.copy(),
                                                                                    self.E,
-                                                                                   self.DENSITY, self.wind,
+                                                                                   self.DENSITY,
+                                                                                   self.wind,
                                                                                    counterjib.get_support_type())
         return axial_force, reaction_force, deformation, area_per_rod

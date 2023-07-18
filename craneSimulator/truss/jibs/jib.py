@@ -2,6 +2,7 @@
 Provides all functions to build the jib of a crane
 """
 
+from enum import Enum
 import numpy as np
 
 
@@ -11,12 +12,22 @@ class Comps:
     beams = []
 
 
+class Style(Enum):
+    """
+    Enum to define a style how the support of the jib is built
+    Can be TRUSS or SET BACK TRUSS
+    """
+    NOT_CHOSEN = 0
+    TRUSS = 1
+    SET_BACK_TRUSS = 2
+
+
 class Dims:
     """Class that contains all dimensions of the jib for global control"""
     SEGMENT_LENGTH = 0
     SEGMENTS = 0
     HEIGHT = 0
-    SUPPORT_TYPE = ''
+    SUPPORT_TYPE = Style.NOT_CHOSEN
     DROPDOWN = False
     BEND = False
 
@@ -97,11 +108,11 @@ def create_segments():
 
         if i < Dims.SEGMENTS:
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
-                                if Dims.SUPPORT_TYPE == 'Truss'
+                                if Dims.SUPPORT_TYPE == Style.TRUSS
                                 else Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
                                 bot_height + top_height])
-        if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != 'Truss':
+        if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != Style.TRUSS:
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
                                 bot_height + top_height])
@@ -113,7 +124,7 @@ def create_beams():
         val_to_add = 3 * i + Dims.INIT_BAR
         create_horizontal_beams(i, val_to_add)
         create_diagonal_beams(val_to_add)
-    if Dims.SUPPORT_TYPE != 'Truss':
+    if Dims.SUPPORT_TYPE != Style.TRUSS:
         val_to_add = 3 * Dims.SEGMENTS + Dims.INIT_BAR
         append_beam(0 + val_to_add, 2 + val_to_add)
         append_beam(1 + val_to_add, 2 + val_to_add)
@@ -125,7 +136,7 @@ def create_horizontal_beams(i, val_to_add):
         append_beam(0 + val_to_add, 1 + val_to_add)  # first horizontal (0-1)
     if i < Dims.SEGMENTS - 1:
         append_beam(2 + val_to_add, 5 + val_to_add)  # top connection
-    if i == Dims.SEGMENTS - 1 and Dims.SUPPORT_TYPE != 'Truss':
+    if i == Dims.SEGMENTS - 1 and Dims.SUPPORT_TYPE != Style.TRUSS:
         append_beam(2 + val_to_add, 5 + val_to_add)
     append_beam(1 + val_to_add, 4 + val_to_add)
     append_beam(4 + val_to_add, 3 + val_to_add)
@@ -189,12 +200,17 @@ def get_longest_beam():
 
 def get_end_base():
     """Returns last node of base of jib"""
-    return len(Comps.nodes) if Dims.SUPPORT_TYPE == 'Truss' else (len(Comps.nodes) - 1)
+    return len(Comps.nodes) if Dims.SUPPORT_TYPE == Style.TRUSS else (len(Comps.nodes) - 1)
 
 
 def get_segments():
     """Returns nuber of segments"""
     return Dims.SEGMENTS
+
+
+def get_support_type():
+    """Returns support type of jib as an int"""
+    return Dims.SUPPORT_TYPE.value
 
 
 def set_dims(length, height, segs, sup_type, dropwdown, bend):
@@ -208,7 +224,7 @@ def set_dims(length, height, segs, sup_type, dropwdown, bend):
     Dims.SEGMENTS = segs
     Dims.SEGMENT_LENGTH = length / segs
     Dims.HEIGHT = height
-    Dims.SUPPORT_TYPE = sup_type
+    Dims.SUPPORT_TYPE = Style.TRUSS if sup_type == 'Truss' else Style.SET_BACK_TRUSS
     Dims.DROPDOWN = dropwdown
     Dims.BEND = bend
 
