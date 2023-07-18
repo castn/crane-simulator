@@ -422,7 +422,7 @@
                <item>
                 <widget class="QGroupBox" name="wind_settings">
                  <property name="title">
-                  <string>Wind</string>
+                  <string>Horizontal Force</string>
                  </property>
                  <property name="checkable">
                   <bool>true</bool>
@@ -1106,7 +1106,7 @@
      <x>0</x>
      <y>0</y>
      <width>1022</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

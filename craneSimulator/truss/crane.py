@@ -176,7 +176,7 @@ class Crane:
     def enable_wind(self, direc, force):
         """Applies wind in given direction with given force"""
         self.wind = force
-        analysis.apply_wind(direc.lower(), force, counterjib.get_support_type())
+        analysis.apply_horizontal_force(direc.lower(), force, counterjib.get_support_type())
 
     def analyze(self):
         """Performs the analysis of the crane"""
