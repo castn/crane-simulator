@@ -78,8 +78,7 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
     Dims.START_HEIGHT = tower_height
     Dims.TOWER_WIDTH = tower_width
     Dims.IS_CONNECTED = True
-    Dims.INIT_BAR = max(np.asarray(Comps.beams).astype(
-        int).max() - 1, 0)
+    Dims.INIT_BAR = max(np.asarray(Comps.beams).astype(int).max() - 1, 0)
     Dims.END_BASE = len(tower_nodes)
 
     create_segments()
@@ -89,9 +88,9 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
 def create_segments():
     """Create the segments of a jib"""
     for i in range(Dims.SEGMENTS + 1):
-        jib_length = Dims.SEGMENTS * Dims.SEGMENT_LENGTH / 1000
+        jib_length_m = Dims.SEGMENTS * Dims.SEGMENT_LENGTH / 1000
         len_in_m = Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i
-        bend_grad = 0.01 * np.power(35, 1/jib_length * len_in_m) * 1000
+        bend_grad = 0.01 * np.power(30, 1/jib_length_m * len_in_m) * 1000
         bot_height = Dims.START_HEIGHT + bend_grad if Dims.BEND else Dims.START_HEIGHT
         # skips the first run-through if nodes already exist
         if not (i == 0 and Dims.IS_CONNECTED):
@@ -101,7 +100,17 @@ def create_segments():
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
                                 Dims.TOWER_WIDTH,
                                 bot_height])
-        top_height = Dims.HEIGHT * 0.77 if Dims.DROPDOWN and i > Dims.SEGMENTS / 2 else Dims.HEIGHT
+        if Dims.DROPDOWN:
+            if i <= 3 * Dims.SEGMENTS / 7:
+                top_height = Dims.HEIGHT
+            elif i >= 5 * Dims.SEGMENTS / 7:
+                top_height = 0.76 * Dims.HEIGHT
+            else:
+                count = i - 2 * Dims.SEGMENTS / 7
+                top_height = Dims.HEIGHT - count * (0.24 * 7 * Dims.HEIGHT / (2 * jib_length_m))
+                top_height = max(top_height, 0.76 * Dims.HEIGHT)
+        else:
+            top_height = Dims.HEIGHT
         # adds top nodes
         if i < Dims.SEGMENTS:
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
@@ -199,6 +208,11 @@ def get_longest_beam():
 def get_end_base():
     """Returns last node of base of jib"""
     return len(Comps.nodes) if Dims.SUPPORT_TYPE == Style.TRUSS else (len(Comps.nodes) - 1)
+
+
+def get_height():
+    """Returns height of jib support structure"""
+    return Dims.HEIGHT
 
 
 def get_segments():

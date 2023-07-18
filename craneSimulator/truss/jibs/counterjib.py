@@ -35,6 +35,7 @@ class Dims:
     END_NODE_JIB = 2
     END_CJ = 0
     END_CJ_BASE = 0
+    JIB_HEIGHT = 0
     JIB_SEGMENTS = 0
     JIB_SUPPORT = 0
 
@@ -52,7 +53,7 @@ def create():
 
 
 def create_connected(crane_nodes, crane_beams, tower_height, tower_width,
-                     tower_num_nodes, jib_segments, jib_support):
+                     tower_num_nodes, jib_segments, jib_support, jib_height):
     """
     Creates a counterjib with desired dimensions connected to the rest of the crane
 
@@ -71,6 +72,7 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width,
     Dims.IS_CONNECTED = True
     Dims.END_NODE_TOWER = tower_num_nodes - 4
     Dims.END_NODE_JIB = len(crane_nodes)
+    Dims.JIB_HEIGHT = jib_height
     Dims.JIB_SEGMENTS = jib_segments
     Dims.JIB_SUPPORT = jib_support
 
@@ -156,16 +158,24 @@ def create_truss_support():
     """Creates truss style support structure for the counterjib"""
     support_start = Dims.END_CJ_BASE
     for i in range(Dims.SEGMENTS + 1):
-        # create required nodes
+        jib_height_seg = (Dims.JIB_HEIGHT - Dims.HEIGHT) / 3
+        top_height = Dims.START_HEIGHT + Dims.HEIGHT
+        # creates node on top of tower
         if i == 0:
-            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH - i * Dims.TOWER_WIDTH,
+            Comps.nodes.append([1/2 * Dims.TOWER_WIDTH,
                                 1/2 * Dims.TOWER_WIDTH,
-                                Dims.START_HEIGHT + Dims.HEIGHT])
+                                top_height + 2 * jib_height_seg])
+        # creates first node on top of the support
+        elif i == 1 and Dims.SEGMENTS > 1:
+            Comps.nodes.append([- Dims.SEGMENT_LENGTH / 2,
+                                1/2 * Dims.TOWER_WIDTH,
+                                top_height + jib_height_seg])
+        # creates all other nodes on top of the support
         else:
             Comps.nodes.append([- Dims.SEGMENT_LENGTH * ((i * 2) - 1) / 2,
                                 1/2 * Dims.TOWER_WIDTH,
-                                Dims.START_HEIGHT + Dims.HEIGHT])
-        # second batch
+                                top_height])
+        # create 'pyramid' structure on top of tower
         if i == 1:
             # diagonal sections
             append_beam(Dims.END_NODE_TOWER, support_start + 1, True)
@@ -174,7 +184,7 @@ def create_truss_support():
             append_beam(Dims.END_NODE_JIB + 1, support_start + 1, True)
             # top section
             append_beam(support_start, support_start + 1, True)
-        # the rest
+        # create the rest of the 'pyramids'
         else:
             if i == 0:
                 start_node = Dims.END_NODE_TOWER

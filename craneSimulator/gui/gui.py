@@ -447,15 +447,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.remove_plot_from_diff(self.diff_canvas)
 
     def remove_plot_from_unoptimized(self, widget):
-        if not type(widget) == type(None):
+        if type(widget) != type(None):
             self.ui.unoptimized_plot_layout.removeWidget(widget)
 
     def remove_plot_from_optimized(self, widget):
-        if not type(widget) == type(None):
+        if type(widget) != type(None):
             self.ui.optimize_plot_layout.removeWidget(widget)
 
     def remove_plot_from_diff(self, widget):
-        if not type(widget) == type(None):
+        if type(widget) != type(None):
             self.ui.diff_plot_layout.removeWidget(widget)
 
     def apply_configuration(self):
@@ -500,7 +500,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.crane.enable_gravity(self.ui)
 
             if self.ui.wind_settings.isChecked():
-                self.ui.output.appendPlainText("Apply wind forces to crane")
+                self.ui.output.appendPlainText("Apply horizontal forces to crane")
                 self.crane.enable_wind(self.ui.wind_direction.currentText(), self.ui.wind_force.value())
 
             # Get undeformed crane with updated values
@@ -591,10 +591,22 @@ class MainWindow(QtWidgets.QMainWindow):
             if counterjib_longest < 500 or counterjib_longest > 2000:
                 self.display_waring("Counter Jib", counterjib_longest)
                 return False
+        if self.dims.get_jib_dropdown() and self.dims.get_jib_segments() < 5:
+            QMessageBox.critical(self, 'Incompatible config',
+                             f'Selection of <b>realistic drop in height</b> isn\'t allowed for this crane.<br>'
+                             f'The number of segments of the jib needs to be at least <b>5</b>.<br>'
+                             f'The number entered is <b>{self.dims.get_jib_segments()}</b>.')
+            return False
+        if self.dims.get_jib_dropdown() and self.dims.get_counter_jib_support_type() == 'Tower':
+            QMessageBox.critical(self, 'Incompatible config',
+                             f'Selection of <b>realistic drop in height</b> isn\'t allowed for this crane.<br>'
+                             f'The <b>Tower<b/> support type for the counterjib can\' also be selected.<br>'
+                             f'Please change one of these parameters.')
+            return False
         return True
 
     def create_comparison(self):
-        if not self.crane.is_build:
+        if not self.crane.is_built:
             QMessageBox.critical(self, "No available data",
                                  "No data is available to create a comparison base from the current crane. "
                                  "You need to first apply all the settings to perform this action!")
@@ -620,10 +632,10 @@ class MainWindow(QtWidgets.QMainWindow):
             QMessageBox.information(self, "Success",
                                     "Successfully created a base version of your current crane. Click apply again to display them")
 
-    def display_waring(self, type, longest_beam):
+    def display_waring(self, part, longest_beam):
         QMessageBox.critical(self, 'Specification Violation',
-                             f'Input parameters of <b>{type}</b> produce a value that violates the requirements.<br>'
-                             f'Longest beam in your {type} has a length of {longest_beam:.4f}mm, but it must be in '
+                             f'Input parameters of <b>{part}</b> produce a value that violates the requirements.<br>'
+                             f'Longest beam in your {part} has a length of {longest_beam:.4f}mm, but it must be in '
                              f'range of 500-2000mm. Change your parameters to fix this issue.<br><br>'
                              f'Allow specification violations? Check box "<i>Ignore specifications of project task</i>" in settings section')
 

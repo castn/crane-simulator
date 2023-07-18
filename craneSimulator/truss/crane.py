@@ -69,7 +69,7 @@ def create_counterjib():
     """Creates a counterjib connected to the other elements of the crane"""
     counterjib.create_connected(jib.get_nodes_raw().copy(), jib.get_beams_raw().copy(),
                                 Dims.TOWER_HEIGHT, Dims.TOWER_WIDTH, Dims.TOWER_NUM_NODES,
-                                jib.get_segments(), jib.get_support_type())
+                                jib.get_segments(), jib.get_support_type(), jib.get_height())
     Dims.CJ_BASE_NUM_NODES = counterjib.get_end_cj_base()
     Dims.CJ_NUM_NODES = len(counterjib.get_nodes())
     Comps.nodes = counterjib.get_nodes_raw().copy()
@@ -147,7 +147,7 @@ class Crane:
         self.has_tower = True
         self.has_jib = True
         self.has_counter_jib = True
-        self.is_build = False
+        self.is_built = False
 
     def build_crane(self):
         """Builds crane from previosuly inputted parameters"""
@@ -157,7 +157,7 @@ class Crane:
             create_jib()
         if self.has_counter_jib:
             create_counterjib()
-        self.is_build = True
+        self.is_built = True
         nodes, beams = get_crane()
         analysis.generate_conditions(nodes, beams)
 
