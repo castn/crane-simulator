@@ -55,6 +55,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         """Initializes main window"""
         super(MainWindow, self).__init__()
+        self.total_values = None
         self.base_optim_displacement_counter_jib = None
         self.base_unoptim_displacement_counter_jib = None
         self.base_optim_displacement_jib = None
