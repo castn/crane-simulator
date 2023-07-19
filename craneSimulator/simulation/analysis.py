@@ -88,7 +88,7 @@ def apply_gravity(nodes, beams, density, grav_const):
             start_float = np.array(beams[beam, 0]).astype(float)
             end_float = np.array(beams[beam, 1]).astype(float)
             volume += (np.linalg.norm(end_float - start_float) / 2) / 1000 * Comps.area_per_beam[beam]
-        Conditions.forces[i, 2] += - (volume * density * grav_const) * kN
+        Conditions.forces[i, 2] += - volume * density * grav_const
 
 
 def apply_horizontal_force(direc, force, cj_sup_type):
@@ -106,69 +106,73 @@ def apply_horizontal_force(direc, force, cj_sup_type):
 def apply_horizontal_force_from_back(force, cj_sup_type):
     """Applies wind coming from the back to the crane"""
     # force in north dir -> -y dir
+    applied_force = force * kN
     # tower: all even nodes
     for t_n in range(int(Dims.TOWER_END / 2)):
-        Conditions.forces[2 * t_n, 1] += - force * kN
+        Conditions.forces[2 * t_n, 1] += - applied_force
     # jib: 0+3n (top), 1+3n (bot)
     for j_n in range(Dims.TOWER_END, int(Dims.JIB_END / 3)):
-        Conditions.forces[(0 + 3 * j_n), 1] += - force * kN
-        Conditions.forces[(1 + 3 * j_n), 1] += - force * kN
+        Conditions.forces[(0 + 3 * j_n), 1] += - applied_force
+        Conditions.forces[(1 + 3 * j_n), 1] += - applied_force
     # counterjib: top center for 1-2 towers, rest just for truss
     for cj_n in range(int(Dims.JIB_END), int(Dims.COUNTERJIB_END / 2)):
-        Conditions.forces[Dims.JIB_END + (0 + 2 * j_n), 1] += - force * kN
+        Conditions.forces[Dims.JIB_END + (0 + 2 * j_n), 1] += - applied_force
     if cj_sup_type == 'Truss':
         for cj_n in range(Dims.COUNTERJIB_END, int(Dims.COUNTERJIB_BASE_END)):
-            Conditions.forces[cj_n, 1] += - force * kN
+            Conditions.forces[cj_n, 1] += - applied_force
     elif cj_sup_type == 'Tower':
-        Conditions.forces[int(Dims.COUNTERJIB_BASE_END), 1] += - force * kN
+        Conditions.forces[int(Dims.COUNTERJIB_BASE_END), 1] += - applied_force
 
 
 def apply_horizontal_force_from_right(force):
     """Applies wind coming from the right to the crane"""
     # force in west dir -> -x
+    applied_force = force * kN
     # tower: 2+4n, 3+4n
     for t_n in range(int(Dims.TOWER_END / 4) - 1):
-        Conditions.forces[(2 + 4 * t_n), 0] += - force * kN
-        Conditions.forces[(3 + 4 * t_n), 0] += - force * kN
+        Conditions.forces[(2 + 4 * t_n), 0] += - applied_force
+        Conditions.forces[(3 + 4 * t_n), 0] += - applied_force
     # jib: last 3
     for j_n in range(int(Dims.JIB_END) - 3, int(Dims.JIB_END)):
-        Conditions.forces[j_n, 0] += - force * kN
+        Conditions.forces[j_n, 0] += - applied_force
     # counterjib: none
 
 
 def apply_horizontal_force_from_front(force, cj_sup_type):
     """Applies wind coming from the front to the crane"""
     # force in south dir -> -y dir
+    applied_force = force * kN
     # tower: all odd nodes
     for t_n in range(int(Dims.TOWER_END / 2)):
-        Conditions.forces[(1 + 2 * t_n), 1] += force * kN
+        Conditions.forces[(1 + 2 * t_n), 1] += applied_force
     # jib: 0+3n (top), 2+3n (bot)
     for j_n in range(int(Dims.TOWER_END), int(Dims.JIB_END / 3)):
-        Conditions.forces[(0 + 3 * j_n), 1] += force * kN
-        Conditions.forces[(2 + 3 * j_n), 1] += force * kN
+        Conditions.forces[(0 + 3 * j_n), 1] += applied_force
+        Conditions.forces[(2 + 3 * j_n), 1] += applied_force
     # counterjib: top center for 1-2 towers, rest just for truss
     for cj_n in range(int(Dims.JIB_END), int(Dims.COUNTERJIB_BASE_END / 2)):
-        Conditions.forces[Dims.JIB_END + (1 + 2 * cj_n), 1] += force * kN
+        Conditions.forces[Dims.JIB_END + (1 + 2 * cj_n), 1] += applied_force
     if cj_sup_type == 'Truss':
         for cj_n in range(int(Dims.COUNTERJIB_BASE_END), Dims.COUNTERJIB_END):
-            Conditions.forces[cj_n, 1] += force * kN
+            Conditions.forces[cj_n, 1] += applied_force
     elif cj_sup_type == 'Tower':
-        Conditions.forces[Dims.COUNTERJIB_END, 1] += force * kN
+        Conditions.forces[Dims.COUNTERJIB_END, 1] += applied_force
 
 
 def apply_horizontal_force_from_left(force, cj_sup_type):
     """Applies wind coming from the left to the crane"""
+    applied_force = force * kN
     # force in east dir -> +x dir
     # tower: 2+4n, 3+4n
     for t_n in range(int(Dims.TOWER_END / 4) - 1):
-        Conditions.forces[(0 + 4 * t_n), 0] += force * kN
-        Conditions.forces[(1 + 4 * t_n), 0] += force * kN
+        Conditions.forces[(0 + 4 * t_n), 0] += applied_force
+        Conditions.forces[(1 + 4 * t_n), 0] += applied_force
     # jib: none
     # counterjib: truss last 3; last 2 plus tower
-    Conditions.forces[Dims.COUNTERJIB_BASE_END - 2, 0] += force * kN
-    Conditions.forces[Dims.COUNTERJIB_BASE_END - 1, 0] += force * kN
+    Conditions.forces[Dims.COUNTERJIB_BASE_END - 2, 0] += applied_force
+    Conditions.forces[Dims.COUNTERJIB_BASE_END - 1, 0] += applied_force
     if cj_sup_type == 'Tower' or cj_sup_type == 'Truss':
-        Conditions.forces[Dims.COUNTERJIB_END - 1, 0] += force * kN
+        Conditions.forces[Dims.COUNTERJIB_END - 1, 0] += applied_force
 
 
 def first_euler_buckling_case(length, flexural_strength):
