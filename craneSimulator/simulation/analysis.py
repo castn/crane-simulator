@@ -84,10 +84,10 @@ def apply_gravity(nodes, beams, density, grav_const):
         beams_conn_to_node_rc = np.where(beams[:, 1] == i)[0]
         beams_conn_to_node = np.concatenate((beams_conn_to_node_lc, beams_conn_to_node_rc), axis=None)
         volume = 0
-        for j in range(len(beams_conn_to_node)):
-            start_float = np.array(beams[beams_conn_to_node[j], 0]).astype(float)
-            end_float = np.array(beams[beams_conn_to_node[j], 1]).astype(float)
-            volume += (np.linalg.norm(end_float - start_float) / 2) / 1000 * Comps.area_per_beam[beams_conn_to_node[j]]
+        for _, beam in enumerate(beams_conn_to_node):
+            start_float = np.array(beams[beam, 0]).astype(float)
+            end_float = np.array(beams[beam, 1]).astype(float)
+            volume += (np.linalg.norm(end_float - start_float) / 2) / 1000 * Comps.area_per_beam[beam]
         Conditions.forces[i, 2] += - (volume * density * grav_const) * kN
 
 
@@ -107,7 +107,7 @@ def apply_horizontal_force_from_front(force, cj_sup_type):
     """Applies wind coming from the front to the crane"""
     # force in north dir -> -y dir
     # tower: all even nodes
-    for t_n in range(Dims.TOWER_END):
+    for t_n in range(int(Dims.TOWER_END / 2)):
         Conditions.forces[2 * t_n, 1] += - force * kN
     # jib: 0+3n (top), 1+3n (bot)
     for j_n in range(Dims.TOWER_END, int(Dims.JIB_END / 3)):
@@ -119,7 +119,7 @@ def apply_horizontal_force_from_front(force, cj_sup_type):
     if cj_sup_type == 'Truss':
         for cj_n in range(Dims.COUNTERJIB_END, int(Dims.COUNTERJIB_BASE_END)):
             Conditions.forces[cj_n, 1] += - force * kN
-    elif cj_sup_type == 'Single tower' or cj_sup_type == 'Twin towers':
+    elif cj_sup_type == 'Tower':
         Conditions.forces[int(Dims.COUNTERJIB_BASE_END), 1] += - force * kN
 
 
@@ -152,10 +152,8 @@ def apply_horizontal_force_from_back(force, cj_sup_type):
     if cj_sup_type == 'Truss':
         for cj_n in range(int(Dims.COUNTERJIB_BASE_END), Dims.COUNTERJIB_END):
             Conditions.forces[cj_n, 1] += force * kN
-    elif cj_sup_type == 'Single tower':
+    elif cj_sup_type == 'Tower':
         Conditions.forces[Dims.COUNTERJIB_END, 1] += force * kN
-    elif cj_sup_type == 'Twin towers':
-        Conditions.forces[Dims.COUNTERJIB_END - 1, 1] += force * kN
 
 
 def apply_horizontal_force_from_left(force, cj_sup_type):
@@ -169,18 +167,8 @@ def apply_horizontal_force_from_left(force, cj_sup_type):
     # counterjib: truss last 3; last 2 plus tower
     Conditions.forces[Dims.COUNTERJIB_BASE_END - 2, 0] += force * kN
     Conditions.forces[Dims.COUNTERJIB_BASE_END - 1, 0] += force * kN
-    if cj_sup_type == 'Twin towers':
-        # start_cj_n = int(Dims.COUNTERJIB_END) - 4
-        Conditions.forces[Dims.COUNTERJIB_END - 2, 0] += force * kN
+    if cj_sup_type == 'Tower' or cj_sup_type == 'Truss':
         Conditions.forces[Dims.COUNTERJIB_END - 1, 0] += force * kN
-    elif cj_sup_type == 'Single tower' or cj_sup_type == 'Truss':
-        # start_cj_n = int(Dims.COUNTERJIB_END) - 2
-        Conditions.forces[Dims.COUNTERJIB_END - 1, 0] += force * kN
-    # else:
-    #     # start_cj_n = int(Dims.COUNTERJIB_END) - 3
-    #     print('Doing nothing')
-    # for cj_n in range(start_cj_n, int(Dims.COUNTERJIB_END)):
-    #     Conditions.forces[cj_n, 0] = force * kN
 
 
 def first_euler_buckling_case(length, flexural_strength):
@@ -230,19 +218,19 @@ def analyze(nodes, beams, E, DENSITY):
     free_dof, support_dof = get_DOFs()
 
     # Structural analysis
-    distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]  # Distance between joints of the beam
-    L = np.sqrt((distance ** 2).sum(axis=1))  # Length of each beam in meters
+    distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]    # Distance between joints of the beam
+    L = np.sqrt((distance ** 2).sum(axis=1))                    # Length of each beam in meters
     Dims.length_of_each_beam = L
     rotation = distance.transpose() / L  # rotation matrix
-    transformation_vector = np.concatenate((- rotation.transpose(), rotation.transpose()),
-                                           axis=1)  # Transformation vector
+    transformation_vector = np.concatenate((- rotation.transpose(),
+                                            rotation.transpose()), axis=1)  # Transformation vector
 
     # Stiffness
     K = calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_number_of_dof, transformation_vector)
     K_bottomleft, K_bottomright, K_topleft = get_components_of_global_stiffness(K, free_dof, support_dof)
 
     # Deformation
-    forces_flatten = Conditions.forces.flatten()[free_dof]  # Flatten only free_dof
+    forces_flatten = Conditions.forces.flatten()[free_dof]                      # Flatten only free_dof
     def_free_nodes = np.linalg.lstsq(K_topleft, forces_flatten, rcond=None)[0]  # Deformation at all nodes with free DOF
     deformation, u = calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes, support_dof)
 
@@ -262,15 +250,12 @@ def analyze(nodes, beams, E, DENSITY):
     reaction_force = calculate_reaction_forces(K_bottomleft, K_bottomright, def_free_nodes, dof)
 
     return np.array(axial_force), np.array(reaction_force), deformation
-    # Uf: deformation of all nodes allowed to deform (new coords) -> def_free_nodes
-    # Ur: coords of nodes that aren't allowed to move (same coords) -> def_fixed_nodes
 
 
 def get_DOFs():
     """Returns the free and fixed degrees of freedom"""
-    free_dof = Conditions.dof_condition.flatten().nonzero()[0]  # Get all DOF that are NOT defined as zero (can move)
-    support_dof = (Conditions.dof_condition.flatten() == 0).nonzero()[
-        0]  # Get all DOF that are defined as zero (can't move; manully defined above)
+    free_dof = Conditions.dof_condition.flatten().nonzero()[0]            # Get all DOF that are NOT defined as zero (can move)
+    support_dof = (Conditions.dof_condition.flatten() == 0).nonzero()[0]  # Get all DOF that are defined as zero (can't move; manully defined above)
     return free_dof, support_dof
 
 
@@ -285,11 +270,11 @@ def calculate_reaction_forces(K_bottomleft, K_bottomright, def_free_nodes, dof):
 def calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes, support_dof):
     """Combines individual deformations into a single matrix"""
     deformation = Conditions.dof_condition.astype(float).flatten()  # Matrix containing all the deformation data
-    deformation[free_dof] = def_free_nodes  # Deformation of all nodes that are free to move
-    deformation[support_dof] = Conditions.def_fixed_nodes  # Deformation of all nodes that are fixed
-    deformation = deformation.reshape(number_of_nodes, dof)  # Deformation vector for each node
+    deformation[free_dof] = def_free_nodes                          # Deformation of all nodes that are free to move
+    deformation[support_dof] = Conditions.def_fixed_nodes           # Deformation of all nodes that are fixed
+    deformation = deformation.reshape(number_of_nodes, dof)         # Deformation vector for each node
     u = np.concatenate((deformation[beams[:, 0]], deformation[beams[:, 1]]),
-                       axis=1)  # Deformed nodes for each beam
+                       axis=1)                                      # Deformed nodes for each beam
     return deformation, u
 
 
@@ -311,41 +296,42 @@ def calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_numbe
 
 def get_components_of_global_stiffness(K, free_dof, support_dof):
     """Splits up the global stiffness matrix into 4 components"""
-    K_topleft = K[np.ix_(free_dof, free_dof)]  # Part of global stiffness matrix
-    K_topright = K[np.ix_(free_dof, support_dof)]  # See K_topleft
-    K_bottomleft = K_topright.transpose()  # See K_topleft
-    K_bottomright = K[np.ix_(support_dof, support_dof)]  # See K_topleft
+    K_topleft = K[np.ix_(free_dof, free_dof)]           # Part of global stiffness matrix
+    K_topright = K[np.ix_(free_dof, support_dof)]       # See K_topleft
+    K_bottomleft = K_topright.transpose()               # See K_topleft
+    K_bottomright = K[np.ix_(support_dof, support_dof)] # See K_topleft
     return K_bottomleft, K_bottomright, K_topleft
 
 
-def optimize(nodes, beams, E, DENSITY, wind, cj_sup_type):
+def optimize(nodes, beams, E, DENSITY, horz_force, cj_sup_type, has_horz_forces):
     """Optimizes the crane to try to be within given specifications"""
-
     optim_apb_per_wind = []
     directions = ["front", "right", "back", "left"]
-    Comps.area_per_beam = np.full((len(beams)), 0.0025)
-    # optimize for all wind directions
+    # optimize for all horizontal force directions
     for direction in directions:
         # Reset apb
-        apply_horizontal_force(direction, wind, cj_sup_type)
-        # optimize for one wind direction
+        Comps.area_per_beam = np.full((len(beams)), 0.0025)
+        if has_horz_forces:
+            apply_horizontal_force(direction, horz_force, cj_sup_type)
+        # optimize for one horizontal force direction
         for _ in range(20):
             axial_force = analyze(nodes, beams, E, DENSITY)
             old_apb = Comps.area_per_beam.copy()
             adjust_cross_section_area(axial_force[0])
             if np.all(Comps.area_per_beam == old_apb):
                 break
+        if not has_horz_forces:
+            break
         optim_apb_per_wind.append(Comps.area_per_beam)
-        Comps.area_per_beam = np.full((len(beams)), 0.0025)
 
-    merged_list = []
-    if len(optim_apb_per_wind[0]) == len(optim_apb_per_wind[1]) == len(optim_apb_per_wind[2]) == len(
-            optim_apb_per_wind[3]):
-        for i in range(len(optim_apb_per_wind[0])):
-            highest = max(optim_apb_per_wind[0][i], optim_apb_per_wind[1][i], optim_apb_per_wind[2][i],
-                          optim_apb_per_wind[3][i])
-            merged_list.append(highest)
-    Comps.area_per_beam = merged_list.copy()
+    if has_horz_forces:
+        merged_list = []
+        if len(optim_apb_per_wind[0]) == len(optim_apb_per_wind[1]) == len(optim_apb_per_wind[2]) == len(optim_apb_per_wind[3]):
+            for i in range(len(optim_apb_per_wind[0])):
+                highest = max(optim_apb_per_wind[0][i], optim_apb_per_wind[1][i],
+                              optim_apb_per_wind[2][i], optim_apb_per_wind[3][i])
+                merged_list.append(highest)
+        Comps.area_per_beam = merged_list.copy()
 
     axial_force, reaction_force, deformation = analyze(nodes, beams, E, DENSITY)
     return axial_force, reaction_force, deformation, Comps.area_per_beam

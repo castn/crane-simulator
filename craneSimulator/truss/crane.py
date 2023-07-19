@@ -187,7 +187,7 @@ class Crane:
 
         return axial_force, reaction_force, deformation, analysis.get_area_per_beam()
 
-    def optimize(self):
+    def optimize(self, has_horz_force):
         """Optimizes the crane to try to be within given specifications"""
         nodes, beams = get_crane()
         analysis.generate_conditions(nodes, beams)
@@ -196,5 +196,6 @@ class Crane:
                                                                                    self.E,
                                                                                    self.DENSITY,
                                                                                    self.wind,
-                                                                                   counterjib.get_support_type())
+                                                                                   counterjib.get_support_type(),
+                                                                                   has_horz_force)
         return axial_force, reaction_force, deformation, area_per_rod

@@ -530,7 +530,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.output.appendPlainText("Finish simulation")
         # Now do the optimisation
         self.ui.output.appendPlainText("Start optimization ...")
-        self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize()
+        self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize(self.ui.wind_settings.isChecked())
         self.optim_deformed_nodes = self.optim_deformations * multiplier + self.nodes
         self.ui.output.appendPlainText("Finish optimization")
 
