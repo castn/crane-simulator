@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.5.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -196,6 +196,7 @@ class Ui_MainWindow(object):
 
         self.jibSupportHalfDrop = QCheckBox(self.jibBox)
         self.jibSupportHalfDrop.setObjectName(u"jibSupportHalfDrop")
+        self.jibSupportHalfDrop.setChecked(True)
 
         self.formLayout_2.setWidget(10, QFormLayout.SpanningRole, self.jibSupportHalfDrop)
 
@@ -685,7 +686,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1022, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1022, 25))
         self.menu_File = QMenu(self.menubar)
         self.menu_File.setObjectName(u"menu_File")
         self.menuHelp = QMenu(self.menubar)
@@ -763,10 +764,10 @@ class Ui_MainWindow(object):
         self.counterJibHeight_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))
         self.counterJibSupportType_label.setText(QCoreApplication.translate("MainWindow", u"Support Type", None))
         self.counterJibSegments_label.setText(QCoreApplication.translate("MainWindow", u"Segments", None))
-        self.counterJibSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Tower", None))
-        self.counterJibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Truss", None))
+        self.counterJibSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Truss", None))
+        self.counterJibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Tower", None))
 
-        self.counterJibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Tower", None))
+        self.counterJibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Truss", None))
         self.current_as_comparison_base.setText(QCoreApplication.translate("MainWindow", u"Make current as comparison base", None))
         self.Settings.setTabText(self.Settings.indexOf(self.crane), QCoreApplication.translate("MainWindow", u"Crane", None))
         self.enable_gravity.setText(QCoreApplication.translate("MainWindow", u"Gravity", None))

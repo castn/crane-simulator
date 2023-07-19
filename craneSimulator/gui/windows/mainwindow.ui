@@ -275,6 +275,9 @@
                     <property name="text">
                      <string>Realistic decrease in height of support</string>
                     </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
                    </widget>
                   </item>
                  </layout>
@@ -365,16 +368,16 @@
                   <item row="9" column="1">
                    <widget class="QComboBox" name="counterJibSupportType_comboBox">
                     <property name="currentText">
-                     <string>Tower</string>
+                     <string>Truss</string>
                     </property>
                     <item>
                      <property name="text">
-                      <string>Tower</string>
+                      <string>Truss</string>
                      </property>
                     </item>
                     <item>
                      <property name="text">
-                      <string>Truss</string>
+                      <string>Tower</string>
                      </property>
                     </item>
                    </widget>
@@ -1106,7 +1109,7 @@
      <x>0</x>
      <y>0</y>
      <width>1022</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

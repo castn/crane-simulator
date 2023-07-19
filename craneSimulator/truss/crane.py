@@ -175,8 +175,9 @@ class Crane:
 
     def enable_wind(self, direc, force):
         """Applies wind in given direction with given force"""
-        self.wind = force
-        analysis.apply_horizontal_force(direc.lower(), force, counterjib.get_support_type())
+        self.horz_force = force
+        self.horz_dir = direc.lower()
+        analysis.apply_horizontal_force(self.horz_dir, self.horz_force, counterjib.get_support_type())
 
     def analyze(self):
         """Performs the analysis of the crane"""
@@ -195,7 +196,8 @@ class Crane:
                                                                                    beams.copy(),
                                                                                    self.E,
                                                                                    self.DENSITY,
-                                                                                   self.wind,
+                                                                                   self.horz_force,
                                                                                    counterjib.get_support_type(),
-                                                                                   has_horz_force)
+                                                                                   has_horz_force,
+                                                                                   self.horz_dir)
         return axial_force, reaction_force, deformation, area_per_rod

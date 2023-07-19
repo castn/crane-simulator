@@ -103,8 +103,8 @@ def apply_horizontal_force(direc, force, cj_sup_type):
         apply_horizontal_force_from_left(force, cj_sup_type)
 
 
-def apply_horizontal_force_from_front(force, cj_sup_type):
-    """Applies wind coming from the front to the crane"""
+def apply_horizontal_force_from_back(force, cj_sup_type):
+    """Applies wind coming from the back to the crane"""
     # force in north dir -> -y dir
     # tower: all even nodes
     for t_n in range(int(Dims.TOWER_END / 2)):
@@ -136,8 +136,8 @@ def apply_horizontal_force_from_right(force):
     # counterjib: none
 
 
-def apply_horizontal_force_from_back(force, cj_sup_type):
-    """Applies wind coming from the back to the crane"""
+def apply_horizontal_force_from_front(force, cj_sup_type):
+    """Applies wind coming from the front to the crane"""
     # force in south dir -> -y dir
     # tower: all odd nodes
     for t_n in range(int(Dims.TOWER_END / 2)):
@@ -303,7 +303,7 @@ def get_components_of_global_stiffness(K, free_dof, support_dof):
     return K_bottomleft, K_bottomright, K_topleft
 
 
-def optimize(nodes, beams, E, DENSITY, horz_force, cj_sup_type, has_horz_forces):
+def optimize(nodes, beams, E, DENSITY, horz_force, cj_sup_type, has_horz_forces, horz_dir):
     """Optimizes the crane to try to be within given specifications"""
     optim_apb_per_wind = []
     directions = ["front", "right", "back", "left"]
@@ -332,6 +332,7 @@ def optimize(nodes, beams, E, DENSITY, horz_force, cj_sup_type, has_horz_forces)
                               optim_apb_per_wind[2][i], optim_apb_per_wind[3][i])
                 merged_list.append(highest)
         Comps.area_per_beam = merged_list.copy()
+        apply_horizontal_force(horz_dir, horz_force, cj_sup_type)
 
     axial_force, reaction_force, deformation = analyze(nodes, beams, E, DENSITY)
     return axial_force, reaction_force, deformation, Comps.area_per_beam

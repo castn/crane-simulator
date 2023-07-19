@@ -12,14 +12,14 @@
             <height>1000</height>
             <segments>9</segments>
             <type>Truss</type>
-            <halfdrop>False</halfdrop>
+            <halfdrop>True</halfdrop>
             <bend>True</bend>
         </jib>
         <counterjib>
             <length>4000</length>
             <height>600</height>
             <segments>3</segments>
-            <type>Tower</type>
+            <type>Truss</type>
         </counterjib>
         <fem>
             <jibLeft>-250</jibLeft>
