@@ -164,14 +164,14 @@ class Crane:
 
     def enable_gravity(self, window):
         """Applies gravity to nodes"""
-        analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES,
+        analysis.apply_forces(window, Comps.nodes.copy(), Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES,
                               Dims.JIB_BASE_NUM_NODES, Dims.CJ_BASE_NUM_NODES, Dims.CJ_NUM_NODES)
         analysis.set_gravity(self.DENSITY, self.GRAVITY_CONSTANT)
-        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams))
+        analysis.apply_gravity(np.array(Comps.nodes.copy()).astype(float), np.array(Comps.beams.copy()))
 
     def reset_forces(self, window):
         """Resets forces on all nodes"""
-        analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES,
+        analysis.apply_forces(window, Comps.nodes.copy(), Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES,
                               Dims.JIB_BASE_NUM_NODES, Dims.CJ_BASE_NUM_NODES, Dims.CJ_NUM_NODES)
 
     def enable_wind(self, direc, force):
@@ -189,7 +189,7 @@ class Crane:
 
         return axial_force, reaction_force, deformation, analysis.get_area_per_beam()
 
-    def optimize(self, has_horz_force):
+    def optimize(self, has_horz_force, has_grav):
         """Optimizes the crane to try to be within given specifications"""
         nodes, beams = get_crane()
         analysis.generate_conditions(nodes, beams)
@@ -199,5 +199,6 @@ class Crane:
                                                                                    self.horz_force,
                                                                                    counterjib.get_support_type(),
                                                                                    has_horz_force,
-                                                                                   self.horz_dir)
+                                                                                   self.horz_dir,
+                                                                                   has_grav)
         return axial_force, reaction_force, deformation, area_per_rod

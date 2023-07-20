@@ -93,19 +93,21 @@ def set_gravity(density, gravity_const):
 
 def apply_gravity(nodes, beams):
     """Applies gravity to each node"""
+    nodes = np.divide(nodes, 1000)
     for i in range(len(nodes)):
         # Gets all beams connected to a specific node
         beams_conn_to_node_lc = np.where(beams[:, 0] == i)[0]
         beams_conn_to_node_rc = np.where(beams[:, 1] == i)[0]
         beams_conn_to_node = np.concatenate((beams_conn_to_node_lc, beams_conn_to_node_rc), axis=None)
+        # Calculates volume connected to a specific node
         volume = 0
         for _, beam in enumerate(beams_conn_to_node):
-            start_float = np.array(beams[beam, 0]).astype(float)
-            end_float = np.array(beams[beam, 1]).astype(float)
-            volume += ((np.linalg.norm(end_float - start_float) / 2) / 1000) * Comps.area_per_beam[beam]
+            start_float = np.array(nodes[beams[beam][0]]).astype(float)
+            end_float = np.array(nodes[beams[beam][1]]).astype(float)
+            volume += (np.linalg.norm(end_float - start_float) / 2) * Comps.area_per_beam[beam]
         volume = volume.round(decimals=8)
-        # print(f'Node {i}: Vol {volume}, Force {volume * Dims.DENSITY * Dims.GRAVITY_CONST}')
-        Conditions.forces[i, 2] += - volume * Dims.DENSITY * Dims.GRAVITY_CONST
+        # Converts volume to weight
+        Conditions.forces[i, 2] -= volume * Dims.DENSITY * Dims.GRAVITY_CONST
 
 
 def apply_horizontal_force(direc, force, cj_sup_type):
@@ -227,8 +229,7 @@ def is_euler_buckling_rod(E, A, DENSITY, length, force):
 
 def analyze(nodes, beams, E):
     """Perform truss structural analysis"""
-    # print(Conditions.forces)
-    nodes = np.divide(nodes, 1000) if nodes[1][0] > 2 else nodes
+    nodes = np.divide(nodes, 1000) if nodes[1][1] > 2 else nodes
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
 
@@ -240,8 +241,8 @@ def analyze(nodes, beams, E):
     # Structural analysis
     distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]    # Distance between joints of the beam
     L = np.sqrt((distance ** 2).sum(axis=1))                    # Length of each beam in meters
-    Dims.length_of_each_beam = L
-    rotation = distance.transpose() / L  # rotation matrix
+    Dims.length_of_each_beam = np.multiply(L, 1000)
+    rotation = distance.transpose() / L                         # rotation matrix
     transformation_vector = np.concatenate((- rotation.transpose(),
                                             rotation.transpose()), axis=1)  # Transformation vector
 
@@ -268,7 +269,7 @@ def analyze(nodes, beams, E):
 
     # Calculate all reaction forces
     reaction_force = calculate_reaction_forces(K_bottomleft, K_bottomright, def_free_nodes, dof)
-
+    deformation = np.multiply(deformation, 1000)
     return np.array(axial_force), np.array(reaction_force), deformation
 
 
@@ -324,7 +325,7 @@ def get_components_of_global_stiffness(K, free_dof, support_dof):
     return K_bottomleft, K_bottomright, K_topleft
 
 
-def optimize(nodes, beams, E, horz_force, cj_sup_type, has_horz_forces, horz_dir):
+def optimize(nodes, beams, E, horz_force, cj_sup_type, has_horz_forces, horz_dir, has_grav):
     """Optimizes the crane to try to be within given specifications"""
     optim_apb_per_wind = []
     directions = ["front", "right", "back", "left"]
@@ -333,7 +334,8 @@ def optimize(nodes, beams, E, horz_force, cj_sup_type, has_horz_forces, horz_dir
         # Reset apb
         Comps.area_per_beam = np.full((len(beams)), 0.0025)
         reset_forces()
-        apply_gravity(nodes, beams)
+        if has_grav:
+            apply_gravity(nodes, beams)
         if has_horz_forces:
             apply_horizontal_force(direction, horz_force, cj_sup_type)
         # optimize for one horizontal force direction
@@ -343,19 +345,22 @@ def optimize(nodes, beams, E, horz_force, cj_sup_type, has_horz_forces, horz_dir
             adjust_cross_section_area(axial_force[0])
             if np.all(Comps.area_per_beam == old_apb):
                 break
+            reset_forces()
+            if has_grav:
+                apply_gravity(nodes, beams)
         if not has_horz_forces:
             break
         optim_apb_per_wind.append(Comps.area_per_beam)
 
     reset_forces()
-    apply_gravity(nodes, beams)
+    if has_grav:
+        apply_gravity(nodes, beams)
     if has_horz_forces:
         merged_list = []
-        if len(optim_apb_per_wind[0]) == len(optim_apb_per_wind[1]) == len(optim_apb_per_wind[2]) == len(optim_apb_per_wind[3]):
-            for i in range(len(optim_apb_per_wind[0])):
-                highest = max(optim_apb_per_wind[0][i], optim_apb_per_wind[1][i],
-                              optim_apb_per_wind[2][i], optim_apb_per_wind[3][i])
-                merged_list.append(highest)
+        for i in range(len(optim_apb_per_wind[0])):
+            highest = max(optim_apb_per_wind[0][i], optim_apb_per_wind[1][i],
+                          optim_apb_per_wind[2][i], optim_apb_per_wind[3][i])
+            merged_list.append(highest)
         Comps.area_per_beam = merged_list.copy()
         apply_horizontal_force(horz_dir, horz_force, cj_sup_type)
 

@@ -496,6 +496,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.crane.reset_forces(self.ui)
 
             if self.ui.enable_gravity.isChecked():
+                print('Enabling gravity')
                 self.ui.output.appendPlainText("Apply gravity forces to crane")
                 self.crane.enable_gravity(self.ui)
 
@@ -530,7 +531,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.output.appendPlainText("Finish simulation")
         # Now do the optimisation
         self.ui.output.appendPlainText("Start optimization ...")
-        self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize(self.ui.wind_settings.isChecked())
+        self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize(self.ui.wind_settings.isChecked(), self.ui.enable_gravity.isChecked())
         self.optim_deformed_nodes = self.optim_deformations * multiplier + self.nodes
         self.ui.output.appendPlainText("Finish optimization")
 
