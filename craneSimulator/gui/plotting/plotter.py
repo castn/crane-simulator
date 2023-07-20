@@ -198,7 +198,8 @@ def num_with_units(num, suffix="Pa"):
         if abs(num) < 1000.0:
             return f"{num:3.1f} {unit}{suffix}"
         num /= 1000.0
-    return f"{num}Yi{suffix}"
+    print(f'Exceeded loop: {num}')
+    return f"{num:.1f}Yi{suffix}"
 
 
 def create_colormap_gradient_area_per_beam(areas_per_beam, cmap, suffix, vals_to_disp):

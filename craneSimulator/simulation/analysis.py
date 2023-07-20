@@ -16,14 +16,18 @@ class Conditions:
 class Comps():
     nodes = []
     area_per_beam = np.zeros(0)
+    window = None
 
 
 class Dims():
     TOWER_END = 0
+    JIB_BASE_END = 0
     JIB_END = 0
     COUNTERJIB_BASE_END = 0
     COUNTERJIB_END = 0
     length_of_each_beam = 0
+    DENSITY = 0
+    GRAVITY_CONST = 0
 
 
 def get_length_of_each_beam():
@@ -58,25 +62,36 @@ def generate_conditions(nodes, beams):
 def apply_forces(window, nodes, end_tower, end_jib, end_jib_base, end_cj_base, end_cj):
     """Applies user-entered forces"""
     Comps.nodes = nodes
+    Comps.window = window
     Dims.TOWER_END = end_tower
     Dims.JIB_END = end_jib
+    Dims.JIB_BASE_END = end_jib_base
     Dims.COUNTERJIB_BASE_END = end_cj_base
     Dims.COUNTERJIB_END = end_cj
 
+    reset_forces()
+
+
+def reset_forces():
+    """Resets all forces to just be weights at the end"""
     # Applied forces
-    p = np.zeros_like(nodes)
-    # Force on jib
-    # p[Dims.JIB_END - 2, 2] = window.jib_left_spinBox.value() * kN
-    # p[Dims.JIB_END - 1, 2] = window.jib_right_spinBox.value() * kN
-    p[end_jib_base - 2, 2] += window.jib_left_spinBox.value() * kN
-    p[end_jib_base - 1, 2] += window.jib_right_spinBox.value() * kN
-    # Force on counter jib
-    p[Dims.COUNTERJIB_BASE_END - 2, 2] += window.counterjib_left_spinBox.value() * kN
-    p[Dims.COUNTERJIB_BASE_END - 1, 2] += window.counterjib_left_spinBox.value() * kN
+    p = np.zeros_like(Comps.nodes)
+    # Weight at end of jib
+    p[Dims.JIB_BASE_END - 2, 2] += Comps.window.jib_left_spinBox.value() * kN
+    p[Dims.JIB_BASE_END - 1, 2] += Comps.window.jib_right_spinBox.value() * kN
+    # Weight at end of counterjib
+    p[Dims.COUNTERJIB_BASE_END - 2, 2] += Comps.window.counterjib_left_spinBox.value() * kN
+    p[Dims.COUNTERJIB_BASE_END - 1, 2] += Comps.window.counterjib_right_spinBox.value() * kN
     Conditions.forces = p
 
 
-def apply_gravity(nodes, beams, density, grav_const):
+def set_gravity(density, gravity_const):
+    """Sets dimensions required to apply gravity"""
+    Dims.DENSITY = density
+    Dims.GRAVITY_CONST = gravity_const
+
+
+def apply_gravity(nodes, beams):
     """Applies gravity to each node"""
     for i in range(len(nodes)):
         # Gets all beams connected to a specific node
@@ -87,12 +102,15 @@ def apply_gravity(nodes, beams, density, grav_const):
         for _, beam in enumerate(beams_conn_to_node):
             start_float = np.array(beams[beam, 0]).astype(float)
             end_float = np.array(beams[beam, 1]).astype(float)
-            volume += (np.linalg.norm(end_float - start_float) / 2) / 1000 * Comps.area_per_beam[beam]
-        Conditions.forces[i, 2] += - volume * density * grav_const
+            volume += ((np.linalg.norm(end_float - start_float) / 2) / 1000) * Comps.area_per_beam[beam]
+        volume = volume.round(decimals=8)
+        # print(f'Node {i}: Vol {volume}, Force {volume * Dims.DENSITY * Dims.GRAVITY_CONST}')
+        Conditions.forces[i, 2] += - volume * Dims.DENSITY * Dims.GRAVITY_CONST
 
 
 def apply_horizontal_force(direc, force, cj_sup_type):
     """Applies wind in specified direction with specified force to the crane"""
+    force = force * kN
     if direc == 'front':
         apply_horizontal_force_from_front(force, cj_sup_type)
     elif direc == 'right':
@@ -106,73 +124,69 @@ def apply_horizontal_force(direc, force, cj_sup_type):
 def apply_horizontal_force_from_back(force, cj_sup_type):
     """Applies wind coming from the back to the crane"""
     # force in north dir -> -y dir
-    applied_force = force * kN
     # tower: all even nodes
     for t_n in range(int(Dims.TOWER_END / 2)):
-        Conditions.forces[2 * t_n, 1] += - applied_force
+        Conditions.forces[2 * t_n, 1] += - force
     # jib: 0+3n (top), 1+3n (bot)
     for j_n in range(Dims.TOWER_END, int(Dims.JIB_END / 3)):
-        Conditions.forces[(0 + 3 * j_n), 1] += - applied_force
-        Conditions.forces[(1 + 3 * j_n), 1] += - applied_force
+        Conditions.forces[(0 + 3 * j_n), 1] += - force
+        Conditions.forces[(1 + 3 * j_n), 1] += - force
     # counterjib: top center for 1-2 towers, rest just for truss
     for cj_n in range(int(Dims.JIB_END), int(Dims.COUNTERJIB_END / 2)):
-        Conditions.forces[Dims.JIB_END + (0 + 2 * j_n), 1] += - applied_force
+        Conditions.forces[Dims.JIB_END + (0 + 2 * j_n), 1] += - force
     if cj_sup_type == 'Truss':
         for cj_n in range(Dims.COUNTERJIB_END, int(Dims.COUNTERJIB_BASE_END)):
-            Conditions.forces[cj_n, 1] += - applied_force
+            Conditions.forces[cj_n, 1] += - force
     elif cj_sup_type == 'Tower':
-        Conditions.forces[int(Dims.COUNTERJIB_BASE_END), 1] += - applied_force
+        Conditions.forces[int(Dims.COUNTERJIB_BASE_END), 1] += - force
 
 
 def apply_horizontal_force_from_right(force):
     """Applies wind coming from the right to the crane"""
     # force in west dir -> -x
-    applied_force = force * kN
     # tower: 2+4n, 3+4n
     for t_n in range(int(Dims.TOWER_END / 4) - 1):
-        Conditions.forces[(2 + 4 * t_n), 0] += - applied_force
-        Conditions.forces[(3 + 4 * t_n), 0] += - applied_force
+        Conditions.forces[(2 + 4 * t_n), 0] += - force
+        Conditions.forces[(3 + 4 * t_n), 0] += - force
     # jib: last 3
     for j_n in range(int(Dims.JIB_END) - 3, int(Dims.JIB_END)):
-        Conditions.forces[j_n, 0] += - applied_force
+        Conditions.forces[j_n, 0] += - force
     # counterjib: none
 
 
 def apply_horizontal_force_from_front(force, cj_sup_type):
     """Applies wind coming from the front to the crane"""
     # force in south dir -> -y dir
-    applied_force = force * kN
     # tower: all odd nodes
     for t_n in range(int(Dims.TOWER_END / 2)):
-        Conditions.forces[(1 + 2 * t_n), 1] += applied_force
+        Conditions.forces[(1 + 2 * t_n), 1] += force
     # jib: 0+3n (top), 2+3n (bot)
     for j_n in range(int(Dims.TOWER_END), int(Dims.JIB_END / 3)):
-        Conditions.forces[(0 + 3 * j_n), 1] += applied_force
-        Conditions.forces[(2 + 3 * j_n), 1] += applied_force
+        Conditions.forces[(0 + 3 * j_n), 1] += force
+        Conditions.forces[(2 + 3 * j_n), 1] += force
     # counterjib: top center for 1-2 towers, rest just for truss
     for cj_n in range(int(Dims.JIB_END), int(Dims.COUNTERJIB_BASE_END / 2)):
-        Conditions.forces[Dims.JIB_END + (1 + 2 * cj_n), 1] += applied_force
+        Conditions.forces[Dims.JIB_END + (1 + 2 * cj_n), 1] += force
     if cj_sup_type == 'Truss':
         for cj_n in range(int(Dims.COUNTERJIB_BASE_END), Dims.COUNTERJIB_END):
-            Conditions.forces[cj_n, 1] += applied_force
+            Conditions.forces[cj_n, 1] += force
     elif cj_sup_type == 'Tower':
-        Conditions.forces[Dims.COUNTERJIB_END, 1] += applied_force
+        Conditions.forces[Dims.COUNTERJIB_END, 1] += force
 
 
 def apply_horizontal_force_from_left(force, cj_sup_type):
     """Applies wind coming from the left to the crane"""
-    applied_force = force * kN
     # force in east dir -> +x dir
     # tower: 2+4n, 3+4n
     for t_n in range(int(Dims.TOWER_END / 4) - 1):
-        Conditions.forces[(0 + 4 * t_n), 0] += applied_force
-        Conditions.forces[(1 + 4 * t_n), 0] += applied_force
+        Conditions.forces[(0 + 4 * t_n), 0] += force
+        Conditions.forces[(1 + 4 * t_n), 0] += force
     # jib: none
     # counterjib: truss last 3; last 2 plus tower
-    Conditions.forces[Dims.COUNTERJIB_BASE_END - 2, 0] += applied_force
-    Conditions.forces[Dims.COUNTERJIB_BASE_END - 1, 0] += applied_force
+    Conditions.forces[Dims.COUNTERJIB_BASE_END - 2, 0] += force
+    Conditions.forces[Dims.COUNTERJIB_BASE_END - 1, 0] += force
     if cj_sup_type == 'Tower' or cj_sup_type == 'Truss':
-        Conditions.forces[Dims.COUNTERJIB_END - 1, 0] += applied_force
+        Conditions.forces[Dims.COUNTERJIB_END - 1, 0] += force
 
 
 def first_euler_buckling_case(length, flexural_strength):
@@ -211,8 +225,10 @@ def is_euler_buckling_rod(E, A, DENSITY, length, force):
         return False
 
 
-def analyze(nodes, beams, E, DENSITY):
+def analyze(nodes, beams, E):
     """Perform truss structural analysis"""
+    # print(Conditions.forces)
+    nodes = np.divide(nodes, 1000) if nodes[1][0] > 2 else nodes
     number_of_nodes = len(nodes)
     number_of_elements = len(beams)
 
@@ -247,7 +263,7 @@ def analyze(nodes, beams, E, DENSITY):
         n = axial_force[i]
         l = L[i]
         A = Comps.area_per_beam[i]
-        if is_euler_buckling_rod(E, A, DENSITY, l, n):
+        if is_euler_buckling_rod(E, A, Dims.DENSITY, l, n):
             print(f"{i} is euler buckling rod!")
 
     # Calculate all reaction forces
@@ -282,7 +298,8 @@ def calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes,
     return deformation, u
 
 
-def calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_number_of_dof, transformation_vector):
+def calculate_global_stiffness(E, L, beams, dof, number_of_elements,
+                               total_number_of_dof, transformation_vector):
     """Calculates the global stiffness matrix"""
     # Empty matrix with required dimension for the stiffness matrix
     K = np.zeros([total_number_of_dof, total_number_of_dof])
@@ -307,7 +324,7 @@ def get_components_of_global_stiffness(K, free_dof, support_dof):
     return K_bottomleft, K_bottomright, K_topleft
 
 
-def optimize(nodes, beams, E, DENSITY, horz_force, cj_sup_type, has_horz_forces, horz_dir):
+def optimize(nodes, beams, E, horz_force, cj_sup_type, has_horz_forces, horz_dir):
     """Optimizes the crane to try to be within given specifications"""
     optim_apb_per_wind = []
     directions = ["front", "right", "back", "left"]
@@ -315,11 +332,13 @@ def optimize(nodes, beams, E, DENSITY, horz_force, cj_sup_type, has_horz_forces,
     for direction in directions:
         # Reset apb
         Comps.area_per_beam = np.full((len(beams)), 0.0025)
+        reset_forces()
+        apply_gravity(nodes, beams)
         if has_horz_forces:
             apply_horizontal_force(direction, horz_force, cj_sup_type)
         # optimize for one horizontal force direction
         for _ in range(20):
-            axial_force = analyze(nodes, beams, E, DENSITY)
+            axial_force = analyze(nodes, beams, E)
             old_apb = Comps.area_per_beam.copy()
             adjust_cross_section_area(axial_force[0])
             if np.all(Comps.area_per_beam == old_apb):
@@ -328,6 +347,8 @@ def optimize(nodes, beams, E, DENSITY, horz_force, cj_sup_type, has_horz_forces,
             break
         optim_apb_per_wind.append(Comps.area_per_beam)
 
+    reset_forces()
+    apply_gravity(nodes, beams)
     if has_horz_forces:
         merged_list = []
         if len(optim_apb_per_wind[0]) == len(optim_apb_per_wind[1]) == len(optim_apb_per_wind[2]) == len(optim_apb_per_wind[3]):
@@ -338,7 +359,7 @@ def optimize(nodes, beams, E, DENSITY, horz_force, cj_sup_type, has_horz_forces,
         Comps.area_per_beam = merged_list.copy()
         apply_horizontal_force(horz_dir, horz_force, cj_sup_type)
 
-    axial_force, reaction_force, deformation = analyze(nodes, beams, E, DENSITY)
+    axial_force, reaction_force, deformation = analyze(nodes, beams, E)
     return axial_force, reaction_force, deformation, Comps.area_per_beam
 
 

@@ -143,11 +143,12 @@ class Crane:
         self.DENSITY = 7850
         self.GRAVITY_CONSTANT = 9.81
 
-        self.wind = 0
         self.has_tower = True
         self.has_jib = True
         self.has_counter_jib = True
         self.is_built = False
+        self.horz_force = 0
+        self.horz_dir = None
 
     def build_crane(self):
         """Builds crane from previosuly inputted parameters"""
@@ -165,8 +166,8 @@ class Crane:
         """Applies gravity to nodes"""
         analysis.apply_forces(window, Comps.nodes, Dims.TOWER_NUM_NODES, Dims.JIB_NUM_NODES,
                               Dims.JIB_BASE_NUM_NODES, Dims.CJ_BASE_NUM_NODES, Dims.CJ_NUM_NODES)
-        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams),
-                               self.DENSITY, self.GRAVITY_CONSTANT)
+        analysis.set_gravity(self.DENSITY, self.GRAVITY_CONSTANT)
+        analysis.apply_gravity(np.array(Comps.nodes).astype(float), np.array(Comps.beams))
 
     def reset_forces(self, window):
         """Resets forces on all nodes"""
@@ -184,7 +185,7 @@ class Crane:
         nodes, beams = get_crane()
         # analysis.generate_conditions(nodes, beams)
         axial_force, reaction_force, deformation = analysis.analyze(nodes.copy(), beams.copy(),
-                                                                    self.E, self.DENSITY)
+                                                                    self.E)
 
         return axial_force, reaction_force, deformation, analysis.get_area_per_beam()
 
@@ -195,7 +196,6 @@ class Crane:
         axial_force, reaction_force, deformation, area_per_rod = analysis.optimize(nodes.copy(),
                                                                                    beams.copy(),
                                                                                    self.E,
-                                                                                   self.DENSITY,
                                                                                    self.horz_force,
                                                                                    counterjib.get_support_type(),
                                                                                    has_horz_force,
