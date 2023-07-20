@@ -496,7 +496,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.crane.reset_forces(self.ui)
 
             if self.ui.enable_gravity.isChecked():
-                print('Enabling gravity')
                 self.ui.output.appendPlainText("Apply gravity forces to crane")
                 self.crane.enable_gravity(self.ui)
 
