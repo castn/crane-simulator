@@ -5,12 +5,12 @@
             <height>10000</height>
             <width>1200</width>
             <segments>7</segments>
-            <type>Cross</type>
+            <type>Zigzag</type>
         </tower>
         <jib>
             <length>10000</length>
             <height>1000</height>
-            <segments>9</segments>
+            <segments>7</segments>
             <type>Truss</type>
             <halfdrop>True</halfdrop>
             <bend>True</bend>
@@ -19,7 +19,7 @@
             <length>4000</length>
             <height>600</height>
             <segments>3</segments>
-            <type>Truss</type>
+            <type>Set-back truss</type>
         </counterjib>
         <fem>
             <jibLeft>-250</jibLeft>

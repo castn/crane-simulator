@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.1
+## Created by: Qt User Interface Compiler version 6.5.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -172,7 +172,7 @@ class Ui_MainWindow(object):
         self.jibSegment_spinBox.setObjectName(u"jibSegment_spinBox")
         self.jibSegment_spinBox.setMinimum(1)
         self.jibSegment_spinBox.setMaximum(1000000)
-        self.jibSegment_spinBox.setValue(9)
+        self.jibSegment_spinBox.setValue(7)
 
         self.formLayout_2.setWidget(6, QFormLayout.FieldRole, self.jibSegment_spinBox)
 
@@ -686,7 +686,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1022, 25))
+        self.menubar.setGeometry(QRect(0, 0, 1022, 19))
         self.menu_File = QMenu(self.menubar)
         self.menu_File.setObjectName(u"menu_File")
         self.menuHelp = QMenu(self.menubar)
@@ -739,11 +739,11 @@ class Ui_MainWindow(object):
         self.towerWidth_spinbox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))
         self.towerSegment_label.setText(QCoreApplication.translate("MainWindow", u"Segments", None))
         self.towerSupportType_label.setText(QCoreApplication.translate("MainWindow", u"Support Type", None))
-        self.towerSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Cross", None))
-        self.towerSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Zigzag", None))
+        self.towerSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Zigzag", None))
+        self.towerSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Cross", None))
         self.towerSupportType_comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Diagonal", None))
 
-        self.towerSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Cross", None))
+        self.towerSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Zigzag", None))
         self.jibBox.setTitle(QCoreApplication.translate("MainWindow", u"Jib", None))
         self.jibLength_label.setText(QCoreApplication.translate("MainWindow", u"Length", None))
         self.jibLength_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))
@@ -751,10 +751,10 @@ class Ui_MainWindow(object):
         self.jibHeight_spinBox.setSuffix(QCoreApplication.translate("MainWindow", u" mm", None))
         self.jibSegment_label.setText(QCoreApplication.translate("MainWindow", u"Segments", None))
         self.jibSupportType_label.setText(QCoreApplication.translate("MainWindow", u"Support Type", None))
-        self.jibSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Truss", None))
-        self.jibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Set-back truss", None))
+        self.jibSupportType_comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Set-back truss", None))
+        self.jibSupportType_comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Truss", None))
 
-        self.jibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Truss", None))
+        self.jibSupportType_comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"Set-back truss", None))
         self.jibBend.setText(QCoreApplication.translate("MainWindow", u"Realistic upward bend", None))
         self.jibSupportHalfDrop.setText(QCoreApplication.translate("MainWindow", u"Realistic decrease in height of support", None))
         self.counterJibBox.setTitle(QCoreApplication.translate("MainWindow", u"Counter Jib", None))

@@ -600,7 +600,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.dims.get_jib_dropdown() and self.dims.get_counter_jib_support_type() == 'Tower':
             QMessageBox.critical(self, 'Incompatible config',
                              f'Selection of <b>realistic drop in height</b> isn\'t allowed for this crane.<br>'
-                             f'The <b>Tower<b/> support type for the counterjib can\' also be selected.<br>'
+                             f'The <b>Tower</b> support type for the counterjib can\'t also be selected.<br>'
                              f'Please change one of these parameters.')
             return False
         return True

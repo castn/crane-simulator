@@ -33,7 +33,7 @@ class Dims:
 
     START_HEIGHT = 0
     TOWER_WIDTH = 0
-    INIT_BAR = 0
+    INIT_BEAM = 0
     END_BASE = 0
 
     IS_CONNECTED = False
@@ -78,7 +78,7 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
     Dims.START_HEIGHT = tower_height
     Dims.TOWER_WIDTH = tower_width
     Dims.IS_CONNECTED = True
-    Dims.INIT_BAR = max(np.asarray(Comps.beams).astype(int).max() - 1, 0)
+    Dims.INIT_BEAM = max(np.asarray(Comps.beams).astype(int).max() - 1, 0)
     Dims.END_BASE = len(tower_nodes)
 
     create_segments()
@@ -115,26 +115,26 @@ def create_segments():
         if i < Dims.SEGMENTS:
             Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i + Dims.SEGMENT_LENGTH / 2
                                 if Dims.SUPPORT_TYPE == Style.TRUSS
-                                else Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
+                                else Dims.TOWER_WIDTH * 1.15 + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
                                 bot_height + top_height])
         # adds last top node for set-back support style
-        if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != Style.TRUSS:
-            Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
-                                Dims.SEGMENT_LENGTH / 2,
-                                bot_height + top_height])
+        # if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != Style.TRUSS:
+        #     Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
+        #                         Dims.SEGMENT_LENGTH / 2,
+        #                         bot_height + top_height])
 
 
 def create_beams():
     """Create all beams of a single segment"""
     for i in range(Dims.SEGMENTS):
-        val_to_add = 3 * i + Dims.INIT_BAR
+        val_to_add = 3 * i + Dims.INIT_BEAM
         create_horizontal_beams(i, val_to_add)
         create_diagonal_beams(val_to_add)
-    if Dims.SUPPORT_TYPE != Style.TRUSS:
-        val_to_add = 3 * Dims.SEGMENTS + Dims.INIT_BAR
-        append_beam(0 + val_to_add, 2 + val_to_add)
-        append_beam(1 + val_to_add, 2 + val_to_add)
+    # if Dims.SUPPORT_TYPE != Style.TRUSS:
+    #     val_to_add = 3 * Dims.SEGMENTS + Dims.INIT_BEAM
+    #     append_beam(0 + val_to_add, 2 + val_to_add)
+    #     append_beam(1 + val_to_add, 2 + val_to_add)
 
 
 def create_horizontal_beams(i, val_to_add):
@@ -143,8 +143,8 @@ def create_horizontal_beams(i, val_to_add):
         append_beam(0 + val_to_add, 1 + val_to_add)  # first horizontal (0-1)
     if i < Dims.SEGMENTS - 1:
         append_beam(2 + val_to_add, 5 + val_to_add)  # top connection
-    if i == Dims.SEGMENTS - 1 and Dims.SUPPORT_TYPE != Style.TRUSS:
-        append_beam(2 + val_to_add, 5 + val_to_add)
+    # if i == Dims.SEGMENTS - 1 and Dims.SUPPORT_TYPE != Style.TRUSS:
+    #     append_beam(2 + val_to_add, 5 + val_to_add)
     append_beam(1 + val_to_add, 4 + val_to_add)
     append_beam(4 + val_to_add, 3 + val_to_add)
     append_beam(3 + val_to_add, 0 + val_to_add)
@@ -207,7 +207,7 @@ def get_longest_beam():
 
 def get_end_base():
     """Returns last node of base of jib"""
-    return len(Comps.nodes) if Dims.SUPPORT_TYPE == Style.TRUSS else (len(Comps.nodes) - 1)
+    return len(Comps.nodes) # len(Comps.nodes) if Dims.SUPPORT_TYPE == Style.TRUSS else (len(Comps.nodes) - 1)
 
 
 def get_height():

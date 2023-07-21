@@ -60,7 +60,7 @@ def create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style
     if has_horizontal and (i % 3 == 0 or i == number_of_segments):
         create_horizontal_beams(val_to_add)
     if not is_hollow:
-        append_bar(0 + 4 * i, 2 + 4 * i)
+        append_beam(0 + 4 * i, 2 + 4 * i)
     if i < number_of_segments:
         create_vertical_beams(val_to_add)
         create_diagonal_beams(val_to_add, style_of_face)
@@ -95,50 +95,52 @@ def create_zigzag_face_beams(val_to_add):
 def create_cross_face_beam(val_to_add):
     """All sides of the segments the tower have a cross of beams"""
     # front face
-    append_bar(0 + val_to_add, 5 + val_to_add)
-    append_bar(4 + val_to_add, 1 + val_to_add)
+    append_beam(0 + val_to_add, 5 + val_to_add)
+    append_beam(4 + val_to_add, 1 + val_to_add)
     # right face
-    append_bar(5 + val_to_add, 3 + val_to_add)
-    append_bar(1 + val_to_add, 7 + val_to_add)
+    append_beam(5 + val_to_add, 3 + val_to_add)
+    append_beam(1 + val_to_add, 7 + val_to_add)
     # rear face
-    append_bar(2 + val_to_add, 7 + val_to_add)
-    append_bar(6 + val_to_add, 3 + val_to_add)
+    append_beam(2 + val_to_add, 7 + val_to_add)
+    append_beam(6 + val_to_add, 3 + val_to_add)
     # left face
-    append_bar(6 + val_to_add, 0 + val_to_add)
-    append_bar(2 + val_to_add, 4 + val_to_add)
+    append_beam(6 + val_to_add, 0 + val_to_add)
+    append_beam(2 + val_to_add, 4 + val_to_add)
     # length of material used
 
 
 def create_parallel_face_beams_RL(val_to_add):
     """Creates bottom right to top left diagonals"""
-    append_bar(4 + val_to_add, 1 + val_to_add)  # front face
-    append_bar(1 + val_to_add, 7 + val_to_add)  # right face
-    append_bar(7 + val_to_add, 2 + val_to_add)  # rear face
-    append_bar(2 + val_to_add, 4 + val_to_add)  # left face
+    append_beam(4 + val_to_add, 1 + val_to_add)  # front face
+    append_beam(1 + val_to_add, 7 + val_to_add)  # right face
+    append_beam(7 + val_to_add, 2 + val_to_add)  # rear face
+    append_beam(2 + val_to_add, 4 + val_to_add)  # left face
 
 
 def create_parallel_face_beams_LR(val_to_add):
     """Creates bottom left to top right diagonals"""
-    append_bar(0 + val_to_add, 5 + val_to_add)  # front face
-    append_bar(5 + val_to_add, 3 + val_to_add)  # right face
-    append_bar(3 + val_to_add, 6 + val_to_add)  # rear face
-    append_bar(6 + val_to_add, 0 + val_to_add)  # left face
+    append_beam(0 + val_to_add, 5 + val_to_add)  # front face
+    append_beam(5 + val_to_add, 3 + val_to_add)  # right face
+    append_beam(3 + val_to_add, 6 + val_to_add)  # rear face
+    append_beam(6 + val_to_add, 0 + val_to_add)  # left face
 
 
 def create_vertical_beams(val_to_add):
     """Create all vertical beams of a segment"""
-    append_bar(0 + val_to_add, 4 + val_to_add)  # front left vertical beam
-    append_bar(1 + val_to_add, 5 + val_to_add)  # front right vertical beam
-    append_bar(3 + val_to_add, 7 + val_to_add)  # rear left vertical beam
-    append_bar(2 + val_to_add, 6 + val_to_add)  # rear right vertical beam
+    append_beam(0 + val_to_add, 4 + val_to_add)  # front left vertical beam
+    append_beam(1 + val_to_add, 5 + val_to_add)  # front right vertical beam
+    append_beam(3 + val_to_add, 7 + val_to_add)  # rear left vertical beam
+    append_beam(2 + val_to_add, 6 + val_to_add)  # rear right vertical beam
 
 
 def create_horizontal_beams(val_to_add):
     """Create all horizontal beams of a segment"""
-    append_bar(0 + val_to_add, 1 + val_to_add)  # front horizontal beam
-    append_bar(1 + val_to_add, 3 + val_to_add)  # right horizontal beam
-    append_bar(3 + val_to_add, 2 + val_to_add)  # rear horizontal beam
-    append_bar(2 + val_to_add, 0 + val_to_add)  # left horizontal beam
+    append_beam(0 + val_to_add, 1 + val_to_add)  # front horizontal beam
+    append_beam(1 + val_to_add, 3 + val_to_add)  # right horizontal beam
+    append_beam(3 + val_to_add, 2 + val_to_add)  # rear horizontal beam
+    append_beam(2 + val_to_add, 0 + val_to_add)  # left horizontal beam
+    if val_to_add != 0:
+        append_beam(0 + val_to_add, 3 + val_to_add)
 
 
 def create_segments(has_horizontal, is_hollow):
@@ -172,7 +174,7 @@ def create_segment_nodes(elevation):
     Comps.nodes.append([Dims.SEGMENT_WIDTH, Dims.SEGMENT_WIDTH, elevation])
 
 
-def append_bar(start_node, end_node):
+def append_beam(start_node, end_node):
     """
     Creates a beam between 2 given points and adds the length to a running total
     
