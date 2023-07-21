@@ -57,7 +57,7 @@ def create_segment_beams(i, number_of_segments, has_horizontal, is_hollow, style
     :param style_of_face: Define the style of diagonal beams of each face. Using the Style Enum
     """
     val_to_add = 4 * i
-    if has_horizontal and (i % 3 == 0 or i == number_of_segments):
+    if has_horizontal:
         create_horizontal_beams(val_to_add)
     if not is_hollow:
         append_beam(0 + 4 * i, 2 + 4 * i)
