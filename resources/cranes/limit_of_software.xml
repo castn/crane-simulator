@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<data>
+    <config>
+        <tower>
+            <height>92000</height>
+            <width>2550</width>
+            <segments>35</segments>
+            <type>Zigzag</type>
+        </tower>
+        <jib>
+            <length>50000</length>
+            <height>2450</height>
+            <segments>20</segments>
+            <type>Set-back truss</type>
+            <halfdrop>True</halfdrop>
+            <bend>True</bend>
+        </jib>
+        <counterjib>
+            <length>17900</length>
+            <height>1800</height>
+            <segments>8</segments>
+            <type>Truss</type>
+        </counterjib>
+        <fem>
+            <jibLeft>-2.0</jibLeft>
+            <jibRight>-2.0</jibRight>
+            <counterJibLeft>-10.0</counterJibLeft>
+            <counterJibRight>-10.0</counterJibRight>
+            <scale>1</scale>
+        </fem>
+        <wind>
+            <enabled>False</enabled>
+            <direction>Front</direction>
+            <force>1.0</force>
+        </wind>
+        <gravity>
+            <enabled>True</enabled>
+        </gravity>
+        <ignorespec>
+            <enabled>True</enabled>
+        </ignorespec>
+    </config>
+</data>
