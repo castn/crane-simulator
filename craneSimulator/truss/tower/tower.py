@@ -112,9 +112,9 @@ def create_cross_face_beam(val_to_add):
 def create_parallel_face_beams_RL(val_to_add):
     """Creates bottom right to top left diagonals"""
     append_bar(4 + val_to_add, 1 + val_to_add)  # front face
-    append_bar(5 + val_to_add, 3 + val_to_add)  # right face
+    append_bar(1 + val_to_add, 7 + val_to_add)  # right face
     append_bar(7 + val_to_add, 2 + val_to_add)  # rear face
-    append_bar(6 + val_to_add, 0 + val_to_add)  # left face
+    append_bar(2 + val_to_add, 4 + val_to_add)  # left face
 
 
 def create_parallel_face_beams_LR(val_to_add):

@@ -143,21 +143,15 @@ class Crane:
         self.DENSITY = 7850
         self.GRAVITY_CONSTANT = 9.81
 
-        self.has_tower = True
-        self.has_jib = True
-        self.has_counter_jib = True
         self.is_built = False
         self.horz_force = 0
         self.horz_dir = None
 
     def build_crane(self):
         """Builds crane from previosuly inputted parameters"""
-        if self.has_tower:
-            create_tower()
-        if self.has_jib:
-            create_jib()
-        if self.has_counter_jib:
-            create_counterjib()
+        create_tower()
+        create_jib()
+        create_counterjib()
         self.is_built = True
         nodes, beams = get_crane()
         analysis.generate_conditions(nodes, beams)
