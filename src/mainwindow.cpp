@@ -27,7 +27,8 @@
 MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent), fileName(QString()) {
     textArea = new KTextEdit();
     QPointer<QVTKOpenGLNativeWidget> vtkRenderWidget = new QVTKOpenGLNativeWidget();
-    setCentralWidget(vtkRenderWidget);
+
+    setCentralWidget(createCentralWidget());
 
     // VTK part
     vtkNew<vtkGenericOpenGLRenderWindow> window;
@@ -54,8 +55,13 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent), fileName(QStrin
     setupActions();
 }
 
+auto MainWindow::createCentralWidget() -> QWidget* {
+    mainWidget = new CentralWidget(this);
+    return mainWidget;
+}
+
 void MainWindow::setupActions() {
-    QAction *clearAction = new QAction(this);
+    auto *clearAction = new QAction(this);
     clearAction->setText(i18n("&Clear"));
     clearAction->setIcon(QIcon::fromTheme("document-new"));
     actionCollection()->setDefaultShortcut(clearAction, Qt::CTRL + Qt::Key_W);
@@ -74,6 +80,7 @@ void MainWindow::setupActions() {
 void MainWindow::newFile() {
     fileName.clear();
     textArea->clear();
+    mainWidget->createNewCrane("untitled");
 }
 
 void MainWindow::saveFileToDisk(const QString &outputFileName) {

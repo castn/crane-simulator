@@ -80,7 +80,7 @@ message (STATUS "VTK_VERSION: ${VTK_VERSION}, Qt Version: ${Qt${VTK_QT_VERSION}W
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 # Tell cmake where to find the source and header files from this file
-set(mainwindow_SRCS src/main.cpp src/mainwindow.cpp)
+set(mainwindow_SRCS src/main.cpp src/mainwindow.cpp src/view/CentralWidget.cpp src/view/CentralWidget.h src/view/CraneTab.cpp src/view/CraneTab.h)
 
 add_executable(mainwindow ${mainwindow_SRCS})
 
