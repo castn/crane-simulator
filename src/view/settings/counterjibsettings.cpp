@@ -8,7 +8,7 @@
 
 CounterJibSettings::CounterJibSettings(QWidget *parent) : QWidget(parent) {
     counterjibSettings = new QGroupBox(this);
-    counterjibSettings->setTitle("Tower");
+    counterjibSettings->setTitle("Counter Jib");
 
     counterjibSettings->setLayout(createSettings());
 }
