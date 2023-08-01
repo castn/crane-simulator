@@ -28,6 +28,8 @@ contains an example configuration of the options, which can be set under **Optio
 
 ## Building
 
+``sudo apt install build-essential cmake extra-cmake-modules qtbase5-dev qtdeclarative5-dev qtquickcontrols2-5-dev libkf5i18n-dev gettext libkf5coreaddons-dev``
+``vtk9 libvtk9-dev libvtk9-qt-dev libvtk9.1``
 Install all requirements for this project listed in the ``requirements.txt`` file. To get a single executable file
 [pyinstaller](https://pyinstaller.org/en/stable/) can be used. Otherwise, the program can also be called as usual via a
 console or an IDE.
