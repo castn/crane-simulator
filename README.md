@@ -44,6 +44,6 @@ Run executable in ``build/`` to launch the program
 
 ## Licence
 
-This source code is under the [GNU GPLv3](LICENCE.md) license, a free and open-source license.
+This source code is licenced under the [GNU GPLv3](LICENCE.md) license.
 
 
