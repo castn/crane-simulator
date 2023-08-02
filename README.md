@@ -26,13 +26,21 @@ below.
 To get started, run your executable. Once done click on **File > Open** and select the file ``exampleCrane.xml``. This
 contains an example configuration of the options, which can be set under **Options** can be set.
 
-## Building
+## Build yourself
 
-``sudo apt install build-essential cmake extra-cmake-modules qtbase5-dev qtdeclarative5-dev qtquickcontrols2-5-dev libkf5i18n-dev gettext libkf5coreaddons-dev``
-``vtk9 libvtk9-dev libvtk9-qt-dev libvtk9.1``
-Install all requirements for this project listed in the ``requirements.txt`` file. To get a single executable file
-[pyinstaller](https://pyinstaller.org/en/stable/) can be used. Otherwise, the program can also be called as usual via a
-console or an IDE.
+Make sure all required packages are installed. Keep in mind that the development branch is unstable at all time. 
+Therefore, it is recommended to use the master branch, which is updated after each new stable release.
+
+```
+build-essential cmake extra-cmake-modules qtbase5-dev qtdeclarative5-dev qtquickcontrols2-5-dev libkf5i18n-dev gettext libkf5coreaddons-dev libkf5xmlgui-dev libkf5textwidgets-dev libkf5kio-dev libvtk9-dev libvtk9-qt-dev xtensor-dev libxtensor-dev
+```
+Afterwards run the following commands: 
+```
+cmake -B build/
+cmake --build build/
+```
+
+Run executable in ``build/`` to launch the program
 
 ## Licence
 
