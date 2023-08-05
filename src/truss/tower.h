@@ -1,7 +1,3 @@
-//
-// Created by castn on 29.07.23.
-//
-
 #ifndef MAINWINDOW_TOWER_H
 #define MAINWINDOW_TOWER_H
 #include <vector>
@@ -13,7 +9,7 @@ public:
     double getTowerHeight();
     double getTowerWidth();
     double getTowerSegments();
-    double getTowerLength();
+    double getTowerTotalBeamLength();
     double getTowerLongestBeam();
     double getTowerTotalHeight();
     std::vector<std::vector<double>> getTowerNodes();

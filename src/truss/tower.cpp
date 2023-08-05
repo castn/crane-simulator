@@ -1,7 +1,3 @@
-//
-// Created by castn on 29.07.23.
-//
-
 #include "tower.h"
 #include <vector>
 #include <cmath>
@@ -17,7 +13,6 @@ public:
 Comps comps;
 
 
-
 double Tower::getTowerHeight() {
     return height;
 }
@@ -30,7 +25,7 @@ double Tower::getTowerSegments() {
     return numberOfSegments;
 }
 
-double Tower::getTowerLength() {
+double Tower::getTowerTotalBeamLength() {
     return totalLength;
 }
 
@@ -42,11 +37,11 @@ double Tower::getTowerTotalHeight() {
     return height * numberOfSegments;
 }
 
-std::vector<std::vector<double>> getTowerNodes() {
+std::vector<std::vector<double>> Tower::getTowerNodes() {
     return comps.nodes;
 }
 
-std::vector<std::vector<int>> getTowerBeams() {
+std::vector<std::vector<int>> Tower::getTowerBeams() {
     return comps.beams;
 }
 
@@ -61,6 +56,7 @@ void Tower::setTowerWidth(double width) {
 void Tower::setTowerSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
+
 
 void Tower::createSegments(bool hasHorizontal, bool isHollow) {
     double segmentHeight = 1000;
@@ -141,7 +137,8 @@ void Tower::createCrossFaceBeam(double valToAdd) {
 }
 
 void Tower::createZigzagFaceBeams(double valToAdd) {
-    if ((valToAdd / 4) % 2 == 0) {
+    int valToCheck = valToAdd / 4;
+    if (valToCheck % 2 == 0) {
         // For even numbers create diagonal from left to right
         createParallelFaceBeamsLR(valToAdd);
     } else {

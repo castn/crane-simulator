@@ -7,6 +7,7 @@
 
 
 #include "tower.h"
+#include "jib.h"
 
 class Crane {
 public:
@@ -14,7 +15,7 @@ public:
 
     Tower *tower = nullptr;
 
-
+    Jib *jib = nullptr;
 private:
 
 
