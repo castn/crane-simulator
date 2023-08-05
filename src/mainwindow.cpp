@@ -31,28 +31,6 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent), fileName(QStrin
 
     setCentralWidget(createCentralWidget());
 
-    // VTK part
-    vtkNew<vtkGenericOpenGLRenderWindow> window;
-    vtkRenderWidget->setRenderWindow(window.Get());
-
-    vtkNew<vtkSphereSource> sphere;
-    sphere->SetRadius(1.0);
-    sphere->SetThetaResolution(100);
-    sphere->SetPhiResolution(100);
-
-    vtkNew<vtkDataSetMapper> mapper;
-    mapper->SetInputConnection(sphere->GetOutputPort());
-
-    vtkNew<vtkActor> actor;
-    actor->SetMapper(mapper);
-    actor->GetProperty()->SetEdgeVisibility(true);
-    actor->GetProperty()->SetRepresentationToSurface();
-
-    vtkNew<vtkRenderer> renderer;
-    renderer->AddActor(actor);
-
-    window->AddRenderer(renderer);
-
     setupActions();
 }
 
