@@ -16,6 +16,8 @@ public:
 };
 Comps comps;
 
+
+
 double Tower::getTowerHeight() {
     return height;
 }
@@ -26,6 +28,26 @@ double Tower::getTowerWidth() {
 
 double Tower::getTowerSegments() {
     return numberOfSegments;
+}
+
+double Tower::getTowerLength() {
+    return totalLength;
+}
+
+double Tower::getTowerLongestBeam() {
+    return longestBeam;
+}
+
+double Tower::getTowerTotalHeight() {
+    return height * numberOfSegments;
+}
+
+std::vector<std::vector<double>> getTowerNodes() {
+    return comps.nodes;
+}
+
+std::vector<std::vector<int>> getTowerBeams() {
+    return comps.beams;
 }
 
 void Tower::setTowerHeight(double height) {
@@ -48,7 +70,7 @@ void Tower::createSegments(bool hasHorizontal, bool isHollow) {
     }
 
     for (int i = 0; i <= numberOfSegments; i++) {
-        createBeamsPerSegment(i, hasHorizontal, isHollow, 0); //last param should be style
+        createBeamsPerSegment(i, hasHorizontal, isHollow);
     }
 }
 
@@ -144,25 +166,11 @@ void Tower::createParallelFaceBeamsRL(double valToAdd) {
 
 void Tower::appendBeam(int startNode, int endNode) {
     // // Create a beam between the two given nodes
-    // comps.beams.push_back({startNode, endNode});
-
-    // // Calculate the length of the beam
-    // std::vector<float> start_float = comps.nodes[startNode];
-    // std::vector<float> end_float = comps.nodes[endNode];
-    // double length = Eigen::Vector3f(end_float[0] - start_float[0], end_float[1] - start_float[1], end_float[2] - start_float[2]).norm();
-
-    // // Update the longest beam and total length
-    // longestBeam = std::max(length, longestBeam);
-    // totalLength += length;
-    // Create a beam between the two given nodes
-    // xt::xarray<int> beams;// = xt::xarray<int>::arange(0, 10);
     comps.beams.push_back({startNode, endNode});
 
     // Calculate the length of the beam
     auto startVector = comps.nodes[startNode];
     auto endVector = comps.nodes[endNode];
-    // double length = std::sqrt((endFloat - startFloat).norm());
-    // double length = std::sqrt((comps.nodes[endNode] - comps.nodes[startNode]).norm());
     std::vector<double> lenVector = {{endVector[0] - startVector[0]}, {endVector[1] - startVector[1]}, {endVector[2] - startVector[2]}};
     double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
 

@@ -4,27 +4,36 @@
 
 #ifndef MAINWINDOW_TOWER_H
 #define MAINWINDOW_TOWER_H
+#include <vector>
 
 
 class Tower {
 public:
+    // Dimension getters and setters
     double getTowerHeight();
     double getTowerWidth();
     double getTowerSegments();
+    double getTowerLength();
+    double getTowerLongestBeam();
+    double getTowerTotalHeight();
+    std::vector<std::vector<double>> getTowerNodes();
+    std::vector<std::vector<int>> getTowerBeams();
     void setTowerHeight(double height);
     void setTowerWidth(double width);
     void setTowerSegments(double numberOfSegments);
-    void createSegments(bool hasHorizontal, bool isHollow);
+    // Creates nodes
     void createNodesPerSegment(double elevation);
+    // Creates beams
+    void createSegments(bool hasHorizontal, bool isHollow);
     void createBeamsPerSegment(int seg, bool hasHorizontal, bool isHollow);
     void createHorizontalBeams(double valToAdd);
-    void appendBeam(int startNode, int endNode);
     void createVerticalBeams(double valToAdd);
     void createDiagonalBeams(double valToAdd);
     void createCrossFaceBeam(double valToAdd);
     void createZigzagFaceBeams(double valToAdd);
     void createParallelFaceBeamsLR(double valToAdd);
     void createParallelFaceBeamsRL(double valToAdd);
+    void appendBeam(int startNode, int endNode);
 private:
     double height = 0;
     double width = 0;
