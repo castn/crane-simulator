@@ -15,8 +15,8 @@ double Jib::getJibLength() {
     return length;
 }
 
-double Jib::getJibWidth() {
-    return width;
+double Jib::getJibHeight() {
+    return height;
 }
 
 double Jib::getJibSegments() {
@@ -40,15 +40,15 @@ std::vector<std::vector<int>> Jib::getJibBeams() {
 }
 
 int Jib::getEndBase() {
-    return comps.nodes.size()
+    return comps.nodes.size();
 }
 
 void Jib::setJibLength(double length) {
     this->length = length;
 }
 
-void Jib::setJibWidth(double width) {
-    this->width = width;
+void Jib::setJibHeight(double height) {
+    this->height = height;
 }
 
 void Jib::setJibSegments(double numberOfSegments) {
@@ -73,10 +73,11 @@ void Jib::createSegments() {
                 topHeight = height;
             } else if (i >= 5 * numberOfSegments / 7) {
                 topHeight = 0.76 * height;
-            } else:
+            } else {
                 double count = i - 2 * numberOfSegments / 7;
-                topHeight = height - count * (0.24 * 7 * height / (2 * jib_length_m));
+                topHeight = height - count * (0.24 * 7 * height / (2 * jibLength_m));
                 topHeight = std::max(topHeight, 0.76 * height);
+            }
         } else {
             topHeight = height;
         }
@@ -89,7 +90,7 @@ void Jib::createSegments() {
 }
 
 void Jib::createBeams(double valToAdd) {
-    for (int i = 0; i < segments; i++) {
+    for (int i = 0; i < numberOfSegments; i++) {
         valToAdd = 3 * i + initBeam;
         createHorizontalBeams(i, valToAdd);
         createDiagonalBeams(valToAdd);
@@ -100,7 +101,7 @@ void Jib::createHorizontalBeams(int seg, double valToAdd) {
     // if (i == 0 and not Dims.IS_CONNECTED) {
     //     appendBeam(0 + valToAdd, 1 + valToAdd);  // first horizontal (0-1)
     // }
-    if (i < Dims.SEGMENTS - 1) {
+    if (seg < numberOfSegments - 1) {
         appendBeam(2 + valToAdd, 5 + valToAdd);  // top connection
     }
     // if (i == Dims.SEGMENTS - 1 and Dims.SUPPORT_TYPE != Style.TRUSS) {
@@ -126,7 +127,7 @@ void Jib::appendBeam(int startNode, int endNode) {
     // Calculate the length of the beam
     auto startVector = comps.nodes[startNode];
     auto endVector = comps.nodes[endNode];
-    std::vector<double> lenVector = {{endVector[0] - startVector[0]}, {endVector[1] - startVector[1]}, {endVector[2] - startVector[2]}};
+    std::vector<double> lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
     double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
 
     // Update the longest beam and total length

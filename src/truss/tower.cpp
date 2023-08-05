@@ -168,7 +168,7 @@ void Tower::appendBeam(int startNode, int endNode) {
     // Calculate the length of the beam
     auto startVector = comps.nodes[startNode];
     auto endVector = comps.nodes[endNode];
-    std::vector<double> lenVector = {{endVector[0] - startVector[0]}, {endVector[1] - startVector[1]}, {endVector[2] - startVector[2]}};
+    std::vector<double> lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
     double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
 
     // Update the longest beam and total length

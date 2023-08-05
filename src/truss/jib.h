@@ -6,7 +6,7 @@ class Jib {
 public:
     // Dimension getters and setters
     double getJibLength();
-    double getJibWidth();
+    double getJibHeight();
     double getJibSegments();
     double getJibTotalBeamLength();
     double getJibLongestBeam();
@@ -14,7 +14,7 @@ public:
     std::vector<std::vector<int>> getJibBeams();
     int getEndBase();
     void setJibLength(double length);
-    void setJibWidth(double width);
+    void setJibHeight(double height);
     void setJibSegments(double numberOfSegments);
     // Create nodes
     void createSegments();
@@ -25,7 +25,7 @@ public:
     void appendBeam(int startNode, int endNode);
 private:
     double length = 0;
-    double width = 0;
+    double height = 0;
     double numberOfSegments = 0;
     double totalLength = 0;
     double longestBeam = 0;

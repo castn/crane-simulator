@@ -12,13 +12,9 @@
 class Crane {
 public:
     Crane();
-
     Tower *tower = nullptr;
-
     Jib *jib = nullptr;
 private:
-
-
 };
 
 
