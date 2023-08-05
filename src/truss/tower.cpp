@@ -3,6 +3,32 @@
 //
 
 #include "tower.h"
+#include <vector>
+
+class Comps {
+public:
+    std::vector<std::vector<double>> nodes;
+    std::vector<double> beams;
+};
+Comps comps;
+
+enum class Style {
+    NONE = 0,
+    CROSS = 1,
+    ZIGZAG = 2,
+    DIAGONAL = 3
+};
+
+class Dims {
+public:
+    double SEGMENT_WIDTH;
+    double SEGMENT_HEIGHT;
+    double SEGMENTS;
+    double TOTAL_LENGTH;
+    Style SUPPORT_TYPE;
+    double LONGEST_BEAM;
+};
+Dims dims;
 
 double Tower::getTowerHeight() {
     return height;
@@ -37,5 +63,9 @@ void Tower::createSegments() {
 }
 
 void Tower::createNodesPerSegment(double elevation) {
-
+    // Create all nodes so the beams of a segment can connect to them
+    comps.nodes.push_back({0, 0, elevation});
+    comps.nodes.push_back({0, dims.SEGMENT_WIDTH, elevation});
+    comps.nodes.push_back({dims.SEGMENT_WIDTH, 0, elevation});
+    comps.nodes.push_back({dims.SEGMENT_WIDTH, dims.SEGMENT_WIDTH, elevation});
 }
