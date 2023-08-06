@@ -57,6 +57,10 @@ void Tower::setTowerSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
+void setDimensions() {
+    
+}
+
 
 void Tower::createSegments(bool hasHorizontal, bool isHollow) {
     double segmentHeight = 1000;

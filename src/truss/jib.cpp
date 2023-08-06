@@ -55,6 +55,10 @@ void Jib::setJibSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
+void setDimensions() {
+    
+}
+
 
 void Jib::createSegments() {
     for (int i = 0; i < numberOfSegments; i++) {

@@ -55,6 +55,10 @@ void Counterjib::setCounterjibSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
+void setDimensions() {
+    
+}
+
 
 void Counterjib::createSegments() {
     for (int i = 0; i < numberOfSegments; i++) {
