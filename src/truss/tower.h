@@ -17,6 +17,7 @@ public:
     void setTowerHeight(double height);
     void setTowerWidth(double width);
     void setTowerSegments(double numberOfSegments);
+    void setDimensions();
     // Creates nodes
     void createNodesPerSegment(double elevation);
     // Creates beams

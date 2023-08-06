@@ -16,6 +16,7 @@ public:
     void setJibLength(double length);
     void setJibHeight(double height);
     void setJibSegments(double numberOfSegments);
+    void setDimensions();
     // Create nodes
     void createSegments();
     // Create beams
