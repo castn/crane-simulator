@@ -8,12 +8,14 @@
 
 #include "tower.h"
 #include "jib.h"
+#include "counterjib.h"
 
 class Crane {
 public:
     Crane();
     Tower *tower = nullptr;
     Jib *jib = nullptr;
+    Counterjib *counterjib = nullptr;
 private:
 };
 

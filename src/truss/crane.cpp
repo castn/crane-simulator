@@ -7,4 +7,5 @@
 Crane::Crane() {
     tower = new Tower();
     jib = new Jib();
+    counterjib = new Counterjib();
 }

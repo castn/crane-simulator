@@ -5,6 +5,7 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include "mainwindow.h"
+#include "truss/crane.h"
 
 
 int main(int argc, char *argv[]) {

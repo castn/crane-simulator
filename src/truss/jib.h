@@ -2,6 +2,13 @@
 #define MAINWINDOW_JIB_H
 #include <vector>
 
+
+enum class Style {
+    NONE = 0,
+    TRUSS = 1,
+    SET_BACK_TRUSS = 2
+};
+
 class Jib {
 public:
     // Dimension getters and setters
@@ -16,11 +23,14 @@ public:
     void setJibLength(double length);
     void setJibHeight(double height);
     void setJibSegments(double numberOfSegments);
-    void setDimensions();
+    void setDimensions(double length, double height, int numSegs, int supStyle,
+                       bool dropdown, bool bend);
+    void createJib(std::vector<std::vector<double>> nodes, std::vector<std::vector<int>> beams,
+                   double towerHeight, double towerWidth);
     // Create nodes
     void createSegments();
     // Create beams
-    void createBeams(double valToAdd);
+    void createBeams();
     void createHorizontalBeams(int seg, double valToAdd);
     void createDiagonalBeams(double valToAdd);
     void appendBeam(int startNode, int endNode);
@@ -30,7 +40,7 @@ private:
     double numberOfSegments = 0;
     double totalLength = 0;
     double longestBeam = 0;
-    int supportType = 0;
+    Style supStyle = Style::NONE;
     bool dropdown = false;
     bool bend = false;
     double startHeight = 0;

@@ -3,6 +3,13 @@
 #include <vector>
 
 
+enum class Style {
+    NONE = 0,
+    CROSS = 1,
+    ZIGZAG = 2,
+    DIAGONAL = 3
+};
+
 class Tower {
 public:
     // Dimension getters and setters
@@ -17,7 +24,8 @@ public:
     void setTowerHeight(double height);
     void setTowerWidth(double width);
     void setTowerSegments(double numberOfSegments);
-    void setDimensions();
+    void setDimensions(double height, double width, int numSegs, int supStyle);
+    void createTower(bool hasHorizontal, bool isHollow);
     // Creates nodes
     void createNodesPerSegment(double elevation);
     // Creates beams
@@ -37,7 +45,7 @@ private:
     double numberOfSegments = 0;
     double totalLength = 0;
     double longestBeam = 0;
-    int faceStyle = 0;
+    Style supStyle = Style::NONE;
 };
 
 

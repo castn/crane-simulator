@@ -1,4 +1,5 @@
 #include "counterjib.h"
+#include <iostream>
 #include <vector>
 #include <cmath>
 
@@ -9,6 +10,12 @@ public:
     std::vector<std::vector<int>> beams;
 };
 Comps comps;
+
+enum class Style {
+    NONE = 0,
+    TRUSS = 1,
+    TOWER = 2
+};
 
 
 double Counterjib::getCounterjibLength() {
@@ -40,7 +47,11 @@ std::vector<std::vector<int>> Counterjib::getCounterjibBeams() {
 }
 
 int Counterjib::getEndBase() {
-    return 0;
+    return endBase;
+}
+
+int Counterjib::getEndCJ() {
+    return endCJ;
 }
 
 void Counterjib::setCounterjibLength(double length) {
@@ -55,10 +66,50 @@ void Counterjib::setCounterjibSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
-void setDimensions() {
-    
+void Counterjib::setDimensions(double length, double height, int numSegs, int supStyle) {
+    comps.nodes.clear();
+    comps.beams.clear();
+
+    totalLength = 0;
+    longestBeam = 0;
+
+    this->length = length;
+    this->height = height;
+    numberOfSegments = numSegs;
+    switch (supStyle) {
+        case 1:
+            this->supType = Style::TRUSS;
+            break;
+        case 2:
+            this->supType = Style::TOWER;
+            break;
+        default:
+            this->supType = Style::NONE;
+            std::cout << 'No support style chosen';
+    }
 }
 
+
+void Counterjib::createCounterjib(std::vector<std::vector<double>> nodes, std::vector<std::vector<int>> beams,
+                                  double towerHeight, double towerWidth, int towerNumNodes,
+                                  int jibSegs, int jibSupport, double jibHeight) {
+    comps.nodes = nodes;
+    comps.beams = beams;
+
+    startHeight = towerHeight;
+    this->towerWidth = towerWidth;
+    endTower = towerNumNodes - 4;
+    endJib = nodes.size();
+    this-> jibHeight = jibHeight;
+    jibSegments = jibSegs;
+    this->jibSupport = jibSupport;
+
+    createSegments();
+    createBeams();
+    endBase = comps.nodes.size();
+    createSupport();
+    endCJ = comps.nodes.size();
+}
 
 void Counterjib::createSegments() {
     for (int i = 0; i < numberOfSegments; i++) {
@@ -100,10 +151,12 @@ void Counterjib::createDiagonalBeams(int seg, int startCJ, double valToAdd) {
 }
 
 void Counterjib::createSupport() {
-    if (supportType == 1) { //Truss
+    if (supType == Style::TRUSS) { //Truss
         createTrussSupport();
-    } else if (supportType == 2) { //Tower
+    } else if (supType == Style::TOWER) { //Tower
         createTowerSupport();
+    } else {
+        std::cout << 'No support style chosen';
     }
 }
 

@@ -23,6 +23,7 @@
 #include <vtkSphereSource.h>
 
 #include "mainwindow.h"
+#include "truss/crane.h"
 
 MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent), fileName(QString()) {
     textArea = new KTextEdit();

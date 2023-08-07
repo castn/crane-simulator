@@ -1,4 +1,5 @@
 #include "tower.h"
+#include <iostream>
 #include <vector>
 #include <cmath>
 // #include <Eigen/Dense>
@@ -11,6 +12,13 @@ public:
     std::vector<std::vector<int>> beams;
 };
 Comps comps;
+
+enum class Style {
+    NONE = 0,
+    CROSS = 1,
+    ZIGZAG = 2,
+    DIAGONAL = 3
+};
 
 
 double Tower::getTowerHeight() {
@@ -57,10 +65,37 @@ void Tower::setTowerSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
-void setDimensions() {
-    
+void Tower::setDimensions(double height, double width, int numSegs, int supStyle) {
+    // Reset arrays
+    comps.nodes.clear();
+    comps.beams.clear();
+    // Reset calculated dimensions
+    totalLength = 0;
+    longestBeam = 0;
+    // Set remaining parameters
+    this->height = height;
+    this->width = width;
+    numberOfSegments = numSegs;
+    switch (supStyle) {
+        case 1:
+            this->supStyle = Style::CROSS;
+            break;
+        case 2:
+            this->supStyle = Style::ZIGZAG;
+            break;
+        case 3:
+            this->supStyle = Style::DIAGONAL;
+            break;
+        default:
+            this->supStyle = Style::NONE;
+            std::cout << 'No support style chosen';
+    }
 }
 
+
+void Tower::createTower(bool hasHorizontal, bool isHollow) {
+    createSegments(hasHorizontal, isHollow);
+}
 
 void Tower::createSegments(bool hasHorizontal, bool isHollow) {
     double segmentHeight = 1000;
@@ -114,13 +149,13 @@ void Tower::createVerticalBeams(double valToAdd) {
 }
 
 void Tower::createDiagonalBeams(double valToAdd) {
-    if (faceStyle == 3) { //style.DIAGONAL
+    if (supStyle == Style::DIAGONAL) { //style.DIAGONAL/3
         createParallelFaceBeamsLR(valToAdd);
     }
-    else if (faceStyle == 1) { //style.CROSS
+    else if (supStyle == Style::CROSS) { //style.CROSS/1
         createCrossFaceBeam(valToAdd);
     }
-    else if (faceStyle == 2) { //style.ZIGZAG
+    else if (supStyle == Style::ZIGZAG) { //style.ZIGZAG/2
         createZigzagFaceBeams(valToAdd);
     }
 }

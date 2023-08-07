@@ -2,6 +2,13 @@
 #define MAINWINDOW_COUNTERJIB_H
 #include <vector>
 
+
+enum class Style {
+    NONE = 0,
+    TRUSS = 1,
+    TOWER = 2
+};
+
 class Counterjib {
 public:
     // Dimension getters and setters
@@ -13,10 +20,14 @@ public:
     std::vector<std::vector<double>> getCounterjibNodes();
     std::vector<std::vector<int>> getCounterjibBeams();
     int getEndBase();
+    int getEndCJ();
     void setCounterjibLength(double length);
     void setCounterjibHeight(double height);
     void setCounterjibSegments(double numberOfSegments);
-    void setDimensions();
+    void setDimensions(double length, double height, int numSegs, int supStyle);
+    void createCounterjib(std::vector<std::vector<double>> nodes, std::vector<std::vector<int>> beams,
+                          double towerHeight, double towerWidth, int towerNumNodes,
+                          int jibSegs, int jibSupport, double jibHeight);
     // Create nodes
     void createSegments();
     // Create beams
@@ -33,7 +44,8 @@ private:
     double numberOfSegments = 0;
     double totalLength = 0;
     double longestBeam = 0;
-    int supportType = 0;
+    Style supType = Style::NONE;
+    int endCJ = 0;
 
     double startHeight = 0;
     double towerWidth = 0;

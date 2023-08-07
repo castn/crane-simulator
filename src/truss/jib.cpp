@@ -1,4 +1,5 @@
 #include "jib.h"
+#include <iostream>
 #include <vector>
 #include <cmath>
 
@@ -9,6 +10,12 @@ public:
     std::vector<std::vector<int>> beams;
 };
 Comps comps;
+
+enum class Style {
+    NONE = 0,
+    TRUSS = 1,
+    SET_BACK_TRUSS = 2
+};
 
 
 double Jib::getJibLength() {
@@ -55,10 +62,44 @@ void Jib::setJibSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
-void setDimensions() {
-    
+void Jib::setDimensions(double length, double height, int numSegs, int supStyle,
+                   bool dropdown, bool bend) {
+    // Reset arrays
+    comps.nodes.clear();
+    comps.beams.clear();
+    // Reset calculated dimensions
+    totalLength = 0;
+    longestBeam = 0;
+    // Set remaining parameters
+    this->height = height;
+    this->length = length;
+    numberOfSegments = numSegs;
+    switch (supStyle) {
+        case 1:
+            this->supStyle = Style::TRUSS;
+            break;
+        case 2:
+            this->supStyle = Style::SET_BACK_TRUSS;
+            break;
+        default:
+            this->supStyle = Style::NONE;
+            std::cout << 'No support style chosen';
+    }
+    this->dropdown = dropdown;
+    this->bend = bend;
 }
 
+
+void Jib::createJib(std::vector<std::vector<double>> nodes, std::vector<std::vector<int>> beams,
+                   double towerHeight, double towerWidth) {
+    comps.nodes = nodes;
+    comps.beams = beams;
+    startHeight = towerHeight;
+    this->towerWidth = towerWidth;
+
+    createSegments();
+    createBeams();
+}
 
 void Jib::createSegments() {
     for (int i = 0; i < numberOfSegments; i++) {
@@ -87,15 +128,15 @@ void Jib::createSegments() {
         }
         // adds top nodes
         if (i < numberOfSegments) { //supType 1 -> truss
-            comps.nodes.push_back({supportType == 1 ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
-                                length / 2, botHeight + topHeight});
+            comps.nodes.push_back({supStyle == Style::TRUSS ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
+                                   length / 2, botHeight + topHeight});
         }
     }
 }
 
-void Jib::createBeams(double valToAdd) {
+void Jib::createBeams() {
     for (int i = 0; i < numberOfSegments; i++) {
-        valToAdd = 3 * i + initBeam;
+        double valToAdd = 3 * i + initBeam;
         createHorizontalBeams(i, valToAdd);
         createDiagonalBeams(valToAdd);
     }
