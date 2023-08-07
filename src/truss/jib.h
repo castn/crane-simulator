@@ -3,7 +3,7 @@
 #include <vector>
 
 
-enum class Style {
+enum class JibStyle {
     NONE = 0,
     TRUSS = 1,
     SET_BACK_TRUSS = 2
@@ -40,7 +40,7 @@ private:
     double numberOfSegments = 0;
     double totalLength = 0;
     double longestBeam = 0;
-    Style supStyle = Style::NONE;
+    JibStyle supStyle = JibStyle::NONE;
     bool dropdown = false;
     bool bend = false;
     double startHeight = 0;

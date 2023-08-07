@@ -11,12 +11,6 @@ public:
 };
 Comps comps;
 
-enum class Style {
-    NONE = 0,
-    TRUSS = 1,
-    SET_BACK_TRUSS = 2
-};
-
 
 double Jib::getJibLength() {
     return length;
@@ -76,14 +70,14 @@ void Jib::setDimensions(double length, double height, int numSegs, int supStyle,
     numberOfSegments = numSegs;
     switch (supStyle) {
         case 1:
-            this->supStyle = Style::TRUSS;
+            this->supStyle = JibStyle::TRUSS;
             break;
         case 2:
-            this->supStyle = Style::SET_BACK_TRUSS;
+            this->supStyle = JibStyle::SET_BACK_TRUSS;
             break;
         default:
-            this->supStyle = Style::NONE;
-            std::cout << 'No support style chosen';
+            this->supStyle = JibStyle::NONE;
+            std::cout << "No support style chosen";
     }
     this->dropdown = dropdown;
     this->bend = bend;
@@ -128,7 +122,7 @@ void Jib::createSegments() {
         }
         // adds top nodes
         if (i < numberOfSegments) { //supType 1 -> truss
-            comps.nodes.push_back({supStyle == Style::TRUSS ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
+            comps.nodes.push_back({supStyle == JibStyle::TRUSS ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
                                    length / 2, botHeight + topHeight});
         }
     }

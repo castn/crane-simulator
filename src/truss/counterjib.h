@@ -3,7 +3,7 @@
 #include <vector>
 
 
-enum class Style {
+enum class CounterjibStyle {
     NONE = 0,
     TRUSS = 1,
     TOWER = 2
@@ -44,7 +44,7 @@ private:
     double numberOfSegments = 0;
     double totalLength = 0;
     double longestBeam = 0;
-    Style supType = Style::NONE;
+    CounterjibStyle supType = CounterjibStyle::NONE;
     int endCJ = 0;
 
     double startHeight = 0;

@@ -11,12 +11,6 @@ public:
 };
 Comps comps;
 
-enum class Style {
-    NONE = 0,
-    TRUSS = 1,
-    TOWER = 2
-};
-
 
 double Counterjib::getCounterjibLength() {
     return length;
@@ -78,14 +72,14 @@ void Counterjib::setDimensions(double length, double height, int numSegs, int su
     numberOfSegments = numSegs;
     switch (supStyle) {
         case 1:
-            this->supType = Style::TRUSS;
+            this->supType = CounterjibStyle::TRUSS;
             break;
         case 2:
-            this->supType = Style::TOWER;
+            this->supType = CounterjibStyle::TOWER;
             break;
         default:
-            this->supType = Style::NONE;
-            std::cout << 'No support style chosen';
+            this->supType = CounterjibStyle::NONE;
+            std::cout << "No support style chosen";
     }
 }
 
@@ -151,12 +145,12 @@ void Counterjib::createDiagonalBeams(int seg, int startCJ, double valToAdd) {
 }
 
 void Counterjib::createSupport() {
-    if (supType == Style::TRUSS) { //Truss
+    if (supType == CounterjibStyle::TRUSS) { //Truss
         createTrussSupport();
-    } else if (supType == Style::TOWER) { //Tower
+    } else if (supType == CounterjibStyle::TOWER) { //Tower
         createTowerSupport();
     } else {
-        std::cout << 'No support style chosen';
+        std::cout << "No support style chosen";
     }
 }
 

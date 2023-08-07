@@ -13,13 +13,6 @@ public:
 };
 Comps comps;
 
-enum class Style {
-    NONE = 0,
-    CROSS = 1,
-    ZIGZAG = 2,
-    DIAGONAL = 3
-};
-
 
 double Tower::getTowerHeight() {
     return height;
@@ -78,17 +71,17 @@ void Tower::setDimensions(double height, double width, int numSegs, int supStyle
     numberOfSegments = numSegs;
     switch (supStyle) {
         case 1:
-            this->supStyle = Style::CROSS;
+            this->supStyle = TowerStyle::CROSS;
             break;
         case 2:
-            this->supStyle = Style::ZIGZAG;
+            this->supStyle = TowerStyle::ZIGZAG;
             break;
         case 3:
-            this->supStyle = Style::DIAGONAL;
+            this->supStyle = TowerStyle::DIAGONAL;
             break;
         default:
-            this->supStyle = Style::NONE;
-            std::cout << 'No support style chosen';
+            this->supStyle = TowerStyle::NONE;
+            std::cout << "No support style chosen";
     }
 }
 
@@ -149,13 +142,13 @@ void Tower::createVerticalBeams(double valToAdd) {
 }
 
 void Tower::createDiagonalBeams(double valToAdd) {
-    if (supStyle == Style::DIAGONAL) { //style.DIAGONAL/3
+    if (supStyle == TowerStyle::DIAGONAL) { //style.DIAGONAL/3
         createParallelFaceBeamsLR(valToAdd);
     }
-    else if (supStyle == Style::CROSS) { //style.CROSS/1
+    else if (supStyle == TowerStyle::CROSS) { //style.CROSS/1
         createCrossFaceBeam(valToAdd);
     }
-    else if (supStyle == Style::ZIGZAG) { //style.ZIGZAG/2
+    else if (supStyle == TowerStyle::ZIGZAG) { //style.ZIGZAG/2
         createZigzagFaceBeams(valToAdd);
     }
 }

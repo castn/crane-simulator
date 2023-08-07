@@ -3,7 +3,7 @@
 #include <vector>
 
 
-enum class Style {
+enum class TowerStyle {
     NONE = 0,
     CROSS = 1,
     ZIGZAG = 2,
@@ -45,7 +45,7 @@ private:
     double numberOfSegments = 0;
     double totalLength = 0;
     double longestBeam = 0;
-    Style supStyle = Style::NONE;
+    TowerStyle supStyle = TowerStyle::NONE;
 };
 
 
