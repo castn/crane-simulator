@@ -27,14 +27,8 @@ public:
                        bool dropdown, bool bend);
     void createJib(std::vector<std::vector<double>> nodes, std::vector<std::vector<int>> beams,
                    double towerHeight, double towerWidth);
-    // Create nodes
-    void createSegments();
-    // Create beams
-    void createBeams();
-    void createHorizontalBeams(int seg, double valToAdd);
-    void createDiagonalBeams(double valToAdd);
-    void appendBeam(int startNode, int endNode);
 private:
+    // Jib dimensions
     double length = 0;
     double height = 0;
     double numberOfSegments = 0;
@@ -43,10 +37,19 @@ private:
     JibStyle supStyle = JibStyle::NONE;
     bool dropdown = false;
     bool bend = false;
-    double startHeight = 0;
-    double towerWidth = 0;
     int initBeam = 0;
     int endBase = 0;
+    // Tower dimensions
+    double startHeight = 0;
+    double towerWidth = 0;
+
+    // Create nodes
+    void createSegments();
+    // Create beams
+    void createBeams();
+    void createHorizontalBeams(int seg, double valToAdd);
+    void createDiagonalBeams(double valToAdd);
+    void appendBeam(int startNode, int endNode);
 };
 
 #endif //MAINWINDOW_JIB_H

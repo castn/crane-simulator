@@ -26,6 +26,15 @@ public:
     void setTowerSegments(double numberOfSegments);
     void setDimensions(double height, double width, int numSegs, int supStyle);
     void createTower(bool hasHorizontal, bool isHollow);
+private:
+    // Tower dimensions
+    double height = 0;
+    double width = 0;
+    double numberOfSegments = 0;
+    double totalLength = 0;
+    double longestBeam = 0;
+    TowerStyle supStyle = TowerStyle::NONE;
+
     // Creates nodes
     void createNodesPerSegment(double elevation);
     // Creates beams
@@ -39,13 +48,6 @@ public:
     void createParallelFaceBeamsLR(double valToAdd);
     void createParallelFaceBeamsRL(double valToAdd);
     void appendBeam(int startNode, int endNode);
-private:
-    double height = 0;
-    double width = 0;
-    double numberOfSegments = 0;
-    double totalLength = 0;
-    double longestBeam = 0;
-    TowerStyle supStyle = TowerStyle::NONE;
 };
 
 
