@@ -1,0 +1,66 @@
+@startuml
+class Crane {
+    #tower: Tower
+    #jib: Jib
+    #counterJib: CounterJib
+    +void createCrane()
+}
+
+enum TowerStyle {
+    None
+    Cross
+    ZigZag
+    Diagonal
+}
+
+class Beam {
+    -start: 3dVector
+    -end: 3dVector
+    -beam: List<3dVector>
+    +Beam()
+    +3dVector getStart()
+    +3dVector getEnd()
+    +List<3dVector> getBeam()
+    +void setStart()
+    +void setEnd()
+}
+
+abstract GeneralSegment {
+    -beams: List<Beams>
+    -longestBeam: Beam
+    -totalLength: double
+    +Segment()
+    +List<Beams> getBeams()
+    +Beam getLongestBeam()
+    +double getLength()
+}
+
+class SquareSegment {
+    -height: double
+    -width: double
+    +SquareSegment()
+    -void createVerticalBeams()
+    -void createHorizontalBeams()
+    -void createFace()
+}
+class JibSegment {
+
+}
+
+class Tower {
+    #height: double
+    #width: double
+    #numberOfSegments: double
+    #totalLength: double
+    #longestBeam: double
+    #supportStyle: TowerStyle
+    +Tower()
+    +createTower()
+}
+
+GeneralSegment <|- SquareSegment
+GeneralSegment <|- JibSegment
+
+SquareSegment <|- Tower
+
+@enduml
