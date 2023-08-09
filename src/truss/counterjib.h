@@ -12,20 +12,20 @@ enum class CounterjibStyle {
 class Counterjib {
 public:
     // Dimension getters and setters
-    double getCounterjibLength();
-    double getCounterjibHeight();
-    double getCounterjibSegments();
-    double getCounterjibTotalBeamLength();
-    double getCounterjibLongestBeam();
-    std::vector<std::vector<double>> getCounterjibNodes();
-    std::vector<Beam> getCounterjibBeams();
+    double getLength();
+    double getHeight();
+    double getSegments();
+    double getTotalBeamLength();
+    double getLongestBeam();
+    std::vector<std::vector<double>> getNodes();
+    std::vector<Beam> getBeams();
     int getEndBase();
     int getEndCJ();
-    void setCounterjibLength(double length);
-    void setCounterjibHeight(double height);
-    void setCounterjibSegments(double numberOfSegments);
+    void setLength(double length);
+    void setHeight(double height);
+    void setSegments(double numberOfSegments);
     void setDimensions(double length, double height, int numSegs, int supStyle);
-    void createCounterjib(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
+    void create(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
                           double towerHeight, double towerWidth, int towerNumNodes,
                           int jibSegs, int jibSupport, double jibHeight);
 private:
