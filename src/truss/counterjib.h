@@ -18,14 +18,14 @@ public:
     double getCounterjibTotalBeamLength();
     double getCounterjibLongestBeam();
     std::vector<std::vector<double>> getCounterjibNodes();
-    std::vector<std::vector<int>> getCounterjibBeams();
+    std::vector<Beam> getCounterjibBeams();
     int getEndBase();
     int getEndCJ();
     void setCounterjibLength(double length);
     void setCounterjibHeight(double height);
     void setCounterjibSegments(double numberOfSegments);
     void setDimensions(double length, double height, int numSegs, int supStyle);
-    void createCounterjib(std::vector<std::vector<double>> nodes, std::vector<std::vector<int>> beams,
+    void createCounterjib(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
                           double towerHeight, double towerWidth, int towerNumNodes,
                           int jibSegs, int jibSupport, double jibHeight);
 private:

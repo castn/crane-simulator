@@ -1,17 +1,13 @@
 #include "tower.h"
+#include "comps.h"
+#include "beam.h"
 #include <iostream>
 #include <vector>
 #include <cmath>
-// #include <Eigen/Dense>
-// #include <xtensor/xarray.hpp>
 
-class Comps {
-public:
-    std::vector<std::vector<double>> nodes;
-    // xt::xarray<double> nodes;
-    std::vector<std::vector<int>> beams;
-};
+
 Comps comps;
+Beam beam;
 
 
 double Tower::getTowerHeight() {
@@ -42,7 +38,7 @@ std::vector<std::vector<double>> Tower::getTowerNodes() {
     return comps.nodes;
 }
 
-std::vector<std::vector<int>> Tower::getTowerBeams() {
+std::vector<Beam> Tower::getTowerBeams() {
     return comps.beams;
 }
 
@@ -195,15 +191,16 @@ void Tower::createParallelFaceBeamsRL(double valToAdd) {
 
 void Tower::appendBeam(int startNode, int endNode) {
     // // Create a beam between the two given nodes
-    comps.beams.push_back({startNode, endNode});
+    Beam tempBeam = Beam(comps.nodes[startNode], comps.nodes[endNode]);
+    comps.beams.push_back(tempBeam);
 
     // Calculate the length of the beam
-    auto startVector = comps.nodes[startNode];
-    auto endVector = comps.nodes[endNode];
-    std::vector<double> lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
-    double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
+    // auto startVector = comps.nodes[startNode];
+    // auto endVector = comps.nodes[endNode];
+    // std::vector<double> lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
+    // double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
 
     // Update the longest beam and total length
-    longestBeam = std::max(length, longestBeam);
-    totalLength += length;
+    longestBeam = std::max(tempBeam.getLength(), longestBeam);
+    totalLength += tempBeam.getLength();
 }

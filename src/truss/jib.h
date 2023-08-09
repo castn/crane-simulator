@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_JIB_H
 #define MAINWINDOW_JIB_H
+
 #include <vector>
+#include "beam.h"
 
 
 enum class JibStyle {
@@ -18,14 +20,14 @@ public:
     double getJibTotalBeamLength();
     double getJibLongestBeam();
     std::vector<std::vector<double>> getJibNodes();
-    std::vector<std::vector<int>> getJibBeams();
+    std::vector<Beam> getJibBeams();
     int getEndBase();
     void setJibLength(double length);
     void setJibHeight(double height);
     void setJibSegments(double numberOfSegments);
     void setDimensions(double length, double height, int numSegs, int supStyle,
                        bool dropdown, bool bend);
-    void createJib(std::vector<std::vector<double>> nodes, std::vector<std::vector<int>> beams,
+    void createJib(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
                    double towerHeight, double towerWidth);
 private:
     // Jib dimensions

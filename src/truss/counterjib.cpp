@@ -1,14 +1,11 @@
 #include "counterjib.h"
+#include "comps.h"
+#include "beam.h"
 #include <iostream>
 #include <vector>
 #include <cmath>
 
 
-class Comps {
-public:
-    std::vector<std::vector<double>> nodes;
-    std::vector<std::vector<int>> beams;
-};
 Comps comps;
 
 
@@ -36,7 +33,7 @@ std::vector<std::vector<double>> Counterjib::getCounterjibNodes() {
     return comps.nodes;
 }
 
-std::vector<std::vector<int>> Counterjib::getCounterjibBeams() {
+std::vector<Beam> Counterjib::getCounterjibBeams() {
     return comps.beams;
 }
 
@@ -84,7 +81,7 @@ void Counterjib::setDimensions(double length, double height, int numSegs, int su
 }
 
 
-void Counterjib::createCounterjib(std::vector<std::vector<double>> nodes, std::vector<std::vector<int>> beams,
+void Counterjib::createCounterjib(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
                                   double towerHeight, double towerWidth, int towerNumNodes,
                                   int jibSegs, int jibSupport, double jibHeight) {
     comps.nodes = nodes;
@@ -282,19 +279,18 @@ void Counterjib::createTowerSupport() {
 
 void Counterjib::appendBeam(int startNode, int endNode, bool lenCounts) {
     // // Create a beam between the two given nodes
-    comps.beams.push_back({startNode, endNode});
+    Beam tempBeam = Beam(comps.nodes[startNode], comps.nodes[endNode]);
+    comps.beams.push_back(tempBeam);
 
     // Calculate the length of the beam
-    auto startVector = comps.nodes[startNode];
-    auto endVector = comps.nodes[endNode];
-    std::vector<double> lenVector = {endVector[0] - startVector[0],
-                                     endVector[1] - startVector[1],
-                                     endVector[2] - startVector[2]};
-    double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
+    // auto startVector = comps.nodes[startNode];
+    // auto endVector = comps.nodes[endNode];
+    // std::vector<double> lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
+    // double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
 
     // Update the longest beam and total length
     if (lenCounts) {
-        longestBeam = std::max(length, longestBeam);
+        longestBeam = std::max(tempBeam.getLength(), longestBeam);
     }
-    totalLength += length;
+    totalLength += tempBeam.getLength();
 }

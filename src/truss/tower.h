@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_TOWER_H
 #define MAINWINDOW_TOWER_H
+
 #include <vector>
+#include "beam.h"
 
 
 enum class TowerStyle {
@@ -20,7 +22,7 @@ public:
     double getTowerLongestBeam();
     double getTowerTotalHeight();
     std::vector<std::vector<double>> getTowerNodes();
-    std::vector<std::vector<int>> getTowerBeams();
+    std::vector<Beam> getTowerBeams();
     void setTowerHeight(double height);
     void setTowerWidth(double width);
     void setTowerSegments(double numberOfSegments);
