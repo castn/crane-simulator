@@ -9,47 +9,58 @@
 Comps comps;
 
 
-double Jib::getJibLength() {
+double Jib::getLength() {
     return length;
 }
 
-double Jib::getJibHeight() {
+double Jib::getHeight() {
     return height;
 }
 
-double Jib::getJibSegments() {
+double Jib::getSegments() {
     return numberOfSegments;
 }
 
-double Jib::getJibTotalBeamLength() {
+double Jib::getTotalBeamLength() {
     return totalLength;
 }
 
-double Jib::getJibLongestBeam() {
+double Jib::getLongestBeam() {
     return longestBeam;
 }
 
-std::vector<std::vector<double>> Jib::getJibNodes() {
+std::vector<std::vector<double>> Jib::getNodes() {
     return comps.nodes;
 }
 
-std::vector<Beam> Jib::getJibBeams() {
+std::vector<Beam> Jib::getBeams() {
     return comps.beams;
+}
+
+int Jib::getSupportStyle() {
+    switch (supStyle) {
+        case JibStyle::TRUSS:
+            return 1;
+        case JibStyle::SET_BACK_TRUSS:
+            return 2;
+        default:
+            return 0;
+    }
 }
 
 int Jib::getEndBase() {
     return comps.nodes.size();
 }
 
-void Jib::setJibLength(double length) {
+void Jib::setLength(double length) {
     this->length = length;
 }
 
-void Jib::setJibHeight(double height) {
+void Jib::setHeight(double height) {
     this->height = height;
 }
 
-void Jib::setJibSegments(double numberOfSegments) {
+void Jib::setSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
@@ -81,7 +92,7 @@ void Jib::setDimensions(double length, double height, int numSegs, int supStyle,
 }
 
 
-void Jib::createJib(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
+void Jib::create(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
                    double towerHeight, double towerWidth) {
     comps.nodes = nodes;
     comps.beams = beams;

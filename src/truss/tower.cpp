@@ -10,47 +10,47 @@ Comps comps;
 Beam beam;
 
 
-double Tower::getTowerHeight() {
+double Tower::getHeight() {
     return height;
 }
 
-double Tower::getTowerWidth() {
+double Tower::getWidth() {
     return width;
 }
 
-double Tower::getTowerSegments() {
+double Tower::getSegments() {
     return numberOfSegments;
 }
 
-double Tower::getTowerTotalBeamLength() {
+double Tower::getTotalBeamLength() {
     return totalLength;
 }
 
-double Tower::getTowerLongestBeam() {
+double Tower::getLongestBeam() {
     return longestBeam;
 }
 
-double Tower::getTowerTotalHeight() {
+double Tower::getTotalHeight() {
     return height * numberOfSegments;
 }
 
-std::vector<std::vector<double>> Tower::getTowerNodes() {
+std::vector<std::vector<double>> Tower::getNodes() {
     return comps.nodes;
 }
 
-std::vector<Beam> Tower::getTowerBeams() {
+std::vector<Beam> Tower::getBeams() {
     return comps.beams;
 }
 
-void Tower::setTowerHeight(double height) {
+void Tower::setHeight(double height) {
     this->height = height;
 }
 
-void Tower::setTowerWidth(double width) {
+void Tower::setWidth(double width) {
     this->width = width;
 }
 
-void Tower::setTowerSegments(double numberOfSegments) {
+void Tower::setSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
@@ -82,7 +82,7 @@ void Tower::setDimensions(double height, double width, int numSegs, int supStyle
 }
 
 
-void Tower::createTower(bool hasHorizontal, bool isHollow) {
+void Tower::create(bool hasHorizontal, bool isHollow) {
     createSegments(hasHorizontal, isHollow);
 }
 

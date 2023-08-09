@@ -15,19 +15,19 @@ enum class TowerStyle {
 class Tower {
 public:
     // Dimension getters and setters
-    double getTowerHeight();
-    double getTowerWidth();
-    double getTowerSegments();
-    double getTowerTotalBeamLength();
-    double getTowerLongestBeam();
-    double getTowerTotalHeight();
-    std::vector<std::vector<double>> getTowerNodes();
-    std::vector<Beam> getTowerBeams();
-    void setTowerHeight(double height);
-    void setTowerWidth(double width);
-    void setTowerSegments(double numberOfSegments);
+    double getHeight();
+    double getWidth();
+    double getSegments();
+    double getTotalBeamLength();
+    double getLongestBeam();
+    double getTotalHeight();
+    std::vector<std::vector<double>> getNodes();
+    std::vector<Beam> getBeams();
+    void setHeight(double height);
+    void setWidth(double width);
+    void setSegments(double numberOfSegments);
     void setDimensions(double height, double width, int numSegs, int supStyle);
-    void createTower(bool hasHorizontal, bool isHollow);
+    void create(bool hasHorizontal, bool isHollow);
 private:
     // Tower dimensions
     double height = 0;

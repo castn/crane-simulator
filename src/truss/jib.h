@@ -14,20 +14,21 @@ enum class JibStyle {
 class Jib {
 public:
     // Dimension getters and setters
-    double getJibLength();
-    double getJibHeight();
-    double getJibSegments();
-    double getJibTotalBeamLength();
-    double getJibLongestBeam();
-    std::vector<std::vector<double>> getJibNodes();
-    std::vector<Beam> getJibBeams();
+    double getLength();
+    double getHeight();
+    double getSegments();
+    double getTotalBeamLength();
+    double getLongestBeam();
+    std::vector<std::vector<double>> getNodes();
+    std::vector<Beam> getBeams();
+    int getSupportStyle();
     int getEndBase();
-    void setJibLength(double length);
-    void setJibHeight(double height);
-    void setJibSegments(double numberOfSegments);
+    void setLength(double length);
+    void setHeight(double height);
+    void setSegments(double numberOfSegments);
     void setDimensions(double length, double height, int numSegs, int supStyle,
                        bool dropdown, bool bend);
-    void createJib(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
+    void create(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
                    double towerHeight, double towerWidth);
 private:
     // Jib dimensions

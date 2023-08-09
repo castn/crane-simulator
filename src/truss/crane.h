@@ -37,7 +37,7 @@ private:
     std::vector<std::vector<double>> getCounterjibNodes();
     std::vector<Beam> getCounterjibBeams();
     double getCounterjibLength();
-    void setCounterjibDimensions();
+    void setCounterjibDimensions(double cjLength, double cjHeight, int cjNumSegs, int cjNupStyle);
 };
 
 

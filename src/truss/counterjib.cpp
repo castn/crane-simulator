@@ -9,31 +9,31 @@
 Comps comps;
 
 
-double Counterjib::getCounterjibLength() {
+double Counterjib::getLength() {
     return length;
 }
 
-double Counterjib::getCounterjibHeight() {
+double Counterjib::getHeight() {
     return height;
 }
 
-double Counterjib::getCounterjibSegments() {
+double Counterjib::getSegments() {
     return numberOfSegments;
 }
 
-double Counterjib::getCounterjibTotalBeamLength() {
+double Counterjib::getTotalBeamLength() {
     return totalLength;
 }
 
-double Counterjib::getCounterjibLongestBeam() {
+double Counterjib::getLongestBeam() {
     return longestBeam;
 }
 
-std::vector<std::vector<double>> Counterjib::getCounterjibNodes() {
+std::vector<std::vector<double>> Counterjib::getNodes() {
     return comps.nodes;
 }
 
-std::vector<Beam> Counterjib::getCounterjibBeams() {
+std::vector<Beam> Counterjib::getBeams() {
     return comps.beams;
 }
 
@@ -45,15 +45,15 @@ int Counterjib::getEndCJ() {
     return endCJ;
 }
 
-void Counterjib::setCounterjibLength(double length) {
+void Counterjib::setLength(double length) {
     this->length = length;
 }
 
-void Counterjib::setCounterjibHeight(double height) {
+void Counterjib::setHeight(double height) {
     this->height = height;
 }
 
-void Counterjib::setCounterjibSegments(double numberOfSegments) {
+void Counterjib::setSegments(double numberOfSegments) {
     this->numberOfSegments = numberOfSegments;
 }
 
@@ -81,9 +81,9 @@ void Counterjib::setDimensions(double length, double height, int numSegs, int su
 }
 
 
-void Counterjib::createCounterjib(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
-                                  double towerHeight, double towerWidth, int towerNumNodes,
-                                  int jibSegs, int jibSupport, double jibHeight) {
+void Counterjib::create(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
+                        double towerHeight, double towerWidth, int towerNumNodes,
+                        int jibSegs, int jibSupport, double jibHeight) {
     comps.nodes = nodes;
     comps.beams = beams;
 
