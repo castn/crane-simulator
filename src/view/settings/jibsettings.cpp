@@ -6,7 +6,7 @@
 #include "jibsettings.h"
 #include "src/widget.h"
 
-JibSettings::JibSettings(QWidget *parent) {
+JibSettings::JibSettings(QWidget *parent) : QWidget(parent) {
     jibSettings = new QGroupBox(this);
     jibSettings->setTitle("Jib");
 
@@ -34,11 +34,11 @@ QLayout *JibSettings::createSettings() {
 
     heightDegrease = new QCheckBox(this);
     heightDegrease->setText("Realistic decrease in height of support");
-    layout->addWidget(heightDegrease, 4,0);
+    layout->addWidget(heightDegrease, 4, 0);
 
     upwardBend = new QCheckBox(this);
     upwardBend->setText("Realistic upward bend");
-    layout->addWidget(upwardBend,5,0);
+    layout->addWidget(upwardBend, 5, 0);
 
 
     return layout;

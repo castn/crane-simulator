@@ -3,6 +3,7 @@
 //
 
 #include <QLabel>
+#include <QSplitter>
 
 #include "CraneTab.h"
 #include "src/widget.h"
@@ -10,12 +11,15 @@
 #include "RightSide.h"
 
 CraneTab::CraneTab(QWidget *parent) : QWidget(parent) {
-    tabLayout = new QGridLayout(this);
+    tabLayout = new QVBoxLayout(this);
+    auto *splitter = new QSplitter(this);
 
     auto *leftSide = new LeftSide(this);
-    tabLayout->addWidget(leftSide, 0, 0);
+    splitter->addWidget(leftSide);
 
     auto *rightSide = new RightSide(this);
-    tabLayout->addWidget(rightSide, 0, 1);
+    splitter->addWidget(rightSide);
+
+    tabLayout->addWidget(splitter);
 
 }

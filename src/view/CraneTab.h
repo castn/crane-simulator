@@ -13,7 +13,7 @@ class CraneTab : public QWidget {
 Q_OBJECT
 public:
     explicit CraneTab(QWidget *parent);
-    QGridLayout *tabLayout = nullptr;
+    QVBoxLayout *tabLayout = nullptr;
 };
 
 
