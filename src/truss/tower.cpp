@@ -1,5 +1,6 @@
 #include "tower.h"
 #include "comps.h"
+#include "node.h"
 #include "beam.h"
 #include <iostream>
 #include <vector>
@@ -7,7 +8,6 @@
 
 
 Comps comps;
-Beam beam;
 
 
 double Tower::getHeight() {
@@ -34,7 +34,7 @@ double Tower::getTotalHeight() {
     return height * numberOfSegments;
 }
 
-std::vector<std::vector<double>> Tower::getNodes() {
+std::vector<Node> Tower::getNodes() {
     return comps.nodes;
 }
 
@@ -100,10 +100,10 @@ void Tower::createSegments(bool hasHorizontal, bool isHollow) {
 
 void Tower::createNodesPerSegment(double elevation) {
     // Create all nodes so the beams of a segment can connect to them
-    comps.nodes.push_back({0, 0, elevation});
-    comps.nodes.push_back({0, width, elevation});
-    comps.nodes.push_back({width, 0, elevation});
-    comps.nodes.push_back({width, width, elevation});
+    comps.nodes.push_back(Node(0, 0, elevation));
+    comps.nodes.push_back(Node(0, width, elevation));
+    comps.nodes.push_back(Node(width, 0, elevation));
+    comps.nodes.push_back(Node(width, width, elevation));
 }
 
 void Tower::createBeamsPerSegment(int seg, bool hasHorizontal, bool isHollow) {

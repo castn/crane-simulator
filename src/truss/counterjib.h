@@ -17,7 +17,7 @@ public:
     double getSegments();
     double getTotalBeamLength();
     double getLongestBeam();
-    std::vector<std::vector<double>> getNodes();
+    std::vector<Node> getNodes();
     std::vector<Beam> getBeams();
     int getEndBase();
     int getEndCJ();
@@ -25,9 +25,9 @@ public:
     void setHeight(double height);
     void setSegments(double numberOfSegments);
     void setDimensions(double length, double height, int numSegs, int supStyle);
-    void create(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
-                          double towerHeight, double towerWidth, int towerNumNodes,
-                          int jibSegs, int jibSupport, double jibHeight);
+    void create(std::vector<Node> nodes, std::vector<Beam> beams,
+                double towerHeight, double towerWidth, int towerNumNodes,
+                int jibSegs, int jibSupport, double jibHeight);
 private:
     // Counterjib dimensions
     double length = 0;

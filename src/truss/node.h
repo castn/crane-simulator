@@ -3,10 +3,18 @@
 
 class Node {
 public:
-    Node(double x, double y, double z);
+    Node(double x, double y, double z) {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
     double getX();
     double getY();
     double getZ();
+    double norm();
+    Node operator - (const Node& node) {
+        return Node(this->x - node.x, this->y - node.y, this->z - node.z);
+    }
 private:
     double x;
     double y;

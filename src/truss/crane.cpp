@@ -3,6 +3,7 @@
 //
 
 #include "crane.h"
+#include "node.h"
 #include "beam.h"
 
 Crane::Crane() {
@@ -15,7 +16,7 @@ Crane::Crane() {
 void Crane::createTower() {
     tower->create(true, true);
 }
-std::vector<std::vector<double>> Crane::getTowerNodes() {
+std::vector<Node> Crane::getTowerNodes() {
     return tower->getNodes();
 }
 std::vector<Beam> Crane::getTowerBeams() {
@@ -32,7 +33,7 @@ void Crane::setTowerDimensions(double towerHeight, double towerWidth, int towerN
 void Crane::createJib() {
     jib->create(getTowerNodes(), getTowerBeams(), tower->getHeight(), tower->getWidth());
 }
-std::vector<std::vector<double>> Crane::getJibNodes() {
+std::vector<Node> Crane::getJibNodes() {
     return jib->getNodes();
 }
 std::vector<Beam> Crane::getJibBeams() {
@@ -50,7 +51,7 @@ void Crane::createCounterjib() {
     counterjib->create(getJibNodes(), getJibBeams(), tower->getHeight(), tower->getWidth(),
                                  getTowerNodes().size(), jib->getSegments(), jib->getSupportStyle(), jib->getHeight());
 }
-std::vector<std::vector<double>> Crane::getCounterjibNodes() {
+std::vector<Node> Crane::getCounterjibNodes() {
     return counterjib->getNodes();
 }
 std::vector<Beam> Crane::getCounterjibBeams() {

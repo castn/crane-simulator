@@ -19,7 +19,7 @@ public:
     double getSegments();
     double getTotalBeamLength();
     double getLongestBeam();
-    std::vector<std::vector<double>> getNodes();
+    std::vector<Node> getNodes();
     std::vector<Beam> getBeams();
     int getSupportStyle();
     int getEndBase();
@@ -28,7 +28,7 @@ public:
     void setSegments(double numberOfSegments);
     void setDimensions(double length, double height, int numSegs, int supStyle,
                        bool dropdown, bool bend);
-    void create(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
+    void create(std::vector<Node> nodes, std::vector<Beam> beams,
                    double towerHeight, double towerWidth);
 private:
     // Jib dimensions

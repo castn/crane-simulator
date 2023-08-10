@@ -1,16 +1,17 @@
 #ifndef MAINWINDOW_BEAM_H
 #define MAINWINDOW_BEAM_H
 
+#include "node.h"
 #include <vector>
 
 
 class Beam {
 public:
-    Beam(std::vector<double> start, std::vector<double> end);
+    Beam(Node start, Node end);
     double getLength();
 private:
-    std::vector<double> startNode;
-    std::vector<double> endNode;
+    Node startNode;
+    Node endNode;
     double length;
 };
 

@@ -29,7 +29,7 @@ double Jib::getLongestBeam() {
     return longestBeam;
 }
 
-std::vector<std::vector<double>> Jib::getNodes() {
+std::vector<Node> Jib::getNodes() {
     return comps.nodes;
 }
 
@@ -65,7 +65,7 @@ void Jib::setSegments(double numberOfSegments) {
 }
 
 void Jib::setDimensions(double length, double height, int numSegs, int supStyle,
-                   bool dropdown, bool bend) {
+                        bool dropdown, bool bend) {
     // Reset arrays
     comps.nodes.clear();
     comps.beams.clear();
@@ -92,7 +92,7 @@ void Jib::setDimensions(double length, double height, int numSegs, int supStyle,
 }
 
 
-void Jib::create(std::vector<std::vector<double>> nodes, std::vector<Beam> beams,
+void Jib::create(std::vector<Node> nodes, std::vector<Beam> beams,
                    double towerHeight, double towerWidth) {
     comps.nodes = nodes;
     comps.beams = beams;
@@ -111,8 +111,8 @@ void Jib::createSegments() {
         double botHeight = bend ? (startHeight + bendGrad) : startHeight;
         // skips the first run-through if nodes already exist
         if (i != 0) {
-            comps.nodes.push_back({towerWidth + length * i, 0, botHeight});
-            comps.nodes.push_back({towerWidth + length * i, towerWidth, botHeight});
+            comps.nodes.push_back(Node(towerWidth + length * i, 0, botHeight));
+            comps.nodes.push_back(Node(towerWidth + length * i, towerWidth, botHeight));
         }
         double topHeight = 0;
         if (dropdown) {
@@ -130,8 +130,8 @@ void Jib::createSegments() {
         }
         // adds top nodes
         if (i < numberOfSegments) { //supType 1 -> truss
-            comps.nodes.push_back({supStyle == JibStyle::TRUSS ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
-                                   length / 2, botHeight + topHeight});
+            comps.nodes.push_back(Node(supStyle == JibStyle::TRUSS ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
+                                  length / 2, botHeight + topHeight));
         }
     }
 }
@@ -175,7 +175,7 @@ void Jib::appendBeam(int startNode, int endNode) {
     // Calculate the length of the beam
     // auto startVector = comps.nodes[startNode];
     // auto endVector = comps.nodes[endNode];
-    // std::vector<double> lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
+    // Node lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
     // double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
 
     // Update the longest beam and total length
