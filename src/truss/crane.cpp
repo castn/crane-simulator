@@ -6,13 +6,22 @@
 #include "node.h"
 #include "beam.h"
 
-Crane::Crane() {
-    tower = new Tower();
-    jib = new Jib();
-    counterjib = new Counterjib();
+Crane::Crane(double towerHeight, double towerWidth, int towerNumSegs, int towerSupStyle,
+             double jibLength, double jibHeight, int jibNumSegs, int jibSupStyle, bool jibDrop, bool jibBend,
+             double cjLength, double cjHeight, int cjNumSegs, int cjSupStyle) {
+    tower = new Tower(towerHeight, towerWidth, towerNumSegs, towerSupStyle);
+    jib = new Jib(jibLength, jibHeight, jibNumSegs, jibSupStyle, jibDrop, jibBend);
+    counterjib = new Counterjib(cjLength, cjHeight, cjNumSegs, cjSupStyle);
 }
 
 
+void Crane::createCrane() {
+    createTower();
+    createJib();
+    createCounterjib();
+}
+
+// Methods relating to the tower
 void Crane::createTower() {
     tower->create(true, true);
 }
@@ -25,11 +34,12 @@ std::vector<Beam> Crane::getTowerBeams() {
 double Crane::getTowerLength() {
     return tower->getTotalBeamLength();
 }
-void Crane::setTowerDimensions(double towerHeight, double towerWidth, int towerNumSegs,
+void Crane::setTowerDimensions(double towerHeight, double towerWidth, int towerSegs,
                                int towerSupStyle) {
-    tower->setDimensions(towerHeight, towerWidth, towerNumSegs, towerSupStyle);
+    tower->updateDimensions(towerHeight, towerWidth, towerSegs, towerSupStyle);
 }
 
+// Methods relating to the jib
 void Crane::createJib() {
     jib->create(getTowerNodes(), getTowerBeams(), tower->getHeight(), tower->getWidth());
 }
@@ -43,13 +53,14 @@ double Crane::getJibLength() {
     return jib->getTotalBeamLength();
 }
 void Crane::setJibDimensions(double jibLength, double jibHeight, int jibNumSegs, int jibSupStyle,
-                      bool jibDrop, bool jibBend) {
-    jib->setDimensions(jibLength, jibHeight, jibNumSegs, jibSupStyle, jibDrop, jibBend);
+                             bool jibDrop, bool jibBend) {
+    jib->updateDimensions(jibLength, jibHeight, jibNumSegs, jibSupStyle, jibDrop, jibBend);
 }
 
+// Methods relating to the counterjib
 void Crane::createCounterjib() {
     counterjib->create(getJibNodes(), getJibBeams(), tower->getHeight(), tower->getWidth(),
-                                 getTowerNodes().size(), jib->getSegments(), jib->getSupportStyle(), jib->getHeight());
+                       getTowerNodes().size(), jib->getSegments(), jib->getSupportStyle(), jib->getHeight());
 }
 std::vector<Node> Crane::getCounterjibNodes() {
     return counterjib->getNodes();
@@ -61,5 +72,5 @@ double Crane::getCounterjibLength() {
     return counterjib->getTotalBeamLength();
 }
 void Crane::setCounterjibDimensions(double cjLength, double cjHeight, int cjNumSegs, int cjSupStyle) {
-    counterjib->setDimensions(cjLength, cjHeight, cjNumSegs, cjSupStyle);
+    counterjib->updateDimensions(cjLength, cjHeight, cjNumSegs, cjSupStyle);
 }

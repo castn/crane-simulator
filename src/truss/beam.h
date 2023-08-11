@@ -4,7 +4,6 @@
 #include "node.h"
 #include <vector>
 
-
 class Beam {
 public:
     Beam(Node start, Node end);

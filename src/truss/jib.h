@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_JIB_H
 #define MAINWINDOW_JIB_H
 
-#include <vector>
+#include "node.h"
 #include "beam.h"
+#include <vector>
 
 
 enum class JibStyle {
@@ -13,6 +14,7 @@ enum class JibStyle {
 
 class Jib {
 public:
+    Jib(double length, double height, int numSegs, int supStyle, bool dropdown, bool bend);
     // Dimension getters and setters
     double getLength();
     double getHeight();
@@ -25,16 +27,16 @@ public:
     int getEndBase();
     void setLength(double length);
     void setHeight(double height);
-    void setSegments(double numberOfSegments);
-    void setDimensions(double length, double height, int numSegs, int supStyle,
-                       bool dropdown, bool bend);
+    void setSegments(double numSegs);
+    void updateDimensions(double length, double height, int numSegs, int supStyle,
+                          bool dropdown, bool bend);
     void create(std::vector<Node> nodes, std::vector<Beam> beams,
                    double towerHeight, double towerWidth);
 private:
     // Jib dimensions
     double length = 0;
     double height = 0;
-    double numberOfSegments = 0;
+    double numSegs = 0;
     double totalLength = 0;
     double longestBeam = 0;
     JibStyle supStyle = JibStyle::NONE;

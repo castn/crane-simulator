@@ -6,96 +6,18 @@
 #include <cmath>
 
 
-Comps comps;
+Comps jibComps;
 
 
-double Jib::getLength() {
-    return length;
-}
-
-double Jib::getHeight() {
-    return height;
-}
-
-double Jib::getSegments() {
-    return numberOfSegments;
-}
-
-double Jib::getTotalBeamLength() {
-    return totalLength;
-}
-
-double Jib::getLongestBeam() {
-    return longestBeam;
-}
-
-std::vector<Node> Jib::getNodes() {
-    return comps.nodes;
-}
-
-std::vector<Beam> Jib::getBeams() {
-    return comps.beams;
-}
-
-int Jib::getSupportStyle() {
-    switch (supStyle) {
-        case JibStyle::TRUSS:
-            return 1;
-        case JibStyle::SET_BACK_TRUSS:
-            return 2;
-        default:
-            return 0;
-    }
-}
-
-int Jib::getEndBase() {
-    return comps.nodes.size();
-}
-
-void Jib::setLength(double length) {
-    this->length = length;
-}
-
-void Jib::setHeight(double height) {
-    this->height = height;
-}
-
-void Jib::setSegments(double numberOfSegments) {
-    this->numberOfSegments = numberOfSegments;
-}
-
-void Jib::setDimensions(double length, double height, int numSegs, int supStyle,
-                        bool dropdown, bool bend) {
-    // Reset arrays
-    comps.nodes.clear();
-    comps.beams.clear();
-    // Reset calculated dimensions
-    totalLength = 0;
-    longestBeam = 0;
-    // Set remaining parameters
-    this->height = height;
-    this->length = length;
-    numberOfSegments = numSegs;
-    switch (supStyle) {
-        case 1:
-            this->supStyle = JibStyle::TRUSS;
-            break;
-        case 2:
-            this->supStyle = JibStyle::SET_BACK_TRUSS;
-            break;
-        default:
-            this->supStyle = JibStyle::NONE;
-            std::cout << "No support style chosen";
-    }
-    this->dropdown = dropdown;
-    this->bend = bend;
+Jib::Jib(double height, double width, int numSegs, int supStyle, bool dropdown, bool bend) {
+    updateDimensions(height, width, numSegs, supStyle, dropdown, bend);
 }
 
 
 void Jib::create(std::vector<Node> nodes, std::vector<Beam> beams,
                    double towerHeight, double towerWidth) {
-    comps.nodes = nodes;
-    comps.beams = beams;
+    jibComps.nodes = nodes;
+    jibComps.beams = beams;
     startHeight = towerHeight;
     this->towerWidth = towerWidth;
 
@@ -104,24 +26,24 @@ void Jib::create(std::vector<Node> nodes, std::vector<Beam> beams,
 }
 
 void Jib::createSegments() {
-    for (int i = 0; i < numberOfSegments; i++) {
-        double jibLength_m = numberOfSegments * length / 1000;
+    for (int i = 0; i < numSegs; i++) {
+        double jibLength_m = numSegs * length / 1000;
         double lenIn_m = towerWidth / 1000 + length / 1000 * i;
         double bendGrad = 0.01 * pow(30, 1/jibLength_m * lenIn_m) * 1000;
         double botHeight = bend ? (startHeight + bendGrad) : startHeight;
         // skips the first run-through if nodes already exist
         if (i != 0) {
-            comps.nodes.push_back(Node(towerWidth + length * i, 0, botHeight));
-            comps.nodes.push_back(Node(towerWidth + length * i, towerWidth, botHeight));
+            jibComps.nodes.push_back(Node(towerWidth + length * i, 0, botHeight));
+            jibComps.nodes.push_back(Node(towerWidth + length * i, towerWidth, botHeight));
         }
         double topHeight = 0;
         if (dropdown) {
-            if (i <= 3 * numberOfSegments / 7) {
+            if (i <= 3 * numSegs / 7) {
                 topHeight = height;
-            } else if (i >= 5 * numberOfSegments / 7) {
+            } else if (i >= 5 * numSegs / 7) {
                 topHeight = 0.76 * height;
             } else {
-                double count = i - 2 * numberOfSegments / 7;
+                double count = i - 2 * numSegs / 7;
                 topHeight = height - count * (0.24 * 7 * height / (2 * jibLength_m));
                 topHeight = std::max(topHeight, 0.76 * height);
             }
@@ -129,15 +51,15 @@ void Jib::createSegments() {
             topHeight = height;
         }
         // adds top nodes
-        if (i < numberOfSegments) { //supType 1 -> truss
-            comps.nodes.push_back(Node(supStyle == JibStyle::TRUSS ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
+        if (i < numSegs) { //supType 1 -> truss
+            jibComps.nodes.push_back(Node(supStyle == JibStyle::TRUSS ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
                                   length / 2, botHeight + topHeight));
         }
     }
 }
 
 void Jib::createBeams() {
-    for (int i = 0; i < numberOfSegments; i++) {
+    for (int i = 0; i < numSegs; i++) {
         double valToAdd = 3 * i + initBeam;
         createHorizontalBeams(i, valToAdd);
         createDiagonalBeams(valToAdd);
@@ -148,7 +70,7 @@ void Jib::createHorizontalBeams(int seg, double valToAdd) {
     // if (i == 0 and not Dims.IS_CONNECTED) {
     //     appendBeam(0 + valToAdd, 1 + valToAdd);  // first horizontal (0-1)
     // }
-    if (seg < numberOfSegments - 1) {
+    if (seg < numSegs - 1) {
         appendBeam(2 + valToAdd, 5 + valToAdd);  // top connection
     }
     // if (i == Dims.SEGMENTS - 1 and Dims.SUPPORT_TYPE != Style.TRUSS) {
@@ -169,16 +91,92 @@ void Jib::createDiagonalBeams(double valToAdd) {
 
 void Jib::appendBeam(int startNode, int endNode) {
     // // Create a beam between the two given nodes
-    Beam tempBeam = Beam(comps.nodes[startNode], comps.nodes[endNode]);
-    comps.beams.push_back(tempBeam);
-
-    // Calculate the length of the beam
-    // auto startVector = comps.nodes[startNode];
-    // auto endVector = comps.nodes[endNode];
-    // Node lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
-    // double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
-
+    Beam tempBeam = Beam(jibComps.nodes[startNode], jibComps.nodes[endNode]);
+    jibComps.beams.push_back(tempBeam);
     // Update the longest beam and total length
     longestBeam = std::max(tempBeam.getLength(), longestBeam);
     totalLength += tempBeam.getLength();
+}
+
+
+void Jib::updateDimensions(double length, double height, int numSegs, int supStyle,
+                           bool dropdown, bool bend) {
+    // Reset arrays
+    jibComps.nodes.clear();
+    jibComps.beams.clear();
+    // Reset calculated dimensions
+    totalLength = 0;
+    longestBeam = 0;
+    // Set remaining parameters
+    this->height = height;
+    this->length = length;
+    this->numSegs = numSegs;
+    switch (supStyle) {
+        case 1:
+            this->supStyle = JibStyle::TRUSS;
+            break;
+        case 2:
+            this->supStyle = JibStyle::SET_BACK_TRUSS;
+            break;
+        default:
+            this->supStyle = JibStyle::NONE;
+            std::cout << "No support style chosen";
+    }
+    this->dropdown = dropdown;
+    this->bend = bend;
+}
+
+double Jib::getLength() {
+    return length;
+}
+
+double Jib::getHeight() {
+    return height;
+}
+
+double Jib::getSegments() {
+    return numSegs;
+}
+
+double Jib::getTotalBeamLength() {
+    return totalLength;
+}
+
+double Jib::getLongestBeam() {
+    return longestBeam;
+}
+
+std::vector<Node> Jib::getNodes() {
+    return jibComps.nodes;
+}
+
+std::vector<Beam> Jib::getBeams() {
+    return jibComps.beams;
+}
+
+int Jib::getSupportStyle() {
+    switch (supStyle) {
+        case JibStyle::TRUSS:
+            return 1;
+        case JibStyle::SET_BACK_TRUSS:
+            return 2;
+        default:
+            return 0;
+    }
+}
+
+int Jib::getEndBase() {
+    return jibComps.nodes.size();
+}
+
+void Jib::setLength(double length) {
+    this->length = length;
+}
+
+void Jib::setHeight(double height) {
+    this->height = height;
+}
+
+void Jib::setSegments(double numSegs) {
+    this->numSegs = numSegs;
 }

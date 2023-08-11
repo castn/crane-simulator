@@ -5,7 +5,6 @@
 #ifndef MAINWINDOW_CRANE_H
 #define MAINWINDOW_CRANE_H
 
-
 #include "tower.h"
 #include "jib.h"
 #include "counterjib.h"
@@ -14,11 +13,14 @@
 
 class Crane {
 public:
-    Crane();
+    Crane(double towerHeight, double towerWidth, int towerNumSegs, int towerSupStyle,
+          double jibLength, double jibHeight, int jibNumSegs, int jibSupStyle,
+          bool jibDrop, bool jibBend, double cjLength, double cjHeight, int cjNumSegs, int cjSupStyle);
     Tower *tower = nullptr;
     Jib *jib = nullptr;
     Counterjib *counterjib = nullptr;
 private:
+    void createCrane();
     // Everything related to tower
     void createTower();
     std::vector<Node> getTowerNodes();
@@ -38,7 +40,7 @@ private:
     std::vector<Node> getCounterjibNodes();
     std::vector<Beam> getCounterjibBeams();
     double getCounterjibLength();
-    void setCounterjibDimensions(double cjLength, double cjHeight, int cjNumSegs, int cjNupStyle);
+    void setCounterjibDimensions(double cjLength, double cjHeight, int cjNumSegs, int cjSupStyle);
 };
 
 #endif //MAINWINDOW_CRANE_H

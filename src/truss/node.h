@@ -13,9 +13,9 @@ public:
         return Node(this->x - node.x, this->y - node.y, this->z - node.z);
     }
 private:
-    double x;
-    double y;
-    double z;
+    double x = 0;
+    double y = 0;
+    double z = 0;
 };
 
 #endif

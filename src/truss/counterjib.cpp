@@ -6,86 +6,19 @@
 #include <cmath>
 
 
-Comps comps;
+Comps cjComps;
 
 
-double Counterjib::getLength() {
-    return length;
-}
-
-double Counterjib::getHeight() {
-    return height;
-}
-
-double Counterjib::getSegments() {
-    return numberOfSegments;
-}
-
-double Counterjib::getTotalBeamLength() {
-    return totalLength;
-}
-
-double Counterjib::getLongestBeam() {
-    return longestBeam;
-}
-
-std::vector<Node> Counterjib::getNodes() {
-    return comps.nodes;
-}
-
-std::vector<Beam> Counterjib::getBeams() {
-    return comps.beams;
-}
-
-int Counterjib::getEndBase() {
-    return endBase;
-}
-
-int Counterjib::getEndCJ() {
-    return endCJ;
-}
-
-void Counterjib::setLength(double length) {
-    this->length = length;
-}
-
-void Counterjib::setHeight(double height) {
-    this->height = height;
-}
-
-void Counterjib::setSegments(double numberOfSegments) {
-    this->numberOfSegments = numberOfSegments;
-}
-
-void Counterjib::setDimensions(double length, double height, int numSegs, int supStyle) {
-    comps.nodes.clear();
-    comps.beams.clear();
-
-    totalLength = 0;
-    longestBeam = 0;
-
-    this->length = length;
-    this->height = height;
-    numberOfSegments = numSegs;
-    switch (supStyle) {
-        case 1:
-            this->supType = CounterjibStyle::TRUSS;
-            break;
-        case 2:
-            this->supType = CounterjibStyle::TOWER;
-            break;
-        default:
-            this->supType = CounterjibStyle::NONE;
-            std::cout << "No support style chosen";
-    }
+Counterjib::Counterjib(double length, double height, int numSegs, int supStyle) {
+    updateDimensions(length, height, numSegs, supStyle);
 }
 
 
 void Counterjib::create(std::vector<Node> nodes, std::vector<Beam> beams,
                         double towerHeight, double towerWidth, int towerNumNodes,
                         int jibSegs, int jibSupport, double jibHeight) {
-    comps.nodes = nodes;
-    comps.beams = beams;
+    cjComps.nodes = nodes;
+    cjComps.beams = beams;
 
     startHeight = towerHeight;
     this->towerWidth = towerWidth;
@@ -97,23 +30,23 @@ void Counterjib::create(std::vector<Node> nodes, std::vector<Beam> beams,
 
     createSegments();
     createBeams();
-    endBase = comps.nodes.size();
+    endBase = cjComps.nodes.size();
     createSupport();
-    endCJ = comps.nodes.size();
+    endCJ = cjComps.nodes.size();
 }
 
 void Counterjib::createSegments() {
-    for (int i = 0; i < numberOfSegments; i++) {
+    for (int i = 0; i < numSegs; i++) {
         if (i != 0) {
-            comps.nodes.push_back(Node(- length * i, 0, startHeight));
-            comps.nodes.push_back(Node(- length * i, towerWidth, startHeight));
+            cjComps.nodes.push_back(Node(- length * i, 0, startHeight));
+            cjComps.nodes.push_back(Node(- length * i, towerWidth, startHeight));
         }
     }
 }
 
 void Counterjib::createBeams() {
     int startNodeCJ = endJib;
-    for (int i = 0; i < numberOfSegments - 1; i++) {
+    for (int i = 0; i < numSegs - 1; i++) {
         double valToAdd = 2 * (i - 1);
         createFrameBeams(i, startNodeCJ, valToAdd);
         createDiagonalBeams(i, startNodeCJ, valToAdd);
@@ -153,20 +86,20 @@ void Counterjib::createSupport() {
 
 void Counterjib::createTrussSupport() {
     int supportStart = endBase;
-    for (int i = 0; i < numberOfSegments; i++) {
+    for (int i = 0; i < numSegs; i++) {
         double jibHeightSeg = (jibHeight - height) / 3;
         double topHeight = startHeight + height;
         // creates node on top of tower
         if (i == 0) {
-            comps.nodes.push_back(Node(1/2 * towerWidth, 1/2 * towerWidth,
+            cjComps.nodes.push_back(Node(1/2 * towerWidth, 1/2 * towerWidth,
                                    topHeight + 2 * jibHeightSeg));
         // creates first node on top of the support
-        } else if (i == 1 && numberOfSegments > 1) {
-            comps.nodes.push_back(Node(- length / 2, 1/2 * towerWidth, topHeight + jibHeightSeg));
+        } else if (i == 1 && numSegs > 1) {
+            cjComps.nodes.push_back(Node(- length / 2, 1/2 * towerWidth, topHeight + jibHeightSeg));
         }
         // creates all other nodes on top of the support
         else {
-            comps.nodes.push_back(Node(- length * ((i * 2) - 1) / 2, 1/2 * towerWidth, topHeight));
+            cjComps.nodes.push_back(Node(- length * ((i * 2) - 1) / 2, 1/2 * towerWidth, topHeight));
         }
         // create 'pyramid' structure on top of tower
         if (i == 1) {
@@ -201,7 +134,7 @@ void Counterjib::createTrussSupport() {
 // void Counterjib::createTowerSupport() {
 //     int cableStart = endBase;
 //     // if (one_tower) {
-//         comps.nodes.push_back({towerWidth / 2, towerWidth / 2, startHeight + towerWidth});
+//         cjComps.nodes.push_back({towerWidth / 2, towerWidth / 2, startHeight + towerWidth});
 //         // tower to new top
 //         for (int i = 0; i < 4; i++) {
 //             appendBeam(endTower + i, cableStart, true);
@@ -212,8 +145,8 @@ void Counterjib::createTrussSupport() {
 //         appendBeam(cableStart, cableStart - 1, false);
 //         appendBeam(cableStart, cableStart - 2, false);
 //     // } else {
-//     //     comps.nodes.push_back({towerWidth / 2, 0, startHeight + towerWidth});
-//     //     comps.nodes.push_back({towerWidth / 2, towerWidth, startHeight + towerWidth});
+//     //     cjComps.nodes.push_back({towerWidth / 2, 0, startHeight + towerWidth});
+//     //     cjComps.nodes.push_back({towerWidth / 2, towerWidth, startHeight + towerWidth});
 //     //     // tower to new tops
 //     //     for (int i = 0; i < 2; i++) {
 //     //         appendBeam(endTower + i, cableStart + i, true);
@@ -235,13 +168,13 @@ void Counterjib::createTrussSupport() {
 //     appendBeam(endTower + 1, endBase - 1, false);
 // }
 void Counterjib::createTowerSupport() {
-    comps.nodes.push_back(Node(towerWidth / 2, towerWidth / 2, startHeight + towerWidth * 2));
+    cjComps.nodes.push_back(Node(towerWidth / 2, towerWidth / 2, startHeight + towerWidth * 2));
     // Truss support
     int supportStart = endBase;
-    for (int i = 0; i < numberOfSegments; i++) {
+    for (int i = 0; i < numSegs; i++) {
         // create required nodes
         if (i != 0) {
-            comps.nodes.push_back(Node(- startHeight * ((i * 2) - 1) / 2, 
+            cjComps.nodes.push_back(Node(- startHeight * ((i * 2) - 1) / 2, 
                                        1/2 * towerWidth, startHeight + height));
         }
         // second batch
@@ -279,18 +212,83 @@ void Counterjib::createTowerSupport() {
 
 void Counterjib::appendBeam(int startNode, int endNode, bool lenCounts) {
     // // Create a beam between the two given nodes
-    Beam tempBeam = Beam(comps.nodes[startNode], comps.nodes[endNode]);
-    comps.beams.push_back(tempBeam);
-
-    // Calculate the length of the beam
-    // auto startVector = comps.nodes[startNode];
-    // auto endVector = comps.nodes[endNode];
-    // Node lenVector = {endVector[0] - startVector[0], endVector[1] - startVector[1], endVector[2] - startVector[2]};
-    // double length = sqrt(pow(lenVector[0], 2) + pow(lenVector[1], 2) + pow(lenVector[2], 2));
-
+    Beam tempBeam = Beam(cjComps.nodes[startNode], cjComps.nodes[endNode]);
+    cjComps.beams.push_back(tempBeam);
     // Update the longest beam and total length
     if (lenCounts) {
         longestBeam = std::max(tempBeam.getLength(), longestBeam);
     }
     totalLength += tempBeam.getLength();
+}
+
+
+void Counterjib::updateDimensions(double length, double height, int numSegs, int supStyle) {
+    cjComps.nodes.clear();
+    cjComps.beams.clear();
+
+    totalLength = 0;
+    longestBeam = 0;
+
+    this->length = length;
+    this->height = height;
+    this->numSegs = numSegs;
+    switch (supStyle) {
+        case 1:
+            this->supType = CounterjibStyle::TRUSS;
+            break;
+        case 2:
+            this->supType = CounterjibStyle::TOWER;
+            break;
+        default:
+            this->supType = CounterjibStyle::NONE;
+            std::cout << "No support style chosen";
+    }
+}
+
+double Counterjib::getLength() {
+    return length;
+}
+
+double Counterjib::getHeight() {
+    return height;
+}
+
+double Counterjib::getSegments() {
+    return numSegs;
+}
+
+double Counterjib::getTotalBeamLength() {
+    return totalLength;
+}
+
+double Counterjib::getLongestBeam() {
+    return longestBeam;
+}
+
+std::vector<Node> Counterjib::getNodes() {
+    return cjComps.nodes;
+}
+
+std::vector<Beam> Counterjib::getBeams() {
+    return cjComps.beams;
+}
+
+int Counterjib::getEndBase() {
+    return endBase;
+}
+
+int Counterjib::getEndCJ() {
+    return endCJ;
+}
+
+void Counterjib::setLength(double length) {
+    this->length = length;
+}
+
+void Counterjib::setHeight(double height) {
+    this->height = height;
+}
+
+void Counterjib::setSegments(double numSegs) {
+    this->numSegs = numSegs;
 }

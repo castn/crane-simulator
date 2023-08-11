@@ -1,5 +1,8 @@
 #ifndef MAINWINDOW_COUNTERJIB_H
 #define MAINWINDOW_COUNTERJIB_H
+
+#include "node.h"
+#include "beam.h"
 #include <vector>
 
 
@@ -11,6 +14,7 @@ enum class CounterjibStyle {
 
 class Counterjib {
 public:
+    Counterjib(double length, double height, int numSegs, int supStyle);
     // Dimension getters and setters
     double getLength();
     double getHeight();
@@ -23,8 +27,8 @@ public:
     int getEndCJ();
     void setLength(double length);
     void setHeight(double height);
-    void setSegments(double numberOfSegments);
-    void setDimensions(double length, double height, int numSegs, int supStyle);
+    void setSegments(double numSegs);
+    void updateDimensions(double length, double height, int numSegs, int supStyle);
     void create(std::vector<Node> nodes, std::vector<Beam> beams,
                 double towerHeight, double towerWidth, int towerNumNodes,
                 int jibSegs, int jibSupport, double jibHeight);
@@ -32,7 +36,7 @@ private:
     // Counterjib dimensions
     double length = 0;
     double height = 0;
-    double numberOfSegments = 0;
+    double numSegs = 0;
     double totalLength = 0;
     double longestBeam = 0;
     CounterjibStyle supType = CounterjibStyle::NONE;
