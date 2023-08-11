@@ -87,7 +87,9 @@ endif()
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 # Tell cmake where to find the source and header files from this file
-set(mainwindow_SRCS src/main.cpp src/mainwindow.cpp src/view/CentralWidget.cpp src/view/CentralWidget.h src/view/CraneTab.cpp src/view/CraneTab.h src/view/settings/cranesettings.cpp src/view/settings/cranesettings.h src/truss/crane.cpp src/truss/crane.h src/truss/tower.cpp src/truss/tower.h src/widget.cpp src/widget.h src/view/LeftSide.cpp src/view/LeftSide.h src/view/RightSide.cpp src/view/RightSide.h src/view/settings/towersettings.cpp src/view/settings/towersettings.h src/view/settings/counterjibsettings.cpp src/view/settings/counterjibsettings.h src/view/settings/jibsettings.cpp src/view/settings/jibsettings.h)
+set(mainwindow_SRCS src/main.cpp src/mainwindow.cpp src/view/CentralWidget.cpp src/view/CentralWidget.h src/view/CraneTab.cpp src/view/CraneTab.h src/view/settings/cranesettings.cpp src/view/settings/cranesettings.h src/truss/crane.cpp src/truss/crane.h src/truss/tower.cpp src/truss/tower.h src/widget.cpp src/widget.h src/view/LeftSide.cpp src/view/LeftSide.h src/view/RightSide.cpp src/view/RightSide.h src/view/settings/towersettings.cpp src/view/settings/towersettings.h src/view/settings/counterjibsettings.cpp src/view/settings/counterjibsettings.h src/view/settings/jibsettings.cpp src/view/settings/jibsettings.h
+        src/truss/node.cpp
+        src/truss/beam.cpp)
 
 add_executable(mainwindow ${mainwindow_SRCS})
 
