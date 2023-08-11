@@ -10,8 +10,8 @@ public:
     Beam(Node start, Node end);
     double getLength();
 private:
-    Node startNode;
-    Node endNode;
+    Node *startNode = nullptr;
+    Node *endNode = nullptr;
     double length;
 };
 
