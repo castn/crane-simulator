@@ -15,6 +15,7 @@ enum class TowerStyle {
 
 class Tower {
 public:
+    Tower(double height, double width, int segments, TowerStyle suppStyle);
     // Dimension getters and setters
     double getHeight();
     double getWidth();
@@ -33,7 +34,7 @@ private:
     // Tower dimensions
     double height = 0;
     double width = 0;
-    double numberOfSegments = 0;
+    int segments = 0;
     double totalLength = 0;
     double longestBeam = 0;
     TowerStyle supStyle = TowerStyle::NONE;

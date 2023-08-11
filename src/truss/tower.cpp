@@ -10,77 +10,13 @@
 Comps comps;
 
 
-double Tower::getHeight() {
-    return height;
-}
-
-double Tower::getWidth() {
-    return width;
-}
-
-double Tower::getSegments() {
-    return numberOfSegments;
-}
-
-double Tower::getTotalBeamLength() {
-    return totalLength;
-}
-
-double Tower::getLongestBeam() {
-    return longestBeam;
-}
-
-double Tower::getTotalHeight() {
-    return height * numberOfSegments;
-}
-
-std::vector<Node> Tower::getNodes() {
-    return comps.nodes;
-}
-
-std::vector<Beam> Tower::getBeams() {
-    return comps.beams;
-}
-
-void Tower::setHeight(double height) {
-    this->height = height;
-}
-
-void Tower::setWidth(double width) {
-    this->width = width;
-}
-
-void Tower::setSegments(double numberOfSegments) {
-    this->numberOfSegments = numberOfSegments;
-}
-
-void Tower::setDimensions(double height, double width, int numSegs, int supStyle) {
-    // Reset arrays
-    comps.nodes.clear();
-    comps.beams.clear();
-    // Reset calculated dimensions
-    totalLength = 0;
-    longestBeam = 0;
-    // Set remaining parameters
+Tower::Tower(double height, double width, int segments, TowerStyle suppStyle) {
     this->height = height;
     this->width = width;
-    numberOfSegments = numSegs;
-    switch (supStyle) {
-        case 1:
-            this->supStyle = TowerStyle::CROSS;
-            break;
-        case 2:
-            this->supStyle = TowerStyle::ZIGZAG;
-            break;
-        case 3:
-            this->supStyle = TowerStyle::DIAGONAL;
-            break;
-        default:
-            this->supStyle = TowerStyle::NONE;
-            std::cout << "No support style chosen";
-    }
+    this->segments = segments;
+    this->supStyle = suppStyle;
+    create(true, true);
 }
-
 
 void Tower::create(bool hasHorizontal, bool isHollow) {
     createSegments(hasHorizontal, isHollow);
@@ -88,22 +24,22 @@ void Tower::create(bool hasHorizontal, bool isHollow) {
 
 void Tower::createSegments(bool hasHorizontal, bool isHollow) {
     double segmentHeight = 1000;
-    for (int i = 0; i <= numberOfSegments; i++) {
+    for (int i = 0; i <= segments; i++) {
         double elevation = segmentHeight * i;
         createNodesPerSegment(elevation);
     }
 
-    for (int i = 0; i <= numberOfSegments; i++) {
+    for (int i = 0; i <= segments; i++) {
         createBeamsPerSegment(i, hasHorizontal, isHollow);
     }
 }
 
 void Tower::createNodesPerSegment(double elevation) {
     // Create all nodes so the beams of a segment can connect to them
-    comps.nodes.push_back(Node(0, 0, elevation));
-    comps.nodes.push_back(Node(0, width, elevation));
-    comps.nodes.push_back(Node(width, 0, elevation));
-    comps.nodes.push_back(Node(width, width, elevation));
+    comps.nodes.emplace_back(0, 0, elevation);
+    comps.nodes.emplace_back(0, width, elevation);
+    comps.nodes.emplace_back(width, 0, elevation);
+    comps.nodes.emplace_back(width, width, elevation);
 }
 
 void Tower::createBeamsPerSegment(int seg, bool hasHorizontal, bool isHollow) {
@@ -114,7 +50,7 @@ void Tower::createBeamsPerSegment(int seg, bool hasHorizontal, bool isHollow) {
     if (!isHollow) {
         appendBeam(0 + valToAdd, 2 + valToAdd);
     }
-    if (seg < numberOfSegments) {
+    if (seg < segments) {
         createVerticalBeams(valToAdd);
         createDiagonalBeams(valToAdd);
     }
@@ -203,4 +139,75 @@ void Tower::appendBeam(int startNode, int endNode) {
     // Update the longest beam and total length
     longestBeam = std::max(tempBeam.getLength(), longestBeam);
     totalLength += tempBeam.getLength();
+}
+
+void Tower::setDimensions(double height, double width, int numSegs, int supStyle) {
+    // Reset arrays
+    comps.nodes.clear();
+    comps.beams.clear();
+    // Reset calculated dimensions
+    totalLength = 0;
+    longestBeam = 0;
+    // Set remaining parameters
+    this->height = height;
+    this->width = width;
+    segments = numSegs;
+    switch (supStyle) {
+        case 1:
+            this->supStyle = TowerStyle::CROSS;
+            break;
+        case 2:
+            this->supStyle = TowerStyle::ZIGZAG;
+            break;
+        case 3:
+            this->supStyle = TowerStyle::DIAGONAL;
+            break;
+        default:
+            this->supStyle = TowerStyle::NONE;
+            std::cout << "No support style chosen";
+    }
+}
+
+double Tower::getHeight() {
+    return height;
+}
+
+double Tower::getWidth() {
+    return width;
+}
+
+double Tower::getSegments() {
+    return segments;
+}
+
+double Tower::getTotalBeamLength() {
+    return totalLength;
+}
+
+double Tower::getLongestBeam() {
+    return longestBeam;
+}
+
+double Tower::getTotalHeight() {
+    return height * segments;
+}
+
+std::vector<Node> Tower::getNodes() {
+    return comps.nodes;
+}
+
+std::vector<Beam> Tower::getBeams() {
+    return comps.beams;
+}
+
+void Tower::setHeight(double height) {
+    this->height = height;
+}
+
+void Tower::setWidth(double width) {
+    this->width = width;
+}
+
+void Tower::setSegments(double numberOfSegments) {
+    this->segments = numberOfSegments;
 }
