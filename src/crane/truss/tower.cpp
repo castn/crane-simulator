@@ -1,7 +1,7 @@
 #include "tower.h"
-#include "comps.h"
-#include "node.h"
-#include "beam.h"
+#include "src/crane/truss/components/comps.h"
+#include "src/crane/truss/components/node.h"
+#include "src/crane/truss/components/beam.h"
 #include <iostream>
 #include <vector>
 #include <cmath>

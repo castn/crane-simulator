@@ -1,13 +1,27 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.23)
 
 project(mainwindow)
 
 set(QT_MIN_VERSION "5.15.2")
 set(KF5_MIN_VERSION "5.78.0")
-# Instruct CMake to run moc and uic automatically when needed.
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
 
+# Instruct CMake to run moc and uic automatically when needed.
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+# C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Create main executable
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${LIB_SRC})
+
+# Collect source files
+add_subdirectory(src)
+
+# Headers are in src/
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 find_package(ECM 1.0.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -85,28 +99,6 @@ endif()
 
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-# Tell cmake where to find the source and header files from this file
-set(mainwindow_SRCS
-    src/main.cpp
-    src/mainwindow.cpp
-    src/view/CentralWidget.cpp src/view/CentralWidget.h
-    src/view/CraneTab.cpp src/view/CraneTab.h
-    src/view/settings/cranesettings.cpp src/view/settings/cranesettings.h
-    src/truss/crane.cpp src/truss/crane.h
-    src/truss/tower.cpp src/truss/tower.h
-    src/truss/jib.cpp src/truss/jib.h
-    src/truss/counterjib.cpp src/truss/counterjib.h
-    src/widget.cpp src/widget.h
-    src/view/LeftSide.cpp src/view/LeftSide.h
-    src/view/RightSide.cpp src/view/RightSide.h
-    src/view/settings/towersettings.cpp src/view/settings/towersettings.h
-    src/view/settings/counterjibsettings.cpp src/view/settings/counterjibsettings.h
-    src/view/settings/jibsettings.cpp src/view/settings/jibsettings.h
-    src/truss/node.cpp src/truss/node.h
-    src/truss/beam.cpp src/truss/beam.h)
-
-add_executable(mainwindow ${mainwindow_SRCS})
 
 if (Qt${VTK_QT_VERSION}Widgets_VERSION VERSION_LESS "5.11.0")
     qt5_use_modules(mainwindow ${qt_components})

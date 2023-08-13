@@ -5,11 +5,10 @@
 #ifndef MAINWINDOW_CRANE_H
 #define MAINWINDOW_CRANE_H
 
-#include "tower.h"
-#include "jib.h"
-#include "counterjib.h"
-#include "node.h"
-#include "beam.h"
+
+#include "crane/truss/tower.h"
+#include "crane/truss/jib.h"
+#include "crane/truss/counterjib.h"
 
 class Crane {
 public:

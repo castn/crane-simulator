@@ -4,7 +4,7 @@
 
 #include <QGridLayout>
 #include "counterjibsettings.h"
-#include "src/widget.h"
+#include "src/util/widget.h"
 
 CounterjibSettings::CounterjibSettings(QWidget *parent) : QWidget(parent) {
     counterjibSettings = new QGroupBox(this);

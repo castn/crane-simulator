@@ -4,7 +4,7 @@
 
 #include <QGridLayout>
 #include "jibsettings.h"
-#include "src/widget.h"
+#include "src/util/widget.h"
 
 JibSettings::JibSettings(QWidget *parent) : QWidget(parent) {
     jibSettings = new QGroupBox(this);

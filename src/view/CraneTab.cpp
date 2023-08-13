@@ -6,7 +6,7 @@
 #include <QSplitter>
 
 #include "CraneTab.h"
-#include "src/widget.h"
+#include "src/util/widget.h"
 #include "LeftSide.h"
 #include "RightSide.h"
 

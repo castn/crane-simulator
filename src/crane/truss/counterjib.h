@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_COUNTERJIB_H
 #define MAINWINDOW_COUNTERJIB_H
 
-#include "node.h"
-#include "beam.h"
+#include "src/crane/truss/components/node.h"
+#include "src/crane/truss/components/beam.h"
 #include <vector>
 
 

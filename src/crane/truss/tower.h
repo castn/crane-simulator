@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_TOWER_H
 #define MAINWINDOW_TOWER_H
 
-#include "node.h"
-#include "beam.h"
+#include "src/crane/truss/components/node.h"
+#include "src/crane/truss/components/beam.h"
 #include <vector>
 
 
