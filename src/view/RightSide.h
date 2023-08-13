@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QVTKOpenGLNativeWidget.h>
 #include <QVBoxLayout>
+#include <vtkPolyData.h>
 
 class RightSide : public QWidget {
 Q_OBJECT
@@ -18,7 +19,7 @@ public:
 
 private:
     auto addRenderer() -> QWidget *;
-
+    vtkNew<vtkPolyData> createBeamPlot();
 };
 
 
