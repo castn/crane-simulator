@@ -19,7 +19,6 @@
 #include <vtkPointData.h>
 #include <vtkProperty.h>
 #include <vtkRenderer.h>
-#include <vtkSphereSource.h>
 
 #include "mainwindow.h"
 #include "src/crane/crane.h"
@@ -52,8 +51,8 @@ void MainWindow::setupActions() {
     KStandardAction::saveAs(this, &MainWindow::saveFileAs, actionCollection());
     KStandardAction::openNew(this, &MainWindow::newFile, actionCollection());
 
-    auto crane = new Crane(0, 0, 0, 0, 0, 0, 0, 0, true, true, 0, 0, 0, 0);
-    crane->createCrane();
+//    auto crane = new Crane();
+//    crane->createCrane();
 
     setupGUI(Default, "mainwindowui.rc");
 }

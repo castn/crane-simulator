@@ -3,8 +3,11 @@
 //
 
 #include "crane.h"
-#include "src/truss/node.h"
-#include "src/truss/beam.h"
+
+
+Crane::Crane() {
+    Crane(0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+}
 
 Crane::Crane(double towerHeight, double towerWidth, int towerNumSegs, int towerSupStyle,
              double jibLength, double jibHeight, int jibNumSegs, int jibSupStyle, bool jibDrop, bool jibBend,

@@ -12,6 +12,7 @@
 
 class Crane {
 public:
+    Crane();
     Crane(double towerHeight, double towerWidth, int towerNumSegs, int towerSupStyle,
           double jibLength, double jibHeight, int jibNumSegs, int jibSupStyle,
           bool jibDrop, bool jibBend, double cjLength, double cjHeight, int cjNumSegs, int cjSupStyle);
