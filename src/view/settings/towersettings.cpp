@@ -15,16 +15,16 @@ TowerSettings::TowerSettings(QWidget *parent) : QWidget(parent) {
 QLayout *TowerSettings::createSettings() {
     auto *layout = new QGridLayout(this);
 
-    towerHeight = new QSpinBox(this);
+    towerHeight = new QDoubleSpinBox(this);
     towerHeight->setSuffix(" mm");
     Widget::createGridRow(layout, 0, "Heigt", "This is a tooltip!", towerHeight, this);
 
-    towerWidth = new QSpinBox(this);
+    towerWidth = new QDoubleSpinBox(this);
     towerWidth->setSuffix(" mm");
     Widget::createGridRow(layout, 1, "Width", "This is a tooltip!", towerWidth, this);
 
     towerSegments = new QSpinBox(this);
-    towerSegments->setSuffix(" mm");
+//    towerSegments->setSuffix(" mm");
     Widget::createGridRow(layout, 2, "Segments", "This is a tooltip!", towerSegments, this);
 
     towerSupportType = new QComboBox(this);
@@ -32,4 +32,20 @@ QLayout *TowerSettings::createSettings() {
     Widget::createGridRow(layout, 3, "Support Type", "This is a tooltip!", towerSupportType, this);
 
     return layout;
+}
+
+double TowerSettings::getHeight() {
+    return towerHeight->value();
+}
+
+double TowerSettings::getWidth() {
+    return towerWidth->value();
+}
+
+int TowerSettings::getSegs() {
+    return towerSegments->value();
+}
+
+int TowerSettings::getSupType() {
+    return towerSupportType->currentIndex();
 }

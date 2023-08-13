@@ -20,9 +20,13 @@ public:
 
     QGroupBox *towerSettings = nullptr;
 
+    double getHeight();
+    double getWidth();
+    int getSegs();
+    int getSupType();
 private:
-    QSpinBox *towerHeight = nullptr;
-    QSpinBox *towerWidth = nullptr;
+    QDoubleSpinBox *towerHeight = nullptr;
+    QDoubleSpinBox *towerWidth = nullptr;
     QSpinBox *towerSegments = nullptr;
     QComboBox *towerSupportType = nullptr;
 

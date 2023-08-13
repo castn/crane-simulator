@@ -12,7 +12,8 @@ CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent){
 
     tabs = new QTabWidget(this);
     tabs->setTabsClosable(true);
-    tabs->addTab(new CraneTab(this), "test");
+    craneTab = new CraneTab(this);
+    tabs->addTab(craneTab, "test");
 
     centralLayout->addWidget(tabs);
 }
@@ -20,4 +21,16 @@ CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent){
 void CentralWidget::createNewCrane(const QString& name) {
     tabs->addTab(new CraneTab(this), name);
 
+}
+
+std::tuple<double, double, int, int> CentralWidget::getTowerSettings() {
+    return craneTab->getTowerSettings();
+}
+
+std::tuple<double, double, int, int, bool, bool> CentralWidget::getJibSettings() {
+    return craneTab->getJibSettings();
+}
+
+std::tuple<double, double, int, int> CentralWidget::getCounterjibSettings() {
+    return craneTab->getCounterjibSettings();
 }

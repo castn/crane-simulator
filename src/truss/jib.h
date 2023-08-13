@@ -18,7 +18,7 @@ public:
     // Dimension getters and setters
     double getLength();
     double getHeight();
-    double getSegments();
+    int getSegments();
     double getTotalBeamLength();
     double getLongestBeam();
     std::vector<Node> getNodes();
@@ -27,16 +27,17 @@ public:
     int getEndBase();
     void setLength(double length);
     void setHeight(double height);
-    void setSegments(double numSegs);
+    void setSegments(int numSegs);
     void updateDimensions(double length, double height, int numSegs, int supStyle,
                           bool dropdown, bool bend);
+    // Create jib
     void create(std::vector<Node> nodes, std::vector<Beam> beams,
                    double towerHeight, double towerWidth);
 private:
     // Jib dimensions
     double length = 0;
     double height = 0;
-    double numSegs = 0;
+    int numSegs = 0;
     double totalLength = 0;
     double longestBeam = 0;
     JibStyle supStyle = JibStyle::NONE;

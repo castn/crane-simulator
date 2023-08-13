@@ -16,25 +16,25 @@ JibSettings::JibSettings(QWidget *parent) : QWidget(parent) {
 QLayout *JibSettings::createSettings() {
     auto *layout = new QGridLayout(this);
 
-    jibLength = new QSpinBox(this);
+    jibLength = new QDoubleSpinBox(this);
     jibLength->setSuffix(" mm");
     Widget::createGridRow(layout, 0, "Length", "This is a tooltip!", jibLength, this);
 
-    jibHeight = new QSpinBox(this);
+    jibHeight = new QDoubleSpinBox(this);
     jibHeight->setSuffix(" mm");
     Widget::createGridRow(layout, 1, "Height", "This is a tooltip!", jibHeight, this);
 
     jibSegments = new QSpinBox(this);
-    jibSegments->setSuffix(" mm");
+//    jibSegments->setSuffix(" mm");
     Widget::createGridRow(layout, 2, "Segments", "This is a tooltip!", jibSegments, this);
 
     jibSupportType = new QComboBox(this);
     jibSupportType->addItems({"Set-back Truss", "Truss"});
     Widget::createGridRow(layout, 3, "Support Type", "This is a tooltip!", jibSupportType, this);
 
-    heightDegrease = new QCheckBox(this);
-    heightDegrease->setText("Realistic decrease in height of support");
-    layout->addWidget(heightDegrease, 4, 0);
+    heightDropdown = new QCheckBox(this);
+    heightDropdown->setText("Realistic decrease in height of support");
+    layout->addWidget(heightDropdown, 4, 0);
 
     upwardBend = new QCheckBox(this);
     upwardBend->setText("Realistic upward bend");
@@ -42,4 +42,28 @@ QLayout *JibSettings::createSettings() {
 
 
     return layout;
+}
+
+double JibSettings::getLength() {
+    return jibLength->value();
+}
+
+double JibSettings::getHeight() {
+    return jibHeight->value();
+}
+
+int JibSettings::getSegs() {
+    return jibSegments->value();
+}
+
+int JibSettings::getSupType() {
+    return jibSupportType->currentIndex();
+}
+
+bool JibSettings::getDropdown() {
+    return heightDropdown->isChecked();
+}
+
+bool JibSettings::getBend() {
+    return upwardBend->isChecked();
 }

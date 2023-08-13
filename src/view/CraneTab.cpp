@@ -14,12 +14,23 @@ CraneTab::CraneTab(QWidget *parent) : QWidget(parent) {
     tabLayout = new QVBoxLayout(this);
     auto *splitter = new QSplitter(this);
 
-    auto *leftSide = new LeftSide(this);
+    leftSide = new LeftSide(this);
     splitter->addWidget(leftSide);
 
-    auto *rightSide = new RightSide(this);
+    rightSide = new RightSide(this);
     splitter->addWidget(rightSide);
 
     tabLayout->addWidget(splitter);
+}
 
+std::tuple<double, double, int, int> CraneTab::getTowerSettings() {
+    return leftSide->getTowerSettings();
+}
+
+std::tuple<double, double, int, int, bool, bool> CraneTab::getJibSettings() {
+    return leftSide->getJibSettings();
+}
+
+std::tuple<double, double, int, int> CraneTab::getCounterjibSettings() {
+    return leftSide->getCounterjibSettings();
 }

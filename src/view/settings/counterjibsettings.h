@@ -11,15 +11,20 @@
 #include <QSpinBox>
 #include <QComboBox>
 
-class CounterJibSettings : public QWidget {
+class CounterjibSettings : public QWidget {
 Q_OBJECT
 public:
-    explicit CounterJibSettings(QWidget *parent);
+    explicit CounterjibSettings(QWidget *parent);
 
     QGroupBox *counterjibSettings = nullptr;
+
+    double getLength();
+    double getWidth();
+    int getSegs();
+    int getSupType();
 private:
-    QSpinBox *counterjibLength = nullptr;
-    QSpinBox *counterjibWidth = nullptr;
+    QDoubleSpinBox *counterjibLength = nullptr;
+    QDoubleSpinBox *counterjibWidth = nullptr;
     QSpinBox *counterjibSegments = nullptr;
     QComboBox *counterjibSupportType = nullptr;
 

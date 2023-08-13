@@ -134,7 +134,7 @@ double Jib::getHeight() {
     return height;
 }
 
-double Jib::getSegments() {
+int Jib::getSegments() {
     return numSegs;
 }
 
@@ -177,6 +177,6 @@ void Jib::setHeight(double height) {
     this->height = height;
 }
 
-void Jib::setSegments(double numSegs) {
+void Jib::setSegments(int numSegs) {
     this->numSegs = numSegs;
 }

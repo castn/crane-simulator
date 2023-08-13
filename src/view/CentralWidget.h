@@ -8,6 +8,7 @@
 #include "QVBoxLayout"
 #include "QWidget"
 #include "QTabWidget"
+#include "src/view/CraneTab.h"
 
 class CentralWidget : public QWidget {
 Q_OBJECT
@@ -16,9 +17,13 @@ public:
 
     void createNewCrane(const QString& name);
 
+    std::tuple <double, double, int, int> getTowerSettings();
+    std::tuple <double, double, int, int, bool, bool> getJibSettings();
+    std::tuple <double, double, int, int> getCounterjibSettings();
 private:
     QTabWidget *tabs = nullptr;
     QVBoxLayout *centralLayout = nullptr;
+    CraneTab *craneTab = nullptr;
 };
 
 

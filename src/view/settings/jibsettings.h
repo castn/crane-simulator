@@ -19,12 +19,18 @@ public:
 
     QGroupBox *jibSettings = nullptr;
 
+    double getLength();
+    double getHeight();
+    int getSegs();
+    int getSupType();
+    bool getDropdown();
+    bool getBend();
 private:
-    QSpinBox *jibLength = nullptr;
-    QSpinBox *jibHeight = nullptr;
+    QDoubleSpinBox *jibLength = nullptr;
+    QDoubleSpinBox *jibHeight = nullptr;
     QSpinBox *jibSegments = nullptr;
     QComboBox *jibSupportType = nullptr;
-    QCheckBox *heightDegrease = nullptr;
+    QCheckBox *heightDropdown = nullptr;
     QCheckBox *upwardBend = nullptr;
 
     QLayout *createSettings();

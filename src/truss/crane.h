@@ -19,8 +19,8 @@ public:
     Tower *tower = nullptr;
     Jib *jib = nullptr;
     Counterjib *counterjib = nullptr;
-private:
     void createCrane();
+private:
     // Everything related to tower
     void createTower();
     std::vector<Node> getTowerNodes();

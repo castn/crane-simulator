@@ -4,7 +4,6 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QByteArray>
-
 #include <KTextEdit>
 #include <KLocalizedString>
 #include <KActionCollection>
@@ -52,6 +51,9 @@ void MainWindow::setupActions() {
     KStandardAction::save(this, &MainWindow::saveFile, actionCollection());
     KStandardAction::saveAs(this, &MainWindow::saveFileAs, actionCollection());
     KStandardAction::openNew(this, &MainWindow::newFile, actionCollection());
+
+    auto crane = new Crane(0, 0, 0, 0, 0, 0, 0, 0, true, true, 0, 0, 0, 0);
+    crane->createCrane();
 
     setupGUI(Default, "mainwindowui.rc");
 }
