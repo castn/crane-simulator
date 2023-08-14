@@ -1,7 +1,3 @@
-//
-// Created by carsten on 30.07.23.
-//
-
 #ifndef MAINWINDOW_LEFTSIDE_H
 #define MAINWINDOW_LEFTSIDE_H
 
@@ -21,9 +17,9 @@ public:
     explicit LeftSide(QWidget *parent);
     QVBoxLayout *leftLayout = nullptr;
 
-    std::tuple <double, double, int, int> getTowerSettings();
-    std::tuple <double, double, int, int, bool, bool> getJibSettings();
-    std::tuple <double, double, int, int> getCounterjibSettings();
+    std::tuple <int, int, int, int> getTowerSettings();
+    std::tuple <int, int, int, int, bool, bool> getJibSettings();
+    std::tuple <int, int, int, int> getCounterjibSettings();
 private:
     TowerSettings *towerSettings = nullptr;
     JibSettings *jibSettings = nullptr;

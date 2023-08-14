@@ -1,7 +1,3 @@
-//
-// Created by carsten on 28.07.23.
-//
-
 #include <QLabel>
 #include <QSplitter>
 
@@ -23,14 +19,14 @@ CraneTab::CraneTab(QWidget *parent) : QWidget(parent) {
     tabLayout->addWidget(splitter);
 }
 
-std::tuple<double, double, int, int> CraneTab::getTowerSettings() {
+std::tuple<int, int, int, int> CraneTab::getTowerSettings() {
     return leftSide->getTowerSettings();
 }
 
-std::tuple<double, double, int, int, bool, bool> CraneTab::getJibSettings() {
+std::tuple<int, int, int, int, bool, bool> CraneTab::getJibSettings() {
     return leftSide->getJibSettings();
 }
 
-std::tuple<double, double, int, int> CraneTab::getCounterjibSettings() {
+std::tuple<int, int, int, int> CraneTab::getCounterjibSettings() {
     return leftSide->getCounterjibSettings();
 }

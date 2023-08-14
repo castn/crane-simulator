@@ -1,7 +1,3 @@
-//
-// Created by castn on 28.07.23.
-//
-
 #ifndef MAINWINDOW_CRANETAB_H
 #define MAINWINDOW_CRANETAB_H
 
@@ -18,9 +14,9 @@ public:
     explicit CraneTab(QWidget *parent);
     QVBoxLayout *tabLayout = nullptr;
 
-    std::tuple <double, double, int, int> getTowerSettings();
-    std::tuple <double, double, int, int, bool, bool> getJibSettings();
-    std::tuple <double, double, int, int> getCounterjibSettings();
+    std::tuple <int, int, int, int> getTowerSettings();
+    std::tuple <int, int, int, int, bool, bool> getJibSettings();
+    std::tuple <int, int, int, int> getCounterjibSettings();
 private:
     LeftSide *leftSide = nullptr;
     RightSide *rightSide = nullptr;

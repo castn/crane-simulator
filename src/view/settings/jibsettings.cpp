@@ -1,7 +1,3 @@
-//
-// Created by castn on 01.08.23.
-//
-
 #include <QGridLayout>
 #include "jibsettings.h"
 #include "src/util/widget.h"
@@ -16,20 +12,24 @@ JibSettings::JibSettings(QWidget *parent) : QWidget(parent) {
 QLayout *JibSettings::createSettings() {
     auto *layout = new QGridLayout(this);
 
-    jibLength = new QDoubleSpinBox(this);
+    jibLength = new QSpinBox(this);
+    jibLength->setMaximum(10000);
     jibLength->setSuffix(" mm");
+    jibLength->setValue(2000);
     Widget::createGridRow(layout, 0, "Length", "This is a tooltip!", jibLength, this);
 
-    jibHeight = new QDoubleSpinBox(this);
+    jibHeight = new QSpinBox(this);
+    jibHeight->setMaximum(2000);
     jibHeight->setSuffix(" mm");
+    jibHeight->setValue(1000);
     Widget::createGridRow(layout, 1, "Height", "This is a tooltip!", jibHeight, this);
 
     jibSegments = new QSpinBox(this);
-//    jibSegments->setSuffix(" mm");
+    jibSegments->setValue(2);
     Widget::createGridRow(layout, 2, "Segments", "This is a tooltip!", jibSegments, this);
 
     jibSupportType = new QComboBox(this);
-    jibSupportType->addItems({"Set-back Truss", "Truss"});
+    jibSupportType->addItems({"Truss", "Set-back Truss"});
     Widget::createGridRow(layout, 3, "Support Type", "This is a tooltip!", jibSupportType, this);
 
     heightDropdown = new QCheckBox(this);
@@ -44,11 +44,11 @@ QLayout *JibSettings::createSettings() {
     return layout;
 }
 
-double JibSettings::getLength() {
+int JibSettings::getLength() {
     return jibLength->value();
 }
 
-double JibSettings::getHeight() {
+int JibSettings::getHeight() {
     return jibHeight->value();
 }
 

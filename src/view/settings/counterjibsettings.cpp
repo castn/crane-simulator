@@ -1,7 +1,3 @@
-//
-// Created by carsten on 30.07.23.
-//
-
 #include <QGridLayout>
 #include "counterjibsettings.h"
 #include "src/util/widget.h"
@@ -16,16 +12,20 @@ CounterjibSettings::CounterjibSettings(QWidget *parent) : QWidget(parent) {
 QLayout *CounterjibSettings::createSettings() {
     auto *layout = new QGridLayout(this);
 
-    counterjibLength = new QDoubleSpinBox(this);
+    counterjibLength = new QSpinBox(this);
+    counterjibLength->setMaximum(10000);
     counterjibLength->setSuffix(" mm");
+    counterjibLength->setValue(1000);
     Widget::createGridRow(layout, 0, "Length", "This is a tooltip!", counterjibLength, this);
 
-    counterjibWidth = new QDoubleSpinBox(this);
-    counterjibWidth->setSuffix(" mm");
-    Widget::createGridRow(layout, 1, "Width", "This is a tooltip!", counterjibWidth, this);
+    counterjibHeight = new QSpinBox(this);
+    counterjibHeight->setMaximum(2000);
+    counterjibHeight->setSuffix(" mm");
+    counterjibHeight->setValue(800);
+    Widget::createGridRow(layout, 1, "Width", "This is a tooltip!", counterjibHeight, this);
 
     counterjibSegments = new QSpinBox(this);
-//    counterjibSegments->setSuffix(" mm");
+    counterjibSegments->setValue(1);
     Widget::createGridRow(layout, 2, "Segments", "This is a tooltip!", counterjibSegments, this);
 
     counterjibSupportType = new QComboBox(this);
@@ -35,12 +35,12 @@ QLayout *CounterjibSettings::createSettings() {
     return layout;
 }
 
-double CounterjibSettings::getLength() {
+int CounterjibSettings::getLength() {
     return counterjibLength->value();
 }
 
-double CounterjibSettings::getWidth() {
-    return counterjibWidth->value();
+int CounterjibSettings::getHeight() {
+    return counterjibHeight->value();
 }
 
 int CounterjibSettings::getSegs() {

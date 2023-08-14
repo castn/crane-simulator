@@ -18,13 +18,13 @@ public:
 
     QGroupBox *counterjibSettings = nullptr;
 
-    double getLength();
-    double getWidth();
+    int getLength();
+    int getHeight();
     int getSegs();
     int getSupType();
 private:
-    QDoubleSpinBox *counterjibLength = nullptr;
-    QDoubleSpinBox *counterjibWidth = nullptr;
+    QSpinBox *counterjibLength = nullptr;
+    QSpinBox *counterjibHeight = nullptr;
     QSpinBox *counterjibSegments = nullptr;
     QComboBox *counterjibSupportType = nullptr;
 

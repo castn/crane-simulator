@@ -32,33 +32,11 @@ auto RightSide::addRenderer() -> QWidget * {
     sphere->SetThetaResolution(100);
     sphere->SetPhiResolution(100);
 
-    // Create five points.
-    double origin[3] = {0.0, 0.0, 0.0};
-    double p0[3] = {1.0, 0.0, 0.0};
-    double p1[3] = {0.0, 1.0, 0.0};
-    double p2[3] = {0.0, 1.0, 2.0};
-    double p3[3] = {1.0, 2.0, 3.0};
-
     auto polyData = createBeamPlot();
 
     // Setup actor and mapper
     vtkNew<vtkPolyDataMapper> mapper;
     mapper->SetInputData(polyData);
-
-    // Setup render window, renderer, and interactor
-//    vtkNew<vtkRenderer> renderer;
-//    vtkNew<vtkRenderWindow> renderWindow;
-//    renderWindow->SetWindowName("PolyLine");
-//    renderWindow->AddRenderer(renderer);
-//    vtkNew<vtkRenderWindowInteractor> renderWindowInteractor;
-//    renderWindowInteractor->SetRenderWindow(renderWindow);
-//    renderer->AddActor(actor);
-
-//    renderWindow->Render();
-//    renderWindowInteractor->Start();
-
-//    vtkNew<vtkDataSetMapper> mapper;
-//    mapper->SetInputConnection(sphere->GetOutputPort());
 
     vtkNew<vtkActor> actor;
     actor->SetMapper(mapper);

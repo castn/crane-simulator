@@ -1,7 +1,3 @@
-//
-// Created by carsten on 30.07.23.
-//
-
 #include "towersettings.h"
 #include "src/util/widget.h"
 
@@ -15,16 +11,20 @@ TowerSettings::TowerSettings(QWidget *parent) : QWidget(parent) {
 QLayout *TowerSettings::createSettings() {
     auto *layout = new QGridLayout(this);
 
-    towerHeight = new QDoubleSpinBox(this);
+    towerHeight = new QSpinBox(this);
+    towerHeight->setMaximum(10000);
     towerHeight->setSuffix(" mm");
+    towerHeight->setValue(2000);
     Widget::createGridRow(layout, 0, "Heigt", "This is a tooltip!", towerHeight, this);
 
-    towerWidth = new QDoubleSpinBox(this);
+    towerWidth = new QSpinBox(this);
     towerWidth->setSuffix(" mm");
+    towerWidth->setMaximum(2000);
+    towerWidth->setValue(1000);
     Widget::createGridRow(layout, 1, "Width", "This is a tooltip!", towerWidth, this);
 
     towerSegments = new QSpinBox(this);
-//    towerSegments->setSuffix(" mm");
+    towerSegments->setValue(2);
     Widget::createGridRow(layout, 2, "Segments", "This is a tooltip!", towerSegments, this);
 
     towerSupportType = new QComboBox(this);
@@ -34,11 +34,11 @@ QLayout *TowerSettings::createSettings() {
     return layout;
 }
 
-double TowerSettings::getHeight() {
+int TowerSettings::getHeight() {
     return towerHeight->value();
 }
 
-double TowerSettings::getWidth() {
+int TowerSettings::getWidth() {
     return towerWidth->value();
 }
 
