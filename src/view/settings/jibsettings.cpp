@@ -57,7 +57,7 @@ int JibSettings::getSegs() {
 }
 
 int JibSettings::getSupType() {
-    return jibSupportType->currentIndex();
+    return jibSupportType->currentIndex() + 1;
 }
 
 bool JibSettings::getDropdown() {

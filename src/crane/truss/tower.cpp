@@ -10,9 +10,8 @@
 Comps towerComps;
 
 
-Tower::Tower(double height, double width, int numSegs, int supStyle) {
+Tower::Tower(int height, int width, int numSegs, int supStyle) {
     updateDimensions(height, width, numSegs, supStyle);
-    // create(true, true);
 }
 
 void Tower::create(bool hasHorizontal, bool isHollow) {
@@ -20,9 +19,8 @@ void Tower::create(bool hasHorizontal, bool isHollow) {
 }
 
 void Tower::createSegments(bool hasHorizontal, bool isHollow) {
-    double segmentHeight = 1000;
     for (int i = 0; i <= numSegs; i++) {
-        double elevation = segmentHeight * i;
+        double elevation = height * i;
         createNodesPerSegment(elevation);
     }
 
@@ -40,7 +38,7 @@ void Tower::createNodesPerSegment(double elevation) {
 }
 
 void Tower::createBeamsPerSegment(int segment, bool hasHorizontal, bool isHollow) {
-    double valToAdd = 4 * segment;
+    int valToAdd = 4 * segment;
     if (hasHorizontal) {
         createHorizontalBeams(valToAdd);
     }
@@ -53,7 +51,7 @@ void Tower::createBeamsPerSegment(int segment, bool hasHorizontal, bool isHollow
     }
 }
 
-void Tower::createHorizontalBeams(double valToAdd) {
+void Tower::createHorizontalBeams(int valToAdd) {
     appendBeam(0 + valToAdd, 1 + valToAdd);  // front horizontal beam
     appendBeam(1 + valToAdd, 3 + valToAdd);  // right horizontal beam
     appendBeam(3 + valToAdd, 2 + valToAdd);  // rear horizontal beam
@@ -63,14 +61,14 @@ void Tower::createHorizontalBeams(double valToAdd) {
     }
 }
 
-void Tower::createVerticalBeams(double valToAdd) {
+void Tower::createVerticalBeams(int valToAdd) {
     appendBeam(0 + valToAdd, 4 + valToAdd);  // front left vertical beam
     appendBeam(1 + valToAdd, 5 + valToAdd);  // front right vertical beam
     appendBeam(3 + valToAdd, 7 + valToAdd);  // rear left vertical beam
     appendBeam(2 + valToAdd, 6 + valToAdd);  // rear right vertical beam
 }
 
-void Tower::createDiagonalBeams(double valToAdd) {
+void Tower::createDiagonalBeams(int valToAdd) {
     if (supStyle == TowerStyle::DIAGONAL) { //style.DIAGONAL/3
         createParallelFaceBeamsLR(valToAdd);
     }
@@ -82,7 +80,7 @@ void Tower::createDiagonalBeams(double valToAdd) {
     }
 }
 
-void Tower::createCrossFaceBeam(double valToAdd) {
+void Tower::createCrossFaceBeam(int valToAdd) {
     // front face
     appendBeam(0 + valToAdd, 5 + valToAdd);
     appendBeam(4 + valToAdd, 1 + valToAdd);
@@ -97,7 +95,7 @@ void Tower::createCrossFaceBeam(double valToAdd) {
     appendBeam(2 + valToAdd, 4 + valToAdd);
 }
 
-void Tower::createZigzagFaceBeams(double valToAdd) {
+void Tower::createZigzagFaceBeams(int valToAdd) {
     int valToCheck = valToAdd / 4;
     if (valToCheck % 2 == 0) {
         // For even numbers create diagonal from left to right
@@ -108,14 +106,14 @@ void Tower::createZigzagFaceBeams(double valToAdd) {
     }
 }
 
-void Tower::createParallelFaceBeamsLR(double valToAdd) {
+void Tower::createParallelFaceBeamsLR(int valToAdd) {
     appendBeam(0 + valToAdd, 5 + valToAdd);  // front face
     appendBeam(5 + valToAdd, 3 + valToAdd);  // right face
     appendBeam(3 + valToAdd, 6 + valToAdd);  // rear face
     appendBeam(6 + valToAdd, 0 + valToAdd);  // left face
 }
 
-void Tower::createParallelFaceBeamsRL(double valToAdd) {
+void Tower::createParallelFaceBeamsRL(int valToAdd) {
     appendBeam(4 + valToAdd, 1 + valToAdd);  // front face
     appendBeam(1 + valToAdd, 7 + valToAdd);  // right face
     appendBeam(7 + valToAdd, 2 + valToAdd);  // rear face
@@ -131,7 +129,7 @@ void Tower::appendBeam(int startNode, int endNode) {
     totalLength += tempBeam.getLength();
 }
 
-void Tower::updateDimensions(double height, double width, int numSegs, int supStyle) {
+void Tower::updateDimensions(int height, int width, int numSegs, int supStyle) {
     // Reset arrays
     towerComps.nodes.clear();
     towerComps.beams.clear();
@@ -158,15 +156,15 @@ void Tower::updateDimensions(double height, double width, int numSegs, int supSt
     }
 }
 
-double Tower::getHeight() {
+int Tower::getHeight() {
     return height;
 }
 
-double Tower::getWidth() {
+int Tower::getWidth() {
     return width;
 }
 
-double Tower::getSegments() {
+int Tower::getSegments() {
     return numSegs;
 }
 
@@ -178,7 +176,7 @@ double Tower::getLongestBeam() {
     return longestBeam;
 }
 
-double Tower::getTotalHeight() {
+int Tower::getTotalHeight() {
     return height * numSegs;
 }
 
@@ -190,14 +188,14 @@ std::vector<Beam> Tower::getBeams() {
     return towerComps.beams;
 }
 
-void Tower::setHeight(double height) {
+void Tower::setHeight(int height) {
     this->height = height;
 }
 
-void Tower::setWidth(double width) {
+void Tower::setWidth(int width) {
     this->width = width;
 }
 
-void Tower::setSegments(double numSegs) {
+void Tower::setSegments(int numSegs) {
     this->numSegs = numSegs;
 }

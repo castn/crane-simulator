@@ -15,25 +15,25 @@ enum class TowerStyle {
 
 class Tower {
 public:
-    Tower(double height, double width, int segments, int supStyle);
+    Tower(int height, int width, int segments, int supStyle);
     // Dimension getters and setters
-    double getHeight();
-    double getWidth();
-    double getSegments();
+    int getHeight();
+    int getWidth();
+    int getSegments();
     double getTotalBeamLength();
     double getLongestBeam();
-    double getTotalHeight();
+    int getTotalHeight();
     std::vector<Node> getNodes();
     std::vector<Beam> getBeams();
-    void setHeight(double height);
-    void setWidth(double width);
-    void setSegments(double numSegs);
-    void updateDimensions(double height, double width, int numSegs, int supStyle);
+    void setHeight(int height);
+    void setWidth(int width);
+    void setSegments(int numSegs);
+    void updateDimensions(int height, int width, int numSegs, int supStyle);
     void create(bool hasHorizontal, bool isHollow);
 private:
     // Tower dimensions
-    double height = 0;
-    double width = 0;
+    int height = 0;
+    int width = 0;
     int numSegs = 0;
     double totalLength = 0;
     double longestBeam = 0;
@@ -44,13 +44,13 @@ private:
     // Creates beams
     void createSegments(bool hasHorizontal, bool isHollow);
     void createBeamsPerSegment(int seg, bool hasHorizontal, bool isHollow);
-    void createHorizontalBeams(double valToAdd);
-    void createVerticalBeams(double valToAdd);
-    void createDiagonalBeams(double valToAdd);
-    void createCrossFaceBeam(double valToAdd);
-    void createZigzagFaceBeams(double valToAdd);
-    void createParallelFaceBeamsLR(double valToAdd);
-    void createParallelFaceBeamsRL(double valToAdd);
+    void createHorizontalBeams(int valToAdd);
+    void createVerticalBeams(int valToAdd);
+    void createDiagonalBeams(int valToAdd);
+    void createCrossFaceBeam(int valToAdd);
+    void createZigzagFaceBeams(int valToAdd);
+    void createParallelFaceBeamsLR(int valToAdd);
+    void createParallelFaceBeamsRL(int valToAdd);
     void appendBeam(int startNode, int endNode);
 };
 

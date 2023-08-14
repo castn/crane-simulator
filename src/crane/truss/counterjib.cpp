@@ -9,14 +9,14 @@
 Comps cjComps;
 
 
-Counterjib::Counterjib(double length, double height, int numSegs, int supStyle) {
+Counterjib::Counterjib(int length, int height, int numSegs, int supStyle) {
     updateDimensions(length, height, numSegs, supStyle);
 }
 
 
 void Counterjib::create(std::vector<Node> nodes, std::vector<Beam> beams,
-                        double towerHeight, double towerWidth, int towerNumNodes,
-                        int jibSegs, int jibSupport, double jibHeight) {
+                        int towerHeight, int towerWidth, int towerNumNodes,
+                        int jibSegs, int jibSupport, int jibHeight) {
     cjComps.nodes = nodes;
     cjComps.beams = beams;
 
@@ -47,13 +47,13 @@ void Counterjib::createSegments() {
 void Counterjib::createBeams() {
     int startNodeCJ = endJib;
     for (int i = 0; i < numSegs - 1; i++) {
-        double valToAdd = 2 * (i - 1);
+        int valToAdd = 2 * (i - 1);
         createFrameBeams(i, startNodeCJ, valToAdd);
         createDiagonalBeams(i, startNodeCJ, valToAdd);
     }
 }
 
-void Counterjib::createFrameBeams(int seg, int startCJ, double valToAdd) {
+void Counterjib::createFrameBeams(int seg, int startCJ, int valToAdd) {
     if (seg == 0) {
         appendBeam(endTower, startCJ, true);
         appendBeam(endTower + 1, startCJ + 1, true);
@@ -64,7 +64,7 @@ void Counterjib::createFrameBeams(int seg, int startCJ, double valToAdd) {
     appendBeam(startCJ + valToAdd + 2, startCJ + 1 + valToAdd + 2, true);
 }
 
-void Counterjib::createDiagonalBeams(int seg, int startCJ, double valToAdd) {
+void Counterjib::createDiagonalBeams(int seg, int startCJ, int valToAdd) {
     if (seg == 0) {
         appendBeam(endTower, startCJ + 1, true);
         appendBeam(endTower + 1, startCJ, true);
@@ -122,7 +122,7 @@ void Counterjib::createTrussSupport() {
                 appendBeam(supportStart + (i - 1), supportStart + i, true);
             }
             // diagonal sections
-            double valToAdd = std::max(3 * (i - 2), 0);
+            int valToAdd = std::max(3 * (i - 2), 0);
             appendBeam(0 + startNode + valToAdd, supportStart + i, true);
             appendBeam(1 + startNode + valToAdd, supportStart + i, true);
             appendBeam(2 + startNode + valToAdd, supportStart + i, true);
@@ -195,7 +195,7 @@ void Counterjib::createTowerSupport() {
                 appendBeam(supportStart + (i - 1), supportStart + i, true);
             }
             // diagonal sections
-            double valToAdd = std::max(3 * (i - 2), 0);
+            int valToAdd = std::max(3 * (i - 2), 0);
             appendBeam(0 + startNode + valToAdd, supportStart + i, i != 0);
             appendBeam(1 + startNode + valToAdd, supportStart + i, i != 0);
             appendBeam(2 + startNode + valToAdd, supportStart + i, i != 0);
@@ -203,7 +203,7 @@ void Counterjib::createTowerSupport() {
         }
     }
     // Cables
-    double adjustedVal = jibSegments % 2 == 0 ? 2 : (jibSupport != 2 ? 4 : 3);
+    int adjustedVal = jibSegments % 2 == 0 ? 2 : (jibSupport != 2 ? 4 : 3);
     int jibNode = (endJib + endTower) / 2 + adjustedVal;
     appendBeam(supportStart, supportStart - 3, false);
     appendBeam(supportStart, supportStart - 4, false);
@@ -222,7 +222,7 @@ void Counterjib::appendBeam(int startNode, int endNode, bool lenCounts) {
 }
 
 
-void Counterjib::updateDimensions(double length, double height, int numSegs, int supStyle) {
+void Counterjib::updateDimensions(int length, int height, int numSegs, int supStyle) {
     cjComps.nodes.clear();
     cjComps.beams.clear();
 
@@ -245,15 +245,15 @@ void Counterjib::updateDimensions(double length, double height, int numSegs, int
     }
 }
 
-double Counterjib::getLength() {
+int Counterjib::getLength() {
     return length;
 }
 
-double Counterjib::getHeight() {
+int Counterjib::getHeight() {
     return height;
 }
 
-double Counterjib::getSegments() {
+int Counterjib::getSegments() {
     return numSegs;
 }
 
@@ -281,14 +281,14 @@ int Counterjib::getEndCJ() {
     return endCJ;
 }
 
-void Counterjib::setLength(double length) {
+void Counterjib::setLength(int length) {
     this->length = length;
 }
 
-void Counterjib::setHeight(double height) {
+void Counterjib::setHeight(int height) {
     this->height = height;
 }
 
-void Counterjib::setSegments(double numSegs) {
+void Counterjib::setSegments(int numSegs) {
     this->numSegs = numSegs;
 }

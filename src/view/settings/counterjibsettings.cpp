@@ -48,5 +48,5 @@ int CounterjibSettings::getSegs() {
 }
 
 int CounterjibSettings::getSupType() {
-    return counterjibSupportType->currentIndex();
+    return counterjibSupportType->currentIndex() + 1;
 }

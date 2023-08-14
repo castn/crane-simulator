@@ -9,13 +9,13 @@
 Comps jibComps;
 
 
-Jib::Jib(double height, double width, int numSegs, int supStyle, bool dropdown, bool bend) {
+Jib::Jib(int height, int width, int numSegs, int supStyle, bool dropdown, bool bend) {
     updateDimensions(height, width, numSegs, supStyle, dropdown, bend);
 }
 
 
 void Jib::create(std::vector<Node> nodes, std::vector<Beam> beams,
-                   double towerHeight, double towerWidth) {
+                   int towerHeight, int towerWidth) {
     jibComps.nodes = nodes;
     jibComps.beams = beams;
     startHeight = towerHeight;
@@ -60,13 +60,13 @@ void Jib::createSegments() {
 
 void Jib::createBeams() {
     for (int i = 0; i < numSegs; i++) {
-        double valToAdd = 3 * i + initBeam;
+        int valToAdd = 3 * i + initBeam;
         createHorizontalBeams(i, valToAdd);
         createDiagonalBeams(valToAdd);
     }
 }
 
-void Jib::createHorizontalBeams(int seg, double valToAdd) {
+void Jib::createHorizontalBeams(int seg, int valToAdd) {
     // if (i == 0 and not Dims.IS_CONNECTED) {
     //     appendBeam(0 + valToAdd, 1 + valToAdd);  // first horizontal (0-1)
     // }
@@ -82,7 +82,7 @@ void Jib::createHorizontalBeams(int seg, double valToAdd) {
     appendBeam(1 + valToAdd, 3 + valToAdd);     // bottom diagonal beam
 }
 
-void Jib::createDiagonalBeams(double valToAdd) {
+void Jib::createDiagonalBeams(int valToAdd) {
     appendBeam(0 + valToAdd, 2 + valToAdd);
     appendBeam(1 + valToAdd, 2 + valToAdd);
     appendBeam(4 + valToAdd, 2 + valToAdd);
@@ -99,7 +99,7 @@ void Jib::appendBeam(int startNode, int endNode) {
 }
 
 
-void Jib::updateDimensions(double length, double height, int numSegs, int supStyle,
+void Jib::updateDimensions(int length, int height, int numSegs, int supStyle,
                            bool dropdown, bool bend) {
     // Reset arrays
     jibComps.nodes.clear();
@@ -126,11 +126,11 @@ void Jib::updateDimensions(double length, double height, int numSegs, int supSty
     this->bend = bend;
 }
 
-double Jib::getLength() {
+int Jib::getLength() {
     return length;
 }
 
-double Jib::getHeight() {
+int Jib::getHeight() {
     return height;
 }
 
@@ -169,11 +169,11 @@ int Jib::getEndBase() {
     return jibComps.nodes.size();
 }
 
-void Jib::setLength(double length) {
+void Jib::setLength(int length) {
     this->length = length;
 }
 
-void Jib::setHeight(double height) {
+void Jib::setHeight(int height) {
     this->height = height;
 }
 

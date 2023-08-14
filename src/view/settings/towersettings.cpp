@@ -28,7 +28,7 @@ QLayout *TowerSettings::createSettings() {
     Widget::createGridRow(layout, 2, "Segments", "This is a tooltip!", towerSegments, this);
 
     towerSupportType = new QComboBox(this);
-    towerSupportType->addItems({"Zigzag", "Cross", "Diagonal"});
+    towerSupportType->addItems({"Cross", "Zigzag", "Diagonal"});
     Widget::createGridRow(layout, 3, "Support Type", "This is a tooltip!", towerSupportType, this);
 
     return layout;
@@ -47,5 +47,5 @@ int TowerSettings::getSegs() {
 }
 
 int TowerSettings::getSupType() {
-    return towerSupportType->currentIndex();
+    return towerSupportType->currentIndex() + 1;
 }

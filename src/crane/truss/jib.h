@@ -14,10 +14,10 @@ enum class JibStyle {
 
 class Jib {
 public:
-    Jib(double length, double height, int numSegs, int supStyle, bool dropdown, bool bend);
+    Jib(int length, int height, int numSegs, int supStyle, bool dropdown, bool bend);
     // Dimension getters and setters
-    double getLength();
-    double getHeight();
+    int getLength();
+    int getHeight();
     int getSegments();
     double getTotalBeamLength();
     double getLongestBeam();
@@ -25,18 +25,18 @@ public:
     std::vector<Beam> getBeams();
     int getSupportStyle();
     int getEndBase();
-    void setLength(double length);
-    void setHeight(double height);
+    void setLength(int length);
+    void setHeight(int height);
     void setSegments(int numSegs);
-    void updateDimensions(double length, double height, int numSegs, int supStyle,
+    void updateDimensions(int length, int height, int numSegs, int supStyle,
                           bool dropdown, bool bend);
     // Create jib
     void create(std::vector<Node> nodes, std::vector<Beam> beams,
-                   double towerHeight, double towerWidth);
+                   int towerHeight, int towerWidth);
 private:
     // Jib dimensions
-    double length = 0;
-    double height = 0;
+    int length = 0;
+    int height = 0;
     int numSegs = 0;
     double totalLength = 0;
     double longestBeam = 0;
@@ -46,15 +46,15 @@ private:
     int initBeam = 0;
     int endBase = 0;
     // Tower dimensions
-    double startHeight = 0;
-    double towerWidth = 0;
+    int startHeight = 0;
+    int towerWidth = 0;
 
     // Create nodes
     void createSegments();
     // Create beams
     void createBeams();
-    void createHorizontalBeams(int seg, double valToAdd);
-    void createDiagonalBeams(double valToAdd);
+    void createHorizontalBeams(int seg, int valToAdd);
+    void createDiagonalBeams(int valToAdd);
     void appendBeam(int startNode, int endNode);
 };
 
