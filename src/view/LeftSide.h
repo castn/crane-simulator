@@ -23,7 +23,7 @@ public:
     std::tuple <int, int, int, int, bool, bool> getJibSettings();
     std::tuple <int, int, int, int> getCounterjibSettings();
 
-    void connectApply(MainWindow window);
+    void connectApply();
 private:
     TowerSettings *towerSettings = nullptr;
     JibSettings *jibSettings = nullptr;

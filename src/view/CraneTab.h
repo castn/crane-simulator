@@ -8,6 +8,9 @@
 #include "LeftSide.h"
 #include "RightSide.h"
 
+
+class LeftSide;
+
 class CraneTab : public QWidget {
 Q_OBJECT
 public:

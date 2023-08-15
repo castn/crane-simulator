@@ -6,8 +6,8 @@
 #include "src/crane/crane.h"
 
 class KTextEdit;
-
 class KJob;
+class CentralWidget;
 
 class MainWindow : public KXmlGuiWindow {
 Q_OBJECT

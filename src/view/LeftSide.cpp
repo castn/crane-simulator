@@ -38,6 +38,6 @@ std::tuple<int, int, int, int> LeftSide::getCounterjibSettings() {
                            counterjibSettings->getSegs(), counterjibSettings->getSupType());
 }
 
-void LeftSide::connectApply(MainWindow window) {
+void LeftSide::connectApply() {
     connect(applyButton, &QPushButton::released, this, SLOT(&MainWindow::handleApply));
 }

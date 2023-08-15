@@ -126,12 +126,15 @@ void MainWindow::downloadFinished(KJob *job) {
 }
 
 void MainWindow::handleApply() {
-    crane->updateDimensions(std::get<0>(mainWidget->getTowerSettings()), std::get<1>(mainWidget->getTowerSettings()),
-                            std::get<2>(mainWidget->getTowerSettings()), std::get<3>(mainWidget->getTowerSettings()),
-                            std::get<0>(mainWidget->getJibSettings()), std::get<1>(mainWidget->getJibSettings()),
-                            std::get<2>(mainWidget->getJibSettings()), std::get<3>(mainWidget->getJibSettings()),
-                            std::get<4>(mainWidget->getJibSettings()), std::get<5>(mainWidget->getJibSettings()),
-                            std::get<0>(mainWidget->getCounterjibSettings()), std::get<1>(mainWidget->getCounterjibSettings()),
-                            std::get<2>(mainWidget->getCounterjibSettings()), std::get<3>(mainWidget->getCounterjibSettings()));
+    auto towerSettings = mainWidget->getTowerSettings();
+    auto jibSettings = mainWidget->getJibSettings();
+    auto cjSettings = mainWidget->getCounterjibSettings();
+    crane->updateDimensions(std::get<0>(towerSettings), std::get<1>(towerSettings),
+                            std::get<2>(towerSettings), std::get<3>(towerSettings),
+                            std::get<0>(jibSettings), std::get<1>(jibSettings),
+                            std::get<2>(jibSettings), std::get<3>(jibSettings),
+                            std::get<4>(jibSettings), std::get<5>(jibSettings),
+                            std::get<0>(cjSettings), std::get<1>(cjSettings),
+                            std::get<2>(cjSettings), std::get<3>(cjSettings));
     crane->createCrane();
 }

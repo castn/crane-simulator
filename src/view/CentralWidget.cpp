@@ -1,7 +1,3 @@
-//
-// Created by carsten on 28.07.23.
-//
-
 #include "CentralWidget.h"
 #include "CraneTab.h"
 

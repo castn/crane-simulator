@@ -1,7 +1,3 @@
-//
-// Created by carsten on 28.07.23.
-//
-
 #ifndef MAINWINDOW_CENTRALWIDGET_H
 #define MAINWINDOW_CENTRALWIDGET_H
 
@@ -9,6 +5,9 @@
 #include "QWidget"
 #include "QTabWidget"
 #include "src/view/CraneTab.h"
+
+
+class CraneTab;
 
 class CentralWidget : public QWidget {
 Q_OBJECT
