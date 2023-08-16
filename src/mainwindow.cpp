@@ -51,7 +51,8 @@ void MainWindow::setupActions() {
     KStandardAction::saveAs(this, &MainWindow::saveFileAs, actionCollection());
     KStandardAction::openNew(this, &MainWindow::newFile, actionCollection());
 
-    crane = new Crane();
+//    auto crane = new Crane();
+//    crane->createCrane();
 
     setupGUI(Default, "mainwindowui.rc");
 }
@@ -111,6 +112,7 @@ void MainWindow::openFileFromUrl(const QUrl &inputFileName) {
     }
 }
 
+
 void MainWindow::downloadFinished(KJob *job) {
     if (job->error()) {
         KMessageBox::error(this, job->errorString());
@@ -123,18 +125,4 @@ void MainWindow::downloadFinished(KJob *job) {
     if (storedJob) {
         textArea->setPlainText(QTextStream(storedJob->data(), QIODevice::ReadOnly).readAll());
     }
-}
-
-void MainWindow::handleApply() {
-    auto towerSettings = mainWidget->getTowerSettings();
-    auto jibSettings = mainWidget->getJibSettings();
-    auto cjSettings = mainWidget->getCounterjibSettings();
-    crane->updateDimensions(std::get<0>(towerSettings), std::get<1>(towerSettings),
-                            std::get<2>(towerSettings), std::get<3>(towerSettings),
-                            std::get<0>(jibSettings), std::get<1>(jibSettings),
-                            std::get<2>(jibSettings), std::get<3>(jibSettings),
-                            std::get<4>(jibSettings), std::get<5>(jibSettings),
-                            std::get<0>(cjSettings), std::get<1>(cjSettings),
-                            std::get<2>(cjSettings), std::get<3>(cjSettings));
-    crane->createCrane();
 }

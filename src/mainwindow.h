@@ -33,7 +33,7 @@ private Q_SLOTS:
     void saveFileAs();
     void downloadFinished(KJob *job);
 public slots:
-    void handleApply();
+    //void handleApply();
 };
 
 #endif // MAINWINDOW_H

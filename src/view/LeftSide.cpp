@@ -39,5 +39,5 @@ std::tuple<int, int, int, int> LeftSide::getCounterjibSettings() {
 }
 
 void LeftSide::connectApply() {
-    connect(applyButton, &QPushButton::released, this, SLOT(&MainWindow::handleApply));
+    //connect(applyButton, &QPushButton::released, this, SLOT(&MainWindow::handleApply));
 }
