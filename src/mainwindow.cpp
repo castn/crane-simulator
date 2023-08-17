@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent), fileName(QStrin
 }
 
 auto MainWindow::createCentralWidget() -> QWidget* {
-    mainWidget = new CentralWidget(this);
-    return mainWidget;
+    mainContent = new MainContent(this);
+    return mainContent;
 }
 
 void MainWindow::setupActions() {
@@ -60,7 +60,7 @@ void MainWindow::setupActions() {
 void MainWindow::newFile() {
     fileName.clear();
     textArea->clear();
-    mainWidget->createNewCrane("untitled");
+    mainContent->createNewCrane("untitled");
 }
 
 void MainWindow::saveFileToDisk(const QString &outputFileName) {

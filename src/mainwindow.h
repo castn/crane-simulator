@@ -2,12 +2,12 @@
 #define MAINWINDOW_H
 
 #include <KXmlGuiWindow>
-#include "src/view/CentralWidget.h"
+#include "src/view/maincontent.h"
 #include "src/crane/crane.h"
 
 class KTextEdit;
 class KJob;
-class CentralWidget;
+class MainContent;
 
 class MainWindow : public KXmlGuiWindow {
 Q_OBJECT
@@ -23,7 +23,7 @@ private:
 
     KTextEdit *textArea;
     QString fileName;
-    CentralWidget *mainWidget = nullptr;
+    MainContent *mainContent = nullptr;
 
     QWidget *createCentralWidget();
 private Q_SLOTS:

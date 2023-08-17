@@ -14,14 +14,14 @@
 #include <QPointer>
 #include <vtkCellArray.h>
 #include <vtkPolyLine.h>
-#include "RightSide.h"
+#include "renderer.h"
 
-RightSide::RightSide(QWidget *parent) : QWidget(parent) {
+Renderer::Renderer(QWidget *parent) : QWidget(parent) {
     renderLayout = new QVBoxLayout(this);
     renderLayout->addWidget(addRenderer());
 }
 
-auto RightSide::addRenderer() -> QWidget * {
+auto Renderer::addRenderer() -> QWidget * {
     QPointer<QVTKOpenGLNativeWidget> vtkRenderWidget = new QVTKOpenGLNativeWidget(this);
     // VTK part
     vtkNew<vtkGenericOpenGLRenderWindow> window;
@@ -51,7 +51,7 @@ auto RightSide::addRenderer() -> QWidget * {
     return vtkRenderWidget;
 }
 
-vtkNew<vtkPolyData> RightSide::createBeamPlot() {
+vtkNew<vtkPolyData> Renderer::createBeamPlot() {
     // Create five points.
     double origin[3] = {0.0, 0.0, 0.0};
     double p0[3] = {1.0, 0.0, 0.0};

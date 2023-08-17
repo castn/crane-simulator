@@ -2,8 +2,8 @@
 // Created by carsten on 30.07.23.
 //
 
-#ifndef MAINWINDOW_RIGHTSIDE_H
-#define MAINWINDOW_RIGHTSIDE_H
+#ifndef MAINWINDOW_RENDERER_H
+#define MAINWINDOW_RENDERER_H
 
 
 #include <QWidget>
@@ -11,10 +11,10 @@
 #include <QVBoxLayout>
 #include <vtkPolyData.h>
 
-class RightSide : public QWidget {
+class Renderer : public QWidget {
 Q_OBJECT
 public:
-    explicit RightSide(QWidget *parent);
+    explicit Renderer(QWidget *parent);
     QVBoxLayout *renderLayout = nullptr;
 
 private:
@@ -23,4 +23,4 @@ private:
 };
 
 
-#endif //MAINWINDOW_RIGHTSIDE_H
+#endif //MAINWINDOW_RENDERER_H

@@ -1,18 +1,17 @@
-#ifndef MAINWINDOW_CENTRALWIDGET_H
-#define MAINWINDOW_CENTRALWIDGET_H
+#ifndef MAINWINDOW_MAINCONTENT_H
+#define MAINWINDOW_MAINCONTENT_H
 
 #include "QVBoxLayout"
 #include "QWidget"
 #include "QTabWidget"
-#include "src/view/CraneTab.h"
 
 
 class CraneTab;
 
-class CentralWidget : public QWidget {
+class MainContent : public QWidget {
 Q_OBJECT
 public:
-    explicit CentralWidget(QWidget *parent);
+    explicit MainContent(QWidget *parent = nullptr);
 
     void createNewCrane(const QString& name);
 
@@ -20,10 +19,10 @@ public:
     std::tuple <double, double, int, int, bool, bool> getJibSettings();
     std::tuple <double, double, int, int> getCounterjibSettings();
 private:
-    QTabWidget *tabs = nullptr;
-    QVBoxLayout *centralLayout = nullptr;
+    QTabWidget *renderer = nullptr;
+    QGridLayout *mainLayout = nullptr;
     CraneTab *craneTab = nullptr;
 };
 
 
-#endif //MAINWINDOW_CENTRALWIDGET_H
+#endif //MAINWINDOW_MAINCONTENT_H
