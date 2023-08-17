@@ -8,6 +8,8 @@ class Beam {
 public:
     Beam(Node start, Node end);
     double getLength();
+    Node getStart();
+    Node getEnd();
 private:
     Node *startNode = nullptr;
     Node *endNode = nullptr;

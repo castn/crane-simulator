@@ -10,3 +10,11 @@ Beam::Beam(Node start, Node end){
 double Beam::getLength() {
     return length;
 }
+
+Node Beam::getStart() {
+    return *startNode;
+}
+
+Node Beam::getEnd() {
+    return *endNode;
+}
