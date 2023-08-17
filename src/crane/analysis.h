@@ -7,12 +7,19 @@
 class Analysis {
 public:
     void analyze();
-    void applyForces();
-    void resetForces();
-    void setGravityInfo();
+    void applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, int jibBaseEnd,
+                     int cjEnd, int cjBaseEnd);
+    void resetForces(double jibLeftForce, double jibRightForce, double cjLeftForce,
+                     double cjRightForce);
+    void setGravityInfo(int density, double gravityConst);
     void applyGravity();
-    void applyHorizontalForces();
+    void applyHorizontalForces(int direction, double force, int cjSupType);
 private:
+    int kN = 1e3;
+    std::vector<Node> nodes;
+    std::vector<int> defFixedNodes;
+    std::vector<int> dofConition;
+
     int towerEnd = 0;
     int jibBaseEnd = 0;
     int jibEnd = 0;
@@ -25,12 +32,12 @@ private:
     double gravityConst = 0;
     int absMaxTension = 0;
 
-    void generateConditions();
+    void generateConditions(std::vector<Node> nodes);
     
-    void applyHorizontalForcesFromFront();
-    void applyHorizontalForcesFromBack();
-    void applyHorizontalForcesFromLeft();
-    void applyHorizontalForcesFromRight();
+    void applyHorizontalForcesFromFront(double force, int cjSupType);
+    void applyHorizontalForcesFromBack(double force, int cjSupType);
+    void applyHorizontalForcesFromLeft(double force, int cjSupType);
+    void applyHorizontalForcesFromRight(double force);
 
     bool isEulerBucklingRod();
 
