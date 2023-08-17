@@ -18,13 +18,13 @@ MainContent::MainContent(QWidget *parent) : QWidget(parent) {
     renderer = new QTabWidget(this);
     renderer->setTabsClosable(true);
     //craneTab = new CraneTab(this);
-    renderer->addTab(new Renderer(this), "test");
+    renderer->addTab(new Renderer(this), "untitled");
 
     mainLayout->addWidget(renderer, 0,1);
 }
 
 void MainContent::createNewCrane(const QString &name) {
-    renderer->addTab(new Renderer(this), name);
+    //renderer->addTab(new Renderer(this), name);
 
 }
 
