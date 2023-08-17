@@ -1,6 +1,6 @@
 #include "maincontent.h"
 #include "view/settings/cranesettings.h"
-#include "renderer.h"
+#include "src/view/render/renderer.h"
 
 MainContent::MainContent(QWidget *parent) : QWidget(parent) {
     mainLayout = new QGridLayout(this);
