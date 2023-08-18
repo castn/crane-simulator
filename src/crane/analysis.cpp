@@ -68,7 +68,7 @@ void Analysis::generateConditions(std::vector<Node> nodes) {
                      0, 0, 0,
                      0, 0, 0,};
     
-    Eigen::Matrix<int, Eigen::Dynamic, 3> dofCondition;
+    // Eigen::Matrix<int, Eigen::Dynamic, 3> dofCondition;
     dofCondition.fill(1);
 }
     

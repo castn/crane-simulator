@@ -20,8 +20,8 @@ private:
     int kN = 1e3;
     std::vector<Node> nodes;
     std::vector<int> defFixedNodes;
-    Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> dofCondition;
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> forces;
+    Eigen::Matrix<int, Eigen::Dynamic, 3> dofCondition;
+    Eigen::Matrix<double, Eigen::Dynamic, 3> forces;
 
     int towerEnd = 0;
     int jibBaseEnd = 0;
