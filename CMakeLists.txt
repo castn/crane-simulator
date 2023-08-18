@@ -93,9 +93,14 @@ message (STATUS "VTK_VERSION: ${VTK_VERSION}, Qt Version: ${Qt${VTK_QT_VERSION}W
 # library meant for numerical analysis with multi-dimensional array expressions
 find_package(xtl REQUIRED)
 find_package(xtensor REQUIRED)
+find_package(Eigen3 REQUIRED)
 if(MSVC)
     set(CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO)
 endif()
+include_directories(${xtensor_INCLUDE_DIRS})
+target_link_libraries(mainwindow ${xtensor_LIBRARIES})
+include_directories(${Eigen3_INCLUDE_DIRS})
+target_link_libraries(mainwindow ${Eigen3_LIBRARIES})
 
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

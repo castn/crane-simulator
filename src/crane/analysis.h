@@ -3,8 +3,7 @@
 
 #include "truss/components/node.h"
 #include "truss/components/beam.h"
-// #include <xtensor/xarray.hpp>
-#include <xtensor/xtensor.hpp>
+#include <Eigen/Dense>
 
 class Analysis {
 public:
@@ -21,8 +20,8 @@ private:
     int kN = 1e3;
     std::vector<Node> nodes;
     std::vector<int> defFixedNodes;
-    xt::xarray<int> dofCondition;
-    xt::xarray<double> forces;
+    Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> dofCondition;
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> forces;
 
     int towerEnd = 0;
     int jibBaseEnd = 0;
