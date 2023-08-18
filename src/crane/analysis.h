@@ -3,12 +3,15 @@
 
 #include "truss/components/node.h"
 #include "truss/components/beam.h"
+// #include <xtensor/xarray.hpp>
+#include <xtensor/xtensor.hpp>
 
 class Analysis {
 public:
     void analyze();
     void applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, int jibBaseEnd,
-                     int cjEnd, int cjBaseEnd);
+                     int cjEnd, int cjBaseEnd, double jibLeftForce, double jibRightForce,
+                     double cjLeftForce, double cjRightForce);
     void resetForces(double jibLeftForce, double jibRightForce, double cjLeftForce,
                      double cjRightForce);
     void setGravityInfo(int density, double gravityConst);
@@ -18,7 +21,8 @@ private:
     int kN = 1e3;
     std::vector<Node> nodes;
     std::vector<int> defFixedNodes;
-    std::vector<int> dofConition;
+    xt::xarray<int> dofCondition;
+    xt::xarray<double> forces;
 
     int towerEnd = 0;
     int jibBaseEnd = 0;

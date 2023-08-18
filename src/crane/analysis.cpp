@@ -1,7 +1,8 @@
 #include "analysis.h"
 #include "truss/components/node.h"
 #include "truss/components/beam.h"
-#include <xtensor>
+// #include <xtensor/xarray.hpp>
+#include <xtensor/xtensor.hpp>
 
 void Analysis::analyze() {
 
@@ -20,7 +21,16 @@ void Analysis::applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, in
 }
 void Analysis::resetForces(double jibLeftForce, double jibRightForce, double cjLeftForce,
                            double cjRightForce) {
+    xt::xarray<double> p({nodes.size(), 3});
+    p.fill(0.0);
+    auto pTemp = std::copy(p.begin(), p.end(), pTemp.begin());
 
+    pTemp[{jibBaseEnd - 2, 2}] += jibLeftForce;
+    pTemp[{jibBaseEnd - 1, 2}] += jibRightForce;
+    pTemp[{cjBaseEnd - 2, 2}] += cjLeftForce;
+    pTemp[{cjBaseEnd - 1, 2}] += cjRightForce;
+
+    forces = p;
 }
 void Analysis::setGravityInfo(int density, double gravityConst) {
     this->density = density;
