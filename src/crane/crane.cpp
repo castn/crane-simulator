@@ -1,3 +1,4 @@
+#include <iostream>
 #include "crane.h"
 
 
@@ -41,6 +42,11 @@ double Crane::getTowerLength() {
 void Crane::updateTowerDimensions(int towerHeight, int towerWidth, int towerSegs,
                                   int towerSupStyle) {
     tower->updateDimensions(towerHeight, towerWidth, towerSegs, towerSupStyle);
+}
+
+void Crane::updateTowerHeight(int height) {
+    tower->setHeight(height);
+    std::cout << "new height to 9";
 }
 
 // Methods relating to the jib

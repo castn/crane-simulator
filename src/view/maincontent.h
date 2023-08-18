@@ -1,9 +1,11 @@
 #ifndef MAINWINDOW_MAINCONTENT_H
 #define MAINWINDOW_MAINCONTENT_H
 
+#include <QSpinBox>
 #include "QVBoxLayout"
 #include "QWidget"
 #include "QTabWidget"
+#include "crane/crane.h"
 
 
 class CraneTab;
@@ -11,7 +13,7 @@ class CraneTab;
 class MainContent : public QWidget {
 Q_OBJECT
 public:
-    explicit MainContent(QWidget *parent = nullptr);
+    explicit MainContent(Crane &crane, QWidget *parent = nullptr);
 
     void createNewCrane(const QString& name);
 
@@ -21,7 +23,7 @@ public:
 private:
     QTabWidget *renderer = nullptr;
     QGridLayout *mainLayout = nullptr;
-    CraneTab *craneTab = nullptr;
+
 };
 
 

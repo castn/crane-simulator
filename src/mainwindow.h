@@ -16,7 +16,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     void openFileFromUrl(const QUrl &inputFileName);
 private:
-    Crane *crane = nullptr;
+    Crane *crane;
 
     void setupActions();
     void saveFileToDisk(const QString &outputFileName);
