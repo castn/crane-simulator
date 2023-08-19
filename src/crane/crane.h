@@ -29,6 +29,10 @@ public:
 public slots:
 
     void updateTowerHeight(int height);
+    void updateTowerWidth(int width);
+    void updateTowerSegments(int segments);
+    void updateTowerSupportType(int typeIndex);
+
 
 private:
     // Everything related to tower

@@ -30,7 +30,11 @@ CraneSettings::CraneSettings(Crane &crane, QWidget *parent) : QWidget(parent) {
     towerSupportType->addItems({"Cross", "Zigzag", "Diagonal"});
     Widget::createGridRow(towerLayout, 3, "Support Type", "This is a tooltip!", towerSupportType, this);
 
+    // We need to call QOverload due to Qt5 overloading valueChanged(), this deprecated and is fixed in Qt6
     connect(towerHeight, QOverload<int>::of(&QSpinBox::valueChanged), &crane, &Crane::updateTowerHeight);
+    connect(towerWidth, QOverload<int>::of(&QSpinBox::valueChanged), &crane, &Crane::updateTowerWidth);
+    connect(towerSegments, QOverload<int>::of(&QSpinBox::valueChanged), &crane, &Crane::updateTowerSegments);
+    connect(towerSupportType, QOverload<int>::of(&QComboBox::currentIndexChanged), &crane, &Crane::updateTowerSupportType);
 
     towerGroup->setLayout(towerLayout);
     settingsLayout->addWidget(towerGroup);

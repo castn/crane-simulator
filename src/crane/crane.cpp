@@ -46,7 +46,14 @@ void Crane::updateTowerDimensions(int towerHeight, int towerWidth, int towerSegs
 
 void Crane::updateTowerHeight(int height) {
     tower->setHeight(height);
-    std::cout << "new height to 9";
+}
+
+void Crane::updateTowerWidth(int width) {
+    tower->setWidth(width);
+}
+
+void Crane::updateTowerSegments(int segments) {
+    tower->setSegments(segments);
 }
 
 // Methods relating to the jib
@@ -83,4 +90,8 @@ double Crane::getCounterjibLength() {
 }
 void Crane::updateCounterjibDimensions(int cjLength, int cjHeight, int cjNumSegs, int cjSupStyle) {
     counterjib->updateDimensions(cjLength, cjHeight, cjNumSegs, cjSupStyle);
+}
+
+void Crane::updateTowerSupportType(int typeIndex) {
+
 }
