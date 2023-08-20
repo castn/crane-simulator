@@ -27,13 +27,15 @@ MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent), fileName(QStrin
     textArea = new KTextEdit();
     QPointer<QVTKOpenGLNativeWidget> vtkRenderWidget = new QVTKOpenGLNativeWidget();
 
+    crane = new Crane();
+
     setCentralWidget(createCentralWidget());
 
     setupActions();
 }
 
 auto MainWindow::createCentralWidget() -> QWidget* {
-    mainContent = new MainContent(this);
+    mainContent = new MainContent(*crane, this);
     return mainContent;
 }
 

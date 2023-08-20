@@ -5,7 +5,7 @@
 #include "util/widget.h"
 
 
-CraneSettings::CraneSettings(QWidget *parent) : QWidget(parent) {
+CraneSettings::CraneSettings(Crane &crane, QWidget *parent) : QWidget(parent) {
     settingsLayout = new QVBoxLayout(this);
 
     // Tower
@@ -29,6 +29,8 @@ CraneSettings::CraneSettings(QWidget *parent) : QWidget(parent) {
     towerSupportType = new QComboBox(this);
     towerSupportType->addItems({"Cross", "Zigzag", "Diagonal"});
     Widget::createGridRow(towerLayout, 3, "Support Type", "This is a tooltip!", towerSupportType, this);
+
+    connect(towerHeight, QOverload<int>::of(&QSpinBox::valueChanged), &crane, &Crane::updateTowerHeight);
 
     towerGroup->setLayout(towerLayout);
     settingsLayout->addWidget(towerGroup);

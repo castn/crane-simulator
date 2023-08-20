@@ -11,17 +11,21 @@
 #include <QCheckBox>
 #include "mainwindow.h"
 
-class CraneSettings : public QWidget{
+class CraneSettings : public QWidget {
 Q_OBJECT
 public:
-    explicit CraneSettings(QWidget *parent);
+    explicit CraneSettings(Crane &crane, QWidget *parent);
+
     QVBoxLayout *settingsLayout = nullptr;
 
-    std::tuple <int, int, int, int> getTowerSettings();
-    std::tuple <int, int, int, int, bool, bool> getJibSettings();
-    std::tuple <int, int, int, int> getCounterjibSettings();
+    std::tuple<int, int, int, int> getTowerSettings();
+
+    std::tuple<int, int, int, int, bool, bool> getJibSettings();
+
+    std::tuple<int, int, int, int> getCounterjibSettings();
 
     void connectApply();
+
 private:
     QSpinBox *towerHeight = nullptr;
     QSpinBox *towerWidth = nullptr;
