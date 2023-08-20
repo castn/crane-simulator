@@ -80,7 +80,7 @@ void Counterjib::createSupport() {
     } else if (supType == CounterjibStyle::TOWER) { //Tower
         createTowerSupport();
     } else {
-        std::cout << "No support style chosen";
+        std::cout << "No support style chosen!\n";
     }
 }
 
@@ -241,7 +241,7 @@ void Counterjib::updateDimensions(int length, int height, int numSegs, int supSt
             break;
         default:
             this->supType = CounterjibStyle::NONE;
-            std::cout << "No support style chosen";
+            std::cout << "No support style chosen!S\n";
     }
 }
 

@@ -8,6 +8,7 @@
 class Analysis {
 public:
     void analyze();
+    void generateConditions(std::vector<Node> nodes, std::vector<Beam> beams);
     void applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, int jibBaseEnd,
                      int cjEnd, int cjBaseEnd, double jibLeftForce, double jibRightForce,
                      double cjLeftForce, double cjRightForce);
@@ -18,10 +19,17 @@ public:
     void applyHorizontalForces(int direction, double force, int cjSupType);
 private:
     int kN = 1e3;
+    int E = 210e9;
+    int density = 7850;
+    double gravityConst = 0;
+    int absMaxTension = 0;
+
     std::vector<Node> nodes;
+    std::vector<Beam> beams;
     std::vector<int> defFixedNodes;
     Eigen::Matrix<int, Eigen::Dynamic, 3> dofCondition;
     Eigen::Matrix<double, Eigen::Dynamic, 3> forces;
+    Eigen::Vector<double, Eigen::Dynamic> areaPerBeam;
 
     int towerEnd = 0;
     int jibBaseEnd = 0;
@@ -30,25 +38,21 @@ private:
     int cjEnd = 0;
     int numNodes = 0;
     int numBeams = 0;
-
-    int density = 0;
-    double gravityConst = 0;
-    int absMaxTension = 0;
-
-    void generateConditions(std::vector<Node> nodes);
     
     void applyHorizontalForcesFromFront(double force, int cjSupType);
     void applyHorizontalForcesFromBack(double force, int cjSupType);
     void applyHorizontalForcesFromLeft(double force, int cjSupType);
     void applyHorizontalForcesFromRight(double force);
 
-    bool isEulerBucklingRod();
+    bool isEulerBucklingRod(int beam, double force);
 
-    void getDOFs();
+    std::tuple<Eigen::MatrixXd, Eigen::MatrixXd> getDOFs();
     void calculateReactionForces();
-    void calculateDeformation();
+    Eigen::MatrixXd calculateDeformation(Eigen::MatrixXd defFreeNodes, std::vector<Beam> beams,
+                                         int dof, Eigen::MatrixXd freeDOF, int numNodes,
+                                         Eigen::MatrixXd supportDOF);
     void calculateGlobalStiffness();
-    void getComponentsOfGlobalStiffness();
+    std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF);
 
     void optimize();
 };
