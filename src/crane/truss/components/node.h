@@ -12,6 +12,12 @@ public:
     Node operator - (const Node& node) const {
         return Node(this->x - node.x, this->y - node.y, this->z - node.z);
     }
+    Node operator * (const double toMult) const {
+        return Node(this->x * toMult, this->y * toMult, this->z * toMult);
+    }
+    bool operator == (const Node& node) const {
+        return (this->x == node.x && this->y == node.y && this->z == node.z);
+    }
 private:
     double x = 0;
     double y = 0;

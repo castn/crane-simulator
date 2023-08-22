@@ -51,7 +51,7 @@ private:
     Eigen::MatrixXd calculateDeformation(Eigen::MatrixXd defFreeNodes, std::vector<Beam> beams,
                                          int dof, Eigen::MatrixXd freeDOF, int numNodes,
                                          Eigen::MatrixXd supportDOF);
-    void calculateGlobalStiffness();
+    void calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF);
     std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF);
 
     void optimize();

@@ -37,7 +37,25 @@ void Analysis::setGravityInfo(int density = 7850, double gravityConst) {
     this->gravityConst = gravityConst;
 }
 void Analysis::applyGravity() {
+    for (int i = 0; i < nodes.size(); i++) {
+        std::vector<int> beamsConnToNodeIndex;
+        // Collect all beams connected to a specific node
+        Node nodeToCheck = nodes.at(i);
+        for (int j = 0; j < beams.size(); j++) {
+            if (beams.at(j).getStart() == nodeToCheck || beams.at(j).getEnd() == nodeToCheck) {
+                beamsConnToNodeIndex.push_back(j);
+            }
+        }
+        // Calculate volume of all beams connected to node
+        double volume = 0;
+        for (int k = 0; k < beamsConnToNodeIndex.size(); k++) {
+            volume += (beams.at(beamsConnToNodeIndex.at(k)).getLength() / 2) * areaPerBeam(beamsConnToNodeIndex.at(k));
+        }
+        // Apply approximate force of gravity
+        forces(i, 2) -= volume * density * gravityConst;
 
+        beamsConnToNodeIndex.clear();
+    }
 }
 void Analysis::applyHorizontalForces(int direction, double force, int cjSupType) {
     force = force * kN;
@@ -133,9 +151,11 @@ void Analysis::applyHorizontalForcesFromRight(double force) {
 }
 
 bool Analysis::isEulerBucklingRod(int beam, double force) {
+    // Calculate needed measurements
     double length = beams.at(beam).getLength();
     double mass = length * areaPerBeam(beam) * density;
     double I = (1 / 12) * mass * pow(length, 2);
+    // Check if the beam buckles
     if (force >= (pow(M_PI, 2) / pow(length, 2)) * E * I) {
         return false;
     } else if (force >= ((pow(M_PI, 2)) / pow(0.7 * length, 2)) * E * I) {
@@ -164,6 +184,7 @@ void Analysis::calculateReactionForces() {
 }
 Eigen::MatrixXd Analysis::calculateDeformation(Eigen::MatrixXd defFreeNodes, std::vector<Beam> beams, int dof, Eigen::MatrixXd freeDOF, int numNodes, Eigen::MatrixXd supportDOF) {
     // Eigen::MatrixXd deformation = Eigen::MatrixXd::Zero(numNodes, dof);
+    // Flatten? https://github.com/dpilger26/NumCpp/blob/master/develop/NdArray/NdArrayCore.hpp#L536
 
     // // Set the deformations of the free nodes.
     // deformation[freeDOF] = defFreeNodes;
@@ -182,7 +203,11 @@ Eigen::MatrixXd Analysis::calculateDeformation(Eigen::MatrixXd defFreeNodes, std
 
     // return deformation;
 }
-void Analysis::calculateGlobalStiffness() {
+void Analysis::calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF) {
+    Eigen::MatrixXd K = Eigen::MatrixXd::Zero(totalNumOfDOF, totalNumOfDOF);
+    for (int i = 0; i < numOfElements; i++) {
+        auto tmp = beams.at(i) * (double)DOF;
+    }
 
 }
 std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF) {
