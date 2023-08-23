@@ -2,8 +2,8 @@
 #include "node.h"
 
 Beam::Beam(Node start, Node end){
-    startNode = &start;
-    endNode = &end;
+    startNode = start;
+    endNode = end;
     length = (end - start).norm();
 }
 
@@ -12,9 +12,9 @@ double Beam::getLength() {
 }
 
 Node Beam::getStart() {
-    return *startNode;
+    return startNode;
 }
 
 Node Beam::getEnd() {
-    return *endNode;
+    return endNode;
 }

@@ -19,9 +19,9 @@ public:
     void applyHorizontalForces(int direction, double force, int cjSupType);
 private:
     int kN = 1e3;
-    int E = 210e9;
+    double E = 210e9;
     int density = 7850;
-    double gravityConst = 0;
+    double gravityConst = 9.81;
     int absMaxTension = 0;
 
     std::vector<Node> nodes;
@@ -48,9 +48,10 @@ private:
 
     std::tuple<Eigen::MatrixXd, Eigen::MatrixXd> getDOFs();
     void calculateReactionForces();
-    Eigen::MatrixXd calculateDeformation(Eigen::MatrixXd defFreeNodes, std::vector<Beam> beams,
-                                         int dof, Eigen::MatrixXd freeDOF, int numNodes,
-                                         Eigen::MatrixXd supportDOF);
+    std::tuple<Eigen::VectorXd, Eigen::VectorXd> calculateDeformation(Eigen::VectorXd defFreeNodes,
+                                                                      std::vector<Beam> beams,
+                                                                      int dof, int numNodes);
+    Eigen::VectorXd getNonZeros(Eigen::VectorXd vecToClean);
     void calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF);
     std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF);
 

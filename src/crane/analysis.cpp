@@ -21,7 +21,7 @@ void Analysis::applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, in
 }
 void Analysis::resetForces(double jibLeftForce, double jibRightForce, double cjLeftForce,
                            double cjRightForce) {
-    int nodesSize = nodes.size();
+    // int nodesSize = nodes.size();
     Eigen::Matrix<double, Eigen::Dynamic, 3> p;
     p.fill(0.0);
 
@@ -32,23 +32,23 @@ void Analysis::resetForces(double jibLeftForce, double jibRightForce, double cjL
 
     forces = p;
 }
-void Analysis::setGravityInfo(int density = 7850, double gravityConst) {
+void Analysis::setGravityInfo(int density, double gravityConst) {
     this->density = density;
     this->gravityConst = gravityConst;
 }
 void Analysis::applyGravity() {
-    for (int i = 0; i < nodes.size(); i++) {
+    for (int i = 0; i < (int)nodes.size(); i++) {
         std::vector<int> beamsConnToNodeIndex;
         // Collect all beams connected to a specific node
         Node nodeToCheck = nodes.at(i);
-        for (int j = 0; j < beams.size(); j++) {
+        for (int j = 0; j < (int)beams.size(); j++) {
             if (beams.at(j).getStart() == nodeToCheck || beams.at(j).getEnd() == nodeToCheck) {
                 beamsConnToNodeIndex.push_back(j);
             }
         }
         // Calculate volume of all beams connected to node
         double volume = 0;
-        for (int k = 0; k < beamsConnToNodeIndex.size(); k++) {
+        for (int k = 0; k < (int)beamsConnToNodeIndex.size(); k++) {
             volume += (beams.at(beamsConnToNodeIndex.at(k)).getLength() / 2) * areaPerBeam(beamsConnToNodeIndex.at(k));
         }
         // Apply approximate force of gravity
@@ -182,15 +182,42 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getDOFs() {
 void Analysis::calculateReactionForces() {
 
 }
-Eigen::MatrixXd Analysis::calculateDeformation(Eigen::MatrixXd defFreeNodes, std::vector<Beam> beams, int dof, Eigen::MatrixXd freeDOF, int numNodes, Eigen::MatrixXd supportDOF) {
-    // Eigen::MatrixXd deformation = Eigen::MatrixXd::Zero(numNodes, dof);
-    // Flatten? https://github.com/dpilger26/NumCpp/blob/master/develop/NdArray/NdArrayCore.hpp#L536
+std::tuple<Eigen::VectorXd, Eigen::VectorXd> Analysis::calculateDeformation(Eigen::VectorXd defFreeNodes, std::vector<Beam> beams, int dof, int numNodes) {
+    // Flatten dofCondition
+    Eigen::VectorXd deformation;
+    for (int i = 0; i < dofCondition.size(); i++) {
+        for (int j = 0; j < dofCondition.cols(); j++) {
+            deformation(3 * i + j) = dofCondition(i, j);
+        }
+    }
+    auto quickDefo = dofCondition.reshaped<Eigen::RowMajor>().transpose();
 
-    // // Set the deformations of the free nodes.
-    // deformation[freeDOF] = defFreeNodes;
+    // Replaces get_DOFs method but no gurantee about supportDOF
+    auto freeDOF = getNonZeros(dofCondition.reshaped<Eigen::RowMajor>().transpose());
+    auto supportDOF = getNonZeros(dofCondition.reshaped<Eigen::RowMajor>().transpose().cwiseEqual(0));
 
-    // // Set the deformations of the fixed nodes to 0.
-    // deformation[supportDOF] = Eigen::MatrixXd::Zero(supportDOF.rows(), dof);
+    // Set the deformations of the free nodes.
+    int indexFree = 0;
+    for (int i = 0; i < (int)freeDOF.size(); i++) {
+        // Unsure abt all the int casts but otherwise throws errors
+        deformation((int)freeDOF(i)) = (int)defFreeNodes(indexFree);
+        quickDefo((int)freeDOF(i)) = (int)defFreeNodes(indexFree);
+        indexFree++;
+    }
+
+    // Set the deformations of the fixed nodes to 0.
+    int indexFixed = 0;
+    for (int i = 0; i < (int)supportDOF.size(); i++) {
+        // Unsure abt all the int casts but otherwise throws errors
+        deformation((int)freeDOF(i)) = (int)defFreeNodes(indexFixed);
+        quickDefo((int)freeDOF(i)) = (int)defFreeNodes(indexFixed);
+        indexFixed++;
+    }
+    deformation = deformation.reshaped(numNodes, dof);
+    //might need to add id to each node for next step
+    //below is just placeholder for now
+    Eigen::VectorXd u(deformation.size() + quickDefo.size());
+    u << deformation, quickDefo;
 
     // // Combine the deformations of the two nodes in each beam.
     // for (int i = 0; i < beams.size(); i++) {
@@ -201,14 +228,24 @@ Eigen::MatrixXd Analysis::calculateDeformation(Eigen::MatrixXd defFreeNodes, std
     //     deformation.row(node1_row) = (deformation.row(node1_row) + deformation.row(node2_row)) / 2;
     // }
 
-    // return deformation;
+    return std::make_tuple(deformation, u);
+}
+Eigen::VectorXd Analysis::getNonZeros(Eigen::VectorXd vecToClean) {
+    Eigen::VectorXd cleaned;
+    int index = 0;
+    for (int i = 0; i < (int)vecToClean.size(); i++) {
+        if (vecToClean(i) != 0) {
+            cleaned(index) = vecToClean(i);
+            index++;
+        }
+    }
+    return cleaned;
 }
 void Analysis::calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF) {
     Eigen::MatrixXd K = Eigen::MatrixXd::Zero(totalNumOfDOF, totalNumOfDOF);
     for (int i = 0; i < numOfElements; i++) {
         auto tmp = beams.at(i) * (double)DOF;
     }
-
 }
 std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF) {
     Eigen::MatrixXd KTopLeft = K.block(freeDOF.rows(), 0, freeDOF.rows(), freeDOF.rows());
