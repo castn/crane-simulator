@@ -31,6 +31,11 @@ private:
     Eigen::Matrix<double, Eigen::Dynamic, 3> forces;
     Eigen::Vector<double, Eigen::Dynamic> areaPerBeam;
 
+    double jibLeftForce = 0;
+    double jibRightForce = 0;
+    double cjLeftForce = 0;
+    double cjRightForce = 0;
+
     int towerEnd = 0;
     int jibBaseEnd = 0;
     int jibEnd = 0;
@@ -55,7 +60,7 @@ private:
     void calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF);
     std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF);
 
-    void optimize();
+    void optimize(double horzForce, int cjSupType, bool hasHorzForces, bool hasGrav);
 };
 
 #endif

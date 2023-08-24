@@ -33,6 +33,7 @@ public:
                 int towerHeight, int towerWidth, int towerNumNodes,
                 int jibSegs, int jibSupport, int jibHeight);
 private:
+    int nodeIndex = 0;
     // Counterjib dimensions
     int length = 0;
     int height = 0;

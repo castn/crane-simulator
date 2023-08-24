@@ -15,8 +15,8 @@ public:
         return Beam(this->startNode * toMult, this->endNode * toMult);
     }
 private:
-    Node startNode = Node(0, 0, 0);
-    Node endNode = Node(0, 0, 0);
+    Node startNode = Node(0, 0, 0, 0);
+    Node endNode = Node(0, 0, 0, 0);
     double length;
 };
 

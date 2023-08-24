@@ -31,10 +31,14 @@ void Tower::createSegments(bool hasHorizontal, bool isHollow) {
 
 void Tower::createNodesPerSegment(double elevation) {
     // Create all nodes so the beams of a segment can connect to them
-    towerComps.nodes.emplace_back(0, 0, elevation);
-    towerComps.nodes.emplace_back(0, width, elevation);
-    towerComps.nodes.emplace_back(width, 0, elevation);
-    towerComps.nodes.emplace_back(width, width, elevation);
+    towerComps.nodes.push_back(Node(0, 0, elevation, nodeIndex));
+    nodeIndex++;
+    towerComps.nodes.push_back(Node(0, width, elevation, nodeIndex));
+    nodeIndex++;
+    towerComps.nodes.push_back(Node(width, 0, elevation, nodeIndex));
+    nodeIndex++;
+    towerComps.nodes.push_back(Node(width, width, elevation, nodeIndex));
+    nodeIndex++;
 }
 
 void Tower::createBeamsPerSegment(int segment, bool hasHorizontal, bool isHollow) {
@@ -154,6 +158,8 @@ void Tower::updateDimensions(int height, int width, int numSegs, int supStyle) {
             this->supStyle = TowerStyle::NONE;
             std::cout << "No support style chosen!\n";
     }
+
+    nodeIndex = 0;
 }
 
 int Tower::getHeight() {

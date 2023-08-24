@@ -31,6 +31,7 @@ public:
     void updateDimensions(int height, int width, int numSegs, int supStyle);
     void create(bool hasHorizontal, bool isHollow);
 private:
+    int nodeIndex = 0;
     // Tower dimensions
     int height = 0;
     int width = 0;

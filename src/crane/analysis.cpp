@@ -22,13 +22,17 @@ void Analysis::applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, in
 void Analysis::resetForces(double jibLeftForce, double jibRightForce, double cjLeftForce,
                            double cjRightForce) {
     // int nodesSize = nodes.size();
-    Eigen::Matrix<double, Eigen::Dynamic, 3> p;
+    Eigen::Matrix<double, Eigen::Dynamic, 3> p; // put actual value here
     p.fill(0.0);
 
     p(jibBaseEnd - 2, 2) += jibLeftForce;
     p(jibBaseEnd - 1, 2) += jibRightForce;
     p(cjBaseEnd - 2, 2) += cjLeftForce;
     p(cjBaseEnd - 1, 2) += cjRightForce;
+    this->jibLeftForce = jibLeftForce;
+    this->jibRightForce = jibRightForce;
+    this->cjLeftForce = cjLeftForce;
+    this->cjRightForce = cjRightForce;
 
     forces = p;
 }
@@ -214,19 +218,15 @@ std::tuple<Eigen::VectorXd, Eigen::VectorXd> Analysis::calculateDeformation(Eige
         indexFixed++;
     }
     deformation = deformation.reshaped(numNodes, dof);
-    //might need to add id to each node for next step
-    //below is just placeholder for now
-    Eigen::VectorXd u(deformation.size() + quickDefo.size());
+    // rough implementation of what happens inside concatenate
+    Eigen::VectorXd defoBeams0;
+    Eigen::VectorXd defoBeams1;
+    for (int i = 0; i < (int)beams.size(); i++) {
+        defoBeams0(i) = deformation(beams.at(i).getStart().getNodeNum());
+        defoBeams1(i) = deformation(beams.at(i).getEnd().getNodeNum());
+    }
+    Eigen::VectorXd u;
     u << deformation, quickDefo;
-
-    // // Combine the deformations of the two nodes in each beam.
-    // for (int i = 0; i < beams.size(); i++) {
-    //     auto node1 = beams.at(i).getStart();
-    //     auto node2 = beams.at(i).getEnd();
-    //     int node1_row = node1.operator[]();
-    //     int node2_row = node2.operator[]();
-    //     deformation.row(node1_row) = (deformation.row(node1_row) + deformation.row(node2_row)) / 2;
-    // }
 
     return std::make_tuple(deformation, u);
 }
@@ -256,6 +256,21 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getCompo
     return std::make_tuple(KBottomLeft, KBottomRight, KTopLeft);
 }
 
-void Analysis::optimize() {
-
+void Analysis::optimize(double horzForce, int cjSupType, bool hasHorzForces, bool hasGrav) {
+    Eigen::VectorXd optimAPB;
+    std::vector<int> directions = {0, 1, 2, 3};
+    for (auto direction : directions) {
+        areaPerBeam.fill(pow(0.05, 2));
+        resetForces(jibLeftForce, jibRightForce, cjLeftForce, cjRightForce);
+        if (hasGrav) {
+            applyGravity();
+        }
+        if (hasHorzForces) {
+            applyHorizontalForces(direction, horzForce, cjSupType);
+        }
+        for (int i = 0; i < 20; i++) {
+            // auto axialForce = analyze();
+            auto oldAPB(areaPerBeam);
+        }
+    }
 }

@@ -34,6 +34,7 @@ public:
     void create(std::vector<Node> nodes, std::vector<Beam> beams,
                    int towerHeight, int towerWidth);
 private:
+    int nodeIndex = 0;
     // Jib dimensions
     int length = 0;
     int height = 0;

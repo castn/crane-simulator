@@ -38,8 +38,10 @@ void Counterjib::create(std::vector<Node> nodes, std::vector<Beam> beams,
 void Counterjib::createSegments() {
     for (int i = 0; i < numSegs; i++) {
         if (i != 0) {
-            cjComps.nodes.push_back(Node(- length * i, 0, startHeight));
-            cjComps.nodes.push_back(Node(- length * i, towerWidth, startHeight));
+            cjComps.nodes.push_back(Node(- length * i, 0, startHeight, nodeIndex));
+            nodeIndex++;
+            cjComps.nodes.push_back(Node(- length * i, towerWidth, startHeight, nodeIndex));
+            nodeIndex++;
         }
     }
 }
@@ -92,14 +94,19 @@ void Counterjib::createTrussSupport() {
         // creates node on top of tower
         if (i == 0) {
             cjComps.nodes.push_back(Node(1/2 * towerWidth, 1/2 * towerWidth,
-                                   topHeight + 2 * jibHeightSeg));
+                                   topHeight + 2 * jibHeightSeg, nodeIndex));
+            nodeIndex++;
         // creates first node on top of the support
         } else if (i == 1 && numSegs > 1) {
-            cjComps.nodes.push_back(Node(- length / 2, 1/2 * towerWidth, topHeight + jibHeightSeg));
+            cjComps.nodes.push_back(Node(- length / 2, 1/2 * towerWidth,
+                                         topHeight + jibHeightSeg, nodeIndex));
+            nodeIndex++;
         }
         // creates all other nodes on top of the support
         else {
-            cjComps.nodes.push_back(Node(- length * ((i * 2) - 1) / 2, 1/2 * towerWidth, topHeight));
+            cjComps.nodes.push_back(Node(- length * ((i * 2) - 1) / 2, 1/2 * towerWidth,
+                                         topHeight, nodeIndex));
+            nodeIndex++;
         }
         // create 'pyramid' structure on top of tower
         if (i == 1) {
@@ -168,14 +175,16 @@ void Counterjib::createTrussSupport() {
 //     appendBeam(endTower + 1, endBase - 1, false);
 // }
 void Counterjib::createTowerSupport() {
-    cjComps.nodes.push_back(Node(towerWidth / 2, towerWidth / 2, startHeight + towerWidth * 2));
+    cjComps.nodes.push_back(Node(towerWidth / 2, towerWidth / 2, startHeight + towerWidth * 2, nodeIndex));
+    nodeIndex++;
     // Truss support
     int supportStart = endBase;
     for (int i = 0; i < numSegs; i++) {
         // create required nodes
         if (i != 0) {
             cjComps.nodes.push_back(Node(- startHeight * ((i * 2) - 1) / 2, 
-                                       1/2 * towerWidth, startHeight + height));
+                                       1/2 * towerWidth, startHeight + height, nodeIndex));
+            nodeIndex++;
         }
         // second batch
         if (i == 1) {
@@ -243,6 +252,8 @@ void Counterjib::updateDimensions(int length, int height, int numSegs, int supSt
             this->supType = CounterjibStyle::NONE;
             std::cout << "No support style chosen!S\n";
     }
+
+    nodeIndex = 0;
 }
 
 int Counterjib::getLength() {

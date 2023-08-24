@@ -33,8 +33,10 @@ void Jib::createSegments() {
         double botHeight = bend ? (startHeight + bendGrad) : startHeight;
         // skips the first run-through if nodes already exist
         if (i != 0) {
-            jibComps.nodes.push_back(Node(towerWidth + length * i, 0, botHeight));
-            jibComps.nodes.push_back(Node(towerWidth + length * i, towerWidth, botHeight));
+            jibComps.nodes.push_back(Node(towerWidth + length * i, 0, botHeight, nodeIndex));
+            nodeIndex++;
+            jibComps.nodes.push_back(Node(towerWidth + length * i, towerWidth, botHeight, nodeIndex));
+            nodeIndex++;
         }
         double topHeight = 0;
         if (dropdown) {
@@ -53,7 +55,8 @@ void Jib::createSegments() {
         // adds top nodes
         if (i < numSegs) { //supType 1 -> truss
             jibComps.nodes.push_back(Node(supStyle == JibStyle::TRUSS ? towerWidth + length * i + length / 2 : towerWidth * 1.15 + length * i,
-                                  length / 2, botHeight + topHeight));
+                                  length / 2, botHeight + topHeight, nodeIndex));
+            nodeIndex++;
         }
     }
 }
@@ -124,6 +127,8 @@ void Jib::updateDimensions(int length, int height, int numSegs, int supStyle,
     }
     this->dropdown = dropdown;
     this->bend = bend;
+    
+    nodeIndex = 0;
 }
 
 int Jib::getLength() {
