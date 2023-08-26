@@ -106,15 +106,17 @@ CraneSettings::CraneSettings(Crane &crane, QWidget *parent) : QWidget(parent) {
 }
 
 std::tuple<int, int, int, int> CraneSettings::getTowerSettings() {
-    return std::make_tuple(0, 0, 0, 0);
+    return std::make_tuple(towerHeight->value(), towerWidth->value(), towerSegments->value(), towerSupportType->currentIndex());
 }
 
 std::tuple<int, int, int, int, bool, bool> CraneSettings::getJibSettings() {
-    return std::make_tuple(0, 0, 0, 0, false, false);
+    return std::make_tuple(jibLength->value(), jibHeight->value(), jibSegments->value(),
+                           jibSupportType->currentIndex(), heightDropdown->isChecked(), upwardBend->isChecked());
 }
 
 std::tuple<int, int, int, int> CraneSettings::getCounterjibSettings() {
-    return std::make_tuple(0, 0, 0, 0);
+    return std::make_tuple(counterjibLength->value(), counterjibHeight->value(), counterjibSegments->value(),
+                           counterjibSupportType->currentIndex());
 }
 
 void CraneSettings::connectApply() {

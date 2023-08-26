@@ -6,9 +6,12 @@
 #include "QWidget"
 #include "QTabWidget"
 #include "crane/crane.h"
+#include "view/settings/cranesettings.h"
 
 
 class CraneTab;
+class CraneSettings;
+class Renderer;
 
 class MainContent : public QWidget {
 Q_OBJECT
@@ -17,13 +20,13 @@ public:
 
     void createNewCrane(const QString& name);
 
-    std::tuple <double, double, int, int> getTowerSettings();
-    std::tuple <double, double, int, int, bool, bool> getJibSettings();
-    std::tuple <double, double, int, int> getCounterjibSettings();
+    std::tuple <int, int, int, int> getTowerSettings();
+    std::tuple <int, int, int, int, bool, bool> getJibSettings();
+    std::tuple <int, int, int, int> getCounterjibSettings();
 private:
-    QTabWidget *renderer = nullptr;
+    Renderer *renderer = nullptr;
     QGridLayout *mainLayout = nullptr;
-
+    CraneSettings *craneSettings = nullptr;
 };
 
 

@@ -62,8 +62,8 @@ private:
     std::tuple<Eigen::MatrixXd,
                Eigen::MatrixXd,
                Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K,
-                                                               Eigen::MatrixXd freeDOF,
-                                                               Eigen::MatrixXd supportDOF);
+                                                               Eigen::VectorXi freeDOF,
+                                                               Eigen::VectorXi supportDOF);
 
     std::tuple<Eigen::VectorXd,
                Eigen::VectorXd,

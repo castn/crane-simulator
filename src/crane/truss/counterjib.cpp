@@ -250,7 +250,7 @@ void Counterjib::updateDimensions(int length, int height, int numSegs, int supSt
             break;
         default:
             this->supType = CounterjibStyle::NONE;
-            std::cout << "No support style chosen!S\n";
+            std::cout << "No countrjib support style chosen!\n";
     }
 
     nodeIndex = 0;

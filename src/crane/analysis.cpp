@@ -274,7 +274,7 @@ Eigen::MatrixXd Analysis::calculateGlobalStiffness(int DOF, int numOfElements, i
 
     return K;
 }
-std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF) {
+std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::VectorXi freeDOF, Eigen::VectorXi supportDOF) {
     Eigen::MatrixXd KTopLeft = K.block(freeDOF.rows(), 0, freeDOF.rows(), freeDOF.rows());
     Eigen::MatrixXd KTopRight = K.block(freeDOF.rows(), freeDOF.rows(), supportDOF.rows(), supportDOF.rows());
     Eigen::MatrixXd KBottomLeft = KTopRight.transpose();

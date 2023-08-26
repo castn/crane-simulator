@@ -47,7 +47,7 @@ vtkNew<vtkPolyData> Renderer::createBeamPlot() {
     vtkNew<vtkPolyData> polyData;
 
     if (beams.empty()) {
-        std::cout << "Beams haven't been set yet!";
+        std::cout << "Beams haven't been set yet!\n";
         return polyData;
     }
 

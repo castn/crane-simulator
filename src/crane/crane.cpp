@@ -26,6 +26,10 @@ void Crane::createCrane() {
     createCounterjib();
 }
 
+std::vector<Beam> Crane::getBeams() {
+    return counterjib->getBeams();
+}
+
 // Methods relating to the tower
 void Crane::createTower() {
     tower->create(true, true);
@@ -43,17 +47,17 @@ void Crane::updateTowerDimensions(int towerHeight, int towerWidth, int towerSegs
                                   int towerSupStyle) {
     tower->updateDimensions(towerHeight, towerWidth, towerSegs, towerSupStyle);
 }
-
 void Crane::updateTowerHeight(int height) {
     tower->setHeight(height);
 }
-
 void Crane::updateTowerWidth(int width) {
     tower->setWidth(width);
 }
-
 void Crane::updateTowerSegments(int segments) {
     tower->setSegments(segments);
+}
+void Crane::updateTowerSupportType(int typeIndex) {
+    
 }
 
 // Methods relating to the jib
@@ -90,8 +94,4 @@ double Crane::getCounterjibLength() {
 }
 void Crane::updateCounterjibDimensions(int cjLength, int cjHeight, int cjNumSegs, int cjSupStyle) {
     counterjib->updateDimensions(cjLength, cjHeight, cjNumSegs, cjSupStyle);
-}
-
-void Crane::updateTowerSupportType(int typeIndex) {
-
 }

@@ -156,7 +156,7 @@ void Tower::updateDimensions(int height, int width, int numSegs, int supStyle) {
             break;
         default:
             this->supStyle = TowerStyle::NONE;
-            std::cout << "No support style chosen!\n";
+            std::cout << "No tower support style chosen!\n";
     }
 
     nodeIndex = 0;

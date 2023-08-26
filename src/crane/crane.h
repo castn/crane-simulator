@@ -25,51 +25,35 @@ public:
                           bool jibDrop, bool jibBend, int cjLength, int cjHeight, int cjNumSegs, int cjSupStyle);
 
     void createCrane();
-
+    std::vector<Beam> getBeams();
 public slots:
-
+// why do we need this? do we not want just one big update?
     void updateTowerHeight(int height);
     void updateTowerWidth(int width);
     void updateTowerSegments(int segments);
     void updateTowerSupportType(int typeIndex);
-
-
 private:
     // Everything related to tower
     void createTower();
-
     std::vector<Node> getTowerNodes();
-
     std::vector<Beam> getTowerBeams();
-
     double getTowerLength();
-
     void updateTowerDimensions(int towerHeight, int towerWidth, int towerNumSegs, int towerSupStyle);
 
     // Everything related to jib
     void createJib();
-
     std::vector<Node> getJibNodes();
-
     std::vector<Beam> getJibBeams();
-
     double getJibLength();
-
     void updateJibDimensions(int jibLength, int jibHeight, int jibNumSegs, int jibSupStyle,
                              bool jibDrop, bool jibBend);
 
     // Everything realted to counterjib
     void createCounterjib();
-
     std::vector<Node> getCounterjibNodes();
-
     std::vector<Beam> getCounterjibBeams();
-
     double getCounterjibLength();
-
     void updateCounterjibDimensions(int cjLength, int cjHeight, int cjNumSegs, int cjSupStyle);
-
-
 };
 
 #endif //MAINWINDOW_CRANE_H

@@ -14,9 +14,9 @@ public:
     explicit Renderer(QWidget *parent);
     QVBoxLayout *renderLayout = nullptr;
     void setBeamsToRender(std::vector<Beam> beams);
+    vtkNew<vtkPolyData> createBeamPlot();
 private:
     auto addRenderer() -> QWidget *;
-    vtkNew<vtkPolyData> createBeamPlot();
     std::vector<Beam> beams;
 };
 

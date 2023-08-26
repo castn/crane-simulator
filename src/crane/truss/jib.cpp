@@ -123,7 +123,7 @@ void Jib::updateDimensions(int length, int height, int numSegs, int supStyle,
             break;
         default:
             this->supStyle = JibStyle::NONE;
-            std::cout << "No support style chosen!\n";
+            std::cout << "No jib support style chosen!\n";
     }
     this->dropdown = dropdown;
     this->bend = bend;
