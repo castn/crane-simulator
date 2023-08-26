@@ -5,7 +5,25 @@
 #include <Eigen/Dense>
 
 void Analysis::analyze() {
-
+    int numNodes = nodes.size();
+    int numBeams = beams.size();
+    // Degrees of freedom
+    int DOF = 3;
+    int totalNumOfDOF = DOF * numNodes;
+    auto DOFs = getDOFs();
+    auto freeDOF = std::get<0>(DOFs);
+    auto supportDOF = std::get<1>(DOFs);
+    // Structural analysis
+    Eigen::VectorXd distance;
+    for (int i = 0; i < numBeams; i++) {
+        distance(i) = beams.at(i).getLength();
+    }
+    auto L = distance; //???
+    auto rotation = distance.transpose().array() / L.array();
+    Eigen::VectorXd transformationVector;
+    transformationVector << - rotation.transpose(), rotation.transpose();
+    // Stiffness
+    auto K = calculateGlobalStiffness(DOF, numBeams, totalNumOfDOF);
 }
 void Analysis::applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, int jibBaseEnd,
                            int cjEnd, int cjBaseEnd, double jibLeftForce, double jibRightForce,
@@ -168,44 +186,32 @@ bool Analysis::isEulerBucklingRod(int beam, double force) {
     return true;
 }
 
-std::tuple<Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getDOFs() {
-    // converted by Bard so no guarantee that it works
-    Eigen::MatrixXd freeDOF = Eigen::MatrixXd::Zero(dofCondition.rows(), dofCondition.cols());
-    Eigen::MatrixXd supportDOF = Eigen::MatrixXd::Zero(dofCondition.rows(), dofCondition.cols());
-
-    for (int i = 0; i < dofCondition.rows(); i++) {
-        if (dofCondition(i, i) != 0) {
-        freeDOF(i, i) = 1;
-        } else {
-        supportDOF(i, i) = 1;
-        }
-    }
-
-    return std::make_tuple(freeDOF, supportDOF);
-}
 void Analysis::calculateReactionForces() {
 
 }
-std::tuple<Eigen::VectorXd, Eigen::VectorXd> Analysis::calculateDeformation(Eigen::VectorXd defFreeNodes, std::vector<Beam> beams, int dof, int numNodes) {
+std::tuple<Eigen::VectorXi, Eigen::VectorXd> Analysis::calculateDeformation(Eigen::VectorXd defFreeNodes, std::vector<Beam> beams, int dof, int numNodes) {
     // Flatten dofCondition
-    Eigen::VectorXd deformation;
-    for (int i = 0; i < dofCondition.size(); i++) {
-        for (int j = 0; j < dofCondition.cols(); j++) {
-            deformation(3 * i + j) = dofCondition(i, j);
-        }
-    }
-    auto quickDefo = dofCondition.reshaped<Eigen::RowMajor>().transpose();
+    // Eigen::VectorXd deformation;
+    // for (int i = 0; i < dofCondition.size(); i++) {
+    //     for (int j = 0; j < dofCondition.cols(); j++) {
+    //         deformation(3 * i + j) = dofCondition(i, j);
+    //     }
+    // }
+    auto deformation = dofCondition.reshaped<Eigen::RowMajor>().transpose();
 
     // Replaces get_DOFs method but no gurantee about supportDOF
-    auto freeDOF = getNonZeros(dofCondition.reshaped<Eigen::RowMajor>().transpose());
-    auto supportDOF = getNonZeros(dofCondition.reshaped<Eigen::RowMajor>().transpose().cwiseEqual(0));
+    // Eigen::VectorXi freeDOF = getNonZeros(dofCondition.reshaped<Eigen::RowMajor>()); //.transpose()
+    // Eigen::VectorXi supportDOF = getNonZeros(dofCondition.reshaped<Eigen::RowMajor>().cwiseEqual(0)); //.transpose()
+    auto DOFs = getDOFs();
+    auto freeDOF = std::get<0>(DOFs);
+    auto supportDOF = std::get<1>(DOFs);
 
     // Set the deformations of the free nodes.
     int indexFree = 0;
     for (int i = 0; i < (int)freeDOF.size(); i++) {
         // Unsure abt all the int casts but otherwise throws errors
         deformation((int)freeDOF(i)) = (int)defFreeNodes(indexFree);
-        quickDefo((int)freeDOF(i)) = (int)defFreeNodes(indexFree);
+        // quickDefo((int)freeDOF(i)) = (int)defFreeNodes(indexFree);
         indexFree++;
     }
 
@@ -214,7 +220,7 @@ std::tuple<Eigen::VectorXd, Eigen::VectorXd> Analysis::calculateDeformation(Eige
     for (int i = 0; i < (int)supportDOF.size(); i++) {
         // Unsure abt all the int casts but otherwise throws errors
         deformation((int)freeDOF(i)) = (int)defFreeNodes(indexFixed);
-        quickDefo((int)freeDOF(i)) = (int)defFreeNodes(indexFixed);
+        // quickDefo((int)freeDOF(i)) = (int)defFreeNodes(indexFixed);
         indexFixed++;
     }
     deformation = deformation.reshaped(numNodes, dof);
@@ -226,26 +232,38 @@ std::tuple<Eigen::VectorXd, Eigen::VectorXd> Analysis::calculateDeformation(Eige
         defoBeams1(i) = deformation(beams.at(i).getEnd().getNodeNum());
     }
     Eigen::VectorXd u;
-    u << deformation, quickDefo;
+    u << defoBeams0, defoBeams1;
 
     return std::make_tuple(deformation, u);
 }
-Eigen::VectorXd Analysis::getNonZeros(Eigen::VectorXd vecToClean) {
-    Eigen::VectorXd cleaned;
+std::tuple<Eigen::VectorXi, Eigen::VectorXi> Analysis::getDOFs() {
+    Eigen::VectorXi freeDOF = getNonZeros(dofCondition.reshaped<Eigen::RowMajor>(), true); //.transpose()
+    Eigen::VectorXi supportDOF = getNonZeros(dofCondition.reshaped<Eigen::RowMajor>(), false);
+
+    return std::make_tuple(freeDOF, supportDOF);
+}
+Eigen::VectorXi Analysis::getNonZeros(Eigen::VectorXi vecToIndex, bool zeros) {
+    Eigen::VectorXi nzIndexes;
     int index = 0;
-    for (int i = 0; i < (int)vecToClean.size(); i++) {
-        if (vecToClean(i) != 0) {
-            cleaned(index) = vecToClean(i);
-            index++;
+    for (int i = 0; i < (int)vecToIndex.size(); i++) {
+        if (zeros && vecToIndex(i) != 0) {
+                nzIndexes(index) = i;
+                index++;
+        } else if (vecToIndex(i) == 0) {
+                nzIndexes(index) = i;
+                index++;
         }
     }
-    return cleaned;
+
+    return nzIndexes;
 }
-void Analysis::calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF) {
+Eigen::MatrixXd Analysis::calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF) {
     Eigen::MatrixXd K = Eigen::MatrixXd::Zero(totalNumOfDOF, totalNumOfDOF);
     for (int i = 0; i < numOfElements; i++) {
         auto tmp = beams.at(i) * (double)DOF;
     }
+
+    return K;
 }
 std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF) {
     Eigen::MatrixXd KTopLeft = K.block(freeDOF.rows(), 0, freeDOF.rows(), freeDOF.rows());

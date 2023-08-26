@@ -51,13 +51,13 @@ private:
 
     bool isEulerBucklingRod(int beam, double force);
 
-    std::tuple<Eigen::MatrixXd, Eigen::MatrixXd> getDOFs();
     void calculateReactionForces();
-    std::tuple<Eigen::VectorXd, Eigen::VectorXd> calculateDeformation(Eigen::VectorXd defFreeNodes,
+    std::tuple<Eigen::VectorXi, Eigen::VectorXd> calculateDeformation(Eigen::VectorXd defFreeNodes,
                                                                       std::vector<Beam> beams,
                                                                       int dof, int numNodes);
-    Eigen::VectorXd getNonZeros(Eigen::VectorXd vecToClean);
-    void calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF);
+    std::tuple<Eigen::VectorXi, Eigen::VectorXi> getDOFs();
+    Eigen::VectorXi getNonZeros(Eigen::VectorXi vecToIndex, bool zeros);
+    Eigen::MatrixXd calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF);
     std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF);
 
     void optimize(double horzForce, int cjSupType, bool hasHorzForces, bool hasGrav);
