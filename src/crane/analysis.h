@@ -7,7 +7,7 @@
 
 class Analysis {
 public:
-    void analyze();
+    std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::VectorXi> analyze();
     void generateConditions(std::vector<Node> nodes, std::vector<Beam> beams);
     void applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, int jibBaseEnd,
                      int cjEnd, int cjBaseEnd, double jibLeftForce, double jibRightForce,
@@ -52,15 +52,26 @@ private:
     bool isEulerBucklingRod(int beam, double force);
 
     void calculateReactionForces();
-    std::tuple<Eigen::VectorXi, Eigen::VectorXd> calculateDeformation(Eigen::VectorXd defFreeNodes,
-                                                                      std::vector<Beam> beams,
-                                                                      int dof, int numNodes);
+    std::tuple<Eigen::VectorXi,
+               Eigen::VectorXd> calculateDeformation(Eigen::VectorXd defFreeNodes,
+                                                     std::vector<Beam> beams, int dof,
+                                                     int numNodes);
     std::tuple<Eigen::VectorXi, Eigen::VectorXi> getDOFs();
     Eigen::VectorXi getNonZeros(Eigen::VectorXi vecToIndex, bool zeros);
     Eigen::MatrixXd calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF);
-    std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K, Eigen::MatrixXd freeDOF, Eigen::MatrixXd supportDOF);
+    std::tuple<Eigen::MatrixXd,
+               Eigen::MatrixXd,
+               Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K,
+                                                               Eigen::MatrixXd freeDOF,
+                                                               Eigen::MatrixXd supportDOF);
 
-    void optimize(double horzForce, int cjSupType, bool hasHorzForces, bool hasGrav);
+    std::tuple<Eigen::VectorXd,
+               Eigen::VectorXd,
+               Eigen::VectorXd,
+               Eigen::VectorXd> optimize(int horzDir, double horzForce, int cjSupType,
+                                         bool hasHorzForces, bool hasGrav);
+    void adjustCrossSectionArea(Eigen::VectorXd axialForce);
+    Eigen::VectorXd getAreaPerBeam();
 };
 
 #endif

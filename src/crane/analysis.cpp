@@ -4,7 +4,7 @@
 #include "truss/components/beam.h"
 #include <Eigen/Dense>
 
-void Analysis::analyze() {
+std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::VectorXi> Analysis::analyze() {
     int numNodes = nodes.size();
     int numBeams = beams.size();
     // Degrees of freedom
@@ -24,6 +24,15 @@ void Analysis::analyze() {
     transformationVector << - rotation.transpose(), rotation.transpose();
     // Stiffness
     auto K = calculateGlobalStiffness(DOF, numBeams, totalNumOfDOF);
+    auto Kcomps = getComponentsOfGlobalStiffness(K, freeDOF, supportDOF);
+    auto KBottomLeft = std::get<0>(Kcomps);
+    auto KBottomRight = std::get<1>(Kcomps);
+    auto KTopLeft = std::get<2>(Kcomps);
+    // Temp for return so no errors
+    Eigen::VectorXd axialForce;
+    Eigen::VectorXd reactionForce;
+    Eigen::VectorXi deformation;
+    return std::make_tuple(axialForce, reactionForce, deformation);
 }
 void Analysis::applyForces(std::vector<Node> nodes, int towerEnd, int jibEnd, int jibBaseEnd,
                            int cjEnd, int cjBaseEnd, double jibLeftForce, double jibRightForce,
@@ -274,8 +283,8 @@ std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::MatrixXd> Analysis::getCompo
     return std::make_tuple(KBottomLeft, KBottomRight, KTopLeft);
 }
 
-void Analysis::optimize(double horzForce, int cjSupType, bool hasHorzForces, bool hasGrav) {
-    Eigen::VectorXd optimAPB;
+std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::VectorXd, Eigen::VectorXd> Analysis::optimize(int horzDir, double horzForce, int cjSupType, bool hasHorzForces, bool hasGrav) {
+    Eigen::MatrixXd optimAPB;
     std::vector<int> directions = {0, 1, 2, 3};
     for (auto direction : directions) {
         areaPerBeam.fill(pow(0.05, 2));
@@ -287,8 +296,52 @@ void Analysis::optimize(double horzForce, int cjSupType, bool hasHorzForces, boo
             applyHorizontalForces(direction, horzForce, cjSupType);
         }
         for (int i = 0; i < 20; i++) {
-            // auto axialForce = analyze();
+            auto axialForce = std::get<0>(analyze());
             auto oldAPB(areaPerBeam);
+            adjustCrossSectionArea(axialForce);
+            if (oldAPB == areaPerBeam) {
+                break;
+            }
+            resetForces(jibLeftForce, jibRightForce, cjLeftForce, cjRightForce);
+            if (hasGrav) {
+                applyGravity();
+            }
+        }
+        if (!hasHorzForces) {
+            break;
+        }
+        // is this the same as append? or is it concatenate?
+        optimAPB.conservativeResize(optimAPB.rows(), optimAPB.cols() + 1);
+        optimAPB.col(optimAPB.cols() - 1) = areaPerBeam;
+    }
+    resetForces(jibLeftForce, jibRightForce, cjLeftForce, cjRightForce);
+    if (hasGrav) {
+        applyGravity();
+    }
+    if (hasHorzForces) {
+        for (int i = 0; i < (int)areaPerBeam.size(); i++) {
+            double highest1 = std::max(optimAPB(i, 0), optimAPB(i, 1));
+            double highest2 = std::max(optimAPB(i, 2), optimAPB(i, 3));
+            double highest = std::max(highest1, highest2);
+            areaPerBeam(i) = highest;
+        }
+        applyHorizontalForces(horzDir, horzForce, cjSupType);
+    }
+    auto complAna = analyze();
+    auto axialForce = std::get<0>(complAna);
+    auto reactionForce = std::get<1>(complAna);
+    auto deformation = std::get<1>(complAna);
+
+    return std::make_tuple(axialForce, reactionForce, deformation, areaPerBeam);
+}
+void Analysis::adjustCrossSectionArea(Eigen::VectorXd axialForce) {
+    for (int i = 0; i < (int)areaPerBeam.size(); i++) {
+        double currentTension = std::abs(axialForce(i) / areaPerBeam(i));
+        if (currentTension > absMaxTension) {
+            areaPerBeam(i) = pow(sqrt(areaPerBeam(i)) + 0.01, 2);
         }
     }
+}
+Eigen::VectorXd Analysis::getAreaPerBeam() {
+    return areaPerBeam;
 }
