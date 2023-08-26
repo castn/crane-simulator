@@ -28,6 +28,7 @@ public:
     void setHeight(int height);
     void setWidth(int width);
     void setSegments(int numSegs);
+    void setSupportStyle(int supStyle);
     void updateDimensions(int height, int width, int numSegs, int supStyle);
     void create(bool hasHorizontal, bool isHollow);
 private:

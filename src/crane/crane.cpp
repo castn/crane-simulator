@@ -48,6 +48,7 @@ void Crane::updateTowerDimensions(int towerHeight, int towerWidth, int towerSegs
     tower->updateDimensions(towerHeight, towerWidth, towerSegs, towerSupStyle);
 }
 void Crane::updateTowerHeight(int height) {
+    std::cout << "New height";
     tower->setHeight(height);
 }
 void Crane::updateTowerWidth(int width) {
@@ -57,7 +58,7 @@ void Crane::updateTowerSegments(int segments) {
     tower->setSegments(segments);
 }
 void Crane::updateTowerSupportType(int typeIndex) {
-    
+    tower->setSupportStyle(typeIndex + 1);
 }
 
 // Methods relating to the jib

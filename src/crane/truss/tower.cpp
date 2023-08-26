@@ -205,3 +205,20 @@ void Tower::setWidth(int width) {
 void Tower::setSegments(int numSegs) {
     this->numSegs = numSegs;
 }
+
+void Tower::setSupportStyle(int supStyle) {
+    switch (supStyle) {
+        case 1:
+            this->supStyle = TowerStyle::CROSS;
+            break;
+        case 2:
+            this->supStyle = TowerStyle::ZIGZAG;
+            break;
+        case 3:
+            this->supStyle = TowerStyle::DIAGONAL;
+            break;
+        default:
+            this->supStyle = TowerStyle::NONE;
+            std::cout << "No tower support style chosen!\n";
+    }
+}
