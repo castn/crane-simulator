@@ -237,8 +237,8 @@ std::tuple<Eigen::VectorXi, Eigen::VectorXd> Analysis::calculateDeformation(Eige
     Eigen::VectorXd defoBeams0;
     Eigen::VectorXd defoBeams1;
     for (int i = 0; i < (int)beams.size(); i++) {
-        defoBeams0(i) = deformation(beams.at(i).getStart().getNodeNum());
-        defoBeams1(i) = deformation(beams.at(i).getEnd().getNodeNum());
+        defoBeams0(i) = deformation(beams.at(i).getStart().getID());
+        defoBeams1(i) = deformation(beams.at(i).getEnd().getID());
     }
     Eigen::VectorXd u;
     u << defoBeams0, defoBeams1;

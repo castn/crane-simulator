@@ -1,11 +1,11 @@
 #include "node.h"
 #include <cmath>
 
-Node::Node(double x, double y, double z, int nodeNum) {
+Node::Node(double x, double y, double z, int id) {
     this->x = x;
     this->y = y;
     this->z = z;
-    this->nodeNum = nodeNum;
+    this->id = id;
 }
 
 double Node::getX() {
@@ -24,6 +24,6 @@ double Node::norm() {
     return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 }
 
-int Node::getNodeNum() {
-    return nodeNum;
+int Node::getID() {
+    return id;
 }

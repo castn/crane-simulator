@@ -3,18 +3,18 @@
 
 class Node {
 public:
-    Node(double x, double y, double z, int nodeNum);
+    Node(double x, double y, double z, int id);
     double getX();
     double getY();
     double getZ();
     double norm();
-    int getNodeNum();
+    int getID();
 
     Node operator - (const Node& node) const {
-        return Node(this->x - node.x, this->y - node.y, this->z - node.z, nodeNum);
+        return Node(this->x - node.x, this->y - node.y, this->z - node.z, id);
     }
     Node operator * (const double toMult) const {
-        return Node(this->x * toMult, this->y * toMult, this->z * toMult, nodeNum);
+        return Node(this->x * toMult, this->y * toMult, this->z * toMult, id);
     }
     bool operator == (const Node& node) const {
         return (this->x == node.x && this->y == node.y && this->z == node.z);
@@ -23,7 +23,7 @@ private:
     double x = 0;
     double y = 0;
     double z = 0;
-    int nodeNum;
+    int id;
 };
 
 #endif
