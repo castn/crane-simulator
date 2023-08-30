@@ -58,7 +58,7 @@ private:
                                                      int numNodes);
     std::tuple<Eigen::VectorXi, Eigen::VectorXi> getDOFs();
     Eigen::VectorXi getNonZeros(Eigen::VectorXi vecToIndex, bool zeros);
-    Eigen::MatrixXd calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF);
+    Eigen::MatrixXd calculateGlobalStiffness(Eigen::VectorXd L, int DOF, int numOfElements, int totalNumOfDOF, Eigen::VectorXd transformationVector);
     std::tuple<Eigen::MatrixXd,
                Eigen::MatrixXd,
                Eigen::MatrixXd> getComponentsOfGlobalStiffness(Eigen::MatrixXd K,

@@ -266,10 +266,20 @@ Eigen::VectorXi Analysis::getNonZeros(Eigen::VectorXi vecToIndex, bool zeros) {
 
     return nzIndexes;
 }
-Eigen::MatrixXd Analysis::calculateGlobalStiffness(int DOF, int numOfElements, int totalNumOfDOF) {
+Eigen::MatrixXd Analysis::calculateGlobalStiffness(Eigen::VectorXd L, int DOF, int numOfElements, int totalNumOfDOF, Eigen::VectorXd transformationVector) {
     Eigen::MatrixXd K = Eigen::MatrixXd::Zero(totalNumOfDOF, totalNumOfDOF);
+    Eigen::MatrixXd elemStiffness;
     for (int i = 0; i < numOfElements; i++) {
         auto tmp = beams.at(i) * (double)DOF;
+        double row1 = 0;
+        double row2 = 0;
+        auto trafVec2 = transformationVector(i) * E * areaPerBeam(i);
+        for (int j = 0; j < transformationVector.size(); j++) {
+            row1 += transformationVector(j) * trafVec2(j);
+            row2 += transformationVector(j) * trafVec2(j);
+        }
+        row1 /= L(i);
+        row2 /= L(i);
     }
 
     return K;
