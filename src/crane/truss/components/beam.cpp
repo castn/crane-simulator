@@ -1,6 +1,8 @@
 #include "beam.h"
 #include "node.h"
 
+Beam::Beam(){}
+
 Beam::Beam(Node start, Node end){
     startNode = start;
     endNode = end;

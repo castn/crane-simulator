@@ -6,12 +6,16 @@
 
 class Beam {
 public:
+    Beam();
     Beam(Node start, Node end);
     double getLength();
     Node getStart();
     Node getEnd();
 
     Beam operator * (const double toMult) const {
+        return Beam(this->startNode * toMult, this->endNode * toMult);
+    }
+    Beam operator * (const int toMult) const {
         return Beam(this->startNode * toMult, this->endNode * toMult);
     }
 private:

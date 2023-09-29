@@ -23,7 +23,7 @@ std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::VectorXi> Analysis::analyze(
     Eigen::VectorXd transformationVector;
     transformationVector << - rotation.transpose(), rotation.transpose();
     // Stiffness
-    auto K = calculateGlobalStiffness(DOF, numBeams, totalNumOfDOF);
+    auto K = calculateGlobalStiffness(L, DOF, numBeams, totalNumOfDOF, transformationVector);
     auto Kcomps = getComponentsOfGlobalStiffness(K, freeDOF, supportDOF);
     auto KBottomLeft = std::get<0>(Kcomps);
     auto KBottomRight = std::get<1>(Kcomps);
@@ -269,18 +269,35 @@ Eigen::VectorXi Analysis::getNonZeros(Eigen::VectorXi vecToIndex, bool zeros) {
 Eigen::MatrixXd Analysis::calculateGlobalStiffness(Eigen::VectorXd L, int DOF, int numOfElements, int totalNumOfDOF, Eigen::VectorXd transformationVector) {
     Eigen::MatrixXd K = Eigen::MatrixXd::Zero(totalNumOfDOF, totalNumOfDOF);
     Eigen::MatrixXd elemStiffness;
+
+    Beam tmp = Beam();
+    std::vector<int> index;
     for (int i = 0; i < numOfElements; i++) {
-        auto tmp = beams.at(i) * (double)DOF;
-        double row1 = 0;
-        double row2 = 0;
-        auto trafVec2 = transformationVector(i) * E * areaPerBeam(i);
-        for (int j = 0; j < transformationVector.size(); j++) {
-            row1 += transformationVector(j) * trafVec2(j);
-            row2 += transformationVector(j) * trafVec2(j);
+        tmp = beams.at(i) * DOF;
+        // elemStiffness = np.dot(...)
+        for (int j = 0; j < DOF; j++) {
+            index.insert(index.begin(), tmp.getStart().getID() + (2 - j));
+            index.insert(index.end(), tmp.getEnd().getID() + j);
         }
-        row1 /= L(i);
-        row2 /= L(i);
+        K(i) = K(i) + 0;
+        // K[np.ix_(index, index)] = K[np.ix_(index, index)] + elemStiffness
     }
+    // for (int i = 0; i < numOfElements; i++) {
+    //     auto tmp3 = beams.at(i) * (double)DOF;
+    //     double row1 = 0;
+    //     double row2 = 0;
+    //     auto trafVec2 = transformationVector(i) * E * areaPerBeam(i);
+    //     for (int j = 0; j < transformationVector.size(); j++) {
+    //         row1 += transformationVector(j) * trafVec2;
+    //         row2 += transformationVector(j) * trafVec2;
+    //     }
+    //     row1 /= L(i);
+    //     row2 /= L(i);
+
+        
+    //     std::concatenate(tmp.at(0), tmp.at(0) + DOF, tmp.at(1), tmp.at(1) + DOF, index);
+    //     K.block(index, index, DOF, DOF) += trafVec2;
+    // }
 
     return K;
 }
