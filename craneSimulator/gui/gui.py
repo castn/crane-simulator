@@ -302,14 +302,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.current_treeWidget.clear()
 
         current_tree_items = [create_tree_item(self.nodes, "XYZ-Coordinates of undeformed Nodes", ""),
-                              create_tree_item(self.optim_deformed_nodes, "XYZ-Coordinates of deformed Nodes", ""),
+                              create_tree_item(self.optim_deformed_nodes.round(decimals=2), "XYZ-Coordinates of deformed Nodes", ""),
                               create_tree_item(self.beams, "Beams (start and end nodes)", ""),
                               create_tree_item(self.optim_axial_forces.round(decimals=2), "Axial forces", "N"),
                               create_tree_item(self.optim_area_per_rod, "Cross sectional area per Rod", "m\u00B2"),
                               create_tree_item(self.optim_displacement_jib, "Jib displacement of arrows", "mm"),
                               create_tree_item(self.optim_displacement_counter_jib,
                                                "Counter Jib displacement of arrows", "mm"),
-                              create_tree_item([self.total_length.round(decimals=3)], "Total length of beams", "m"),
+                              create_tree_item([self.total_length], "Total length of beams", "m"),
                               create_tree_item([self.total_volume.round(decimals=3)], "Total volume of beams",
                                                "m\u00B3"),
                               create_tree_item([self.total_mass.round(decimals=3)], "Mass", "kg"),
@@ -530,7 +530,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.output.appendPlainText("Finish simulation")
         # Now do the optimisation
         self.ui.output.appendPlainText("Start optimization ...")
-        self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize(self.ui.wind_settings.isChecked(), self.ui.enable_gravity.isChecked())
+        # self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.optimize(self.ui.wind_settings.isChecked(), self.ui.enable_gravity.isChecked())
+        self.optim_axial_forces, self.optim_reaction_forces, self.optim_deformations, self.optim_area_per_rod = self.crane.analyze()
         self.optim_deformed_nodes = self.optim_deformations * multiplier + self.nodes
         self.ui.output.appendPlainText("Finish optimization")
 

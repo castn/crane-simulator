@@ -240,11 +240,17 @@ def analyze(nodes, beams, E):
 
     # Structural analysis
     distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]    # Distance between joints of the beam
+    print("Distance")
+    print(distance)
     L = np.sqrt((distance ** 2).sum(axis=1))                    # Length of each beam in meters
     Dims.length_of_each_beam = np.multiply(L, 1000)
     rotation = distance.transpose() / L                         # rotation matrix
+    print("Rotation")
+    print(rotation)
     transformation_vector = np.concatenate((- rotation.transpose(),
                                             rotation.transpose()), axis=1)  # Transformation vector
+    print("Trafo vec")
+    print(transformation_vector)
 
     # Stiffness
     K = calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_number_of_dof, transformation_vector)

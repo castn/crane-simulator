@@ -87,8 +87,8 @@ def create_connected(tower_nodes, tower_beams, tower_height, tower_width):
 
 def create_segments():
     """Create the segments of a jib"""
+    jib_length_m = Dims.SEGMENTS * Dims.SEGMENT_LENGTH / 1000
     for i in range(Dims.SEGMENTS + 1):
-        jib_length_m = Dims.SEGMENTS * Dims.SEGMENT_LENGTH / 1000
         len_in_m = Dims.TOWER_WIDTH / 1000 + Dims.SEGMENT_LENGTH / 1000 * i
         bend_grad = 0.01 * np.power(30, 1/jib_length_m * len_in_m) * 1000
         bot_height = Dims.START_HEIGHT + bend_grad if Dims.BEND else Dims.START_HEIGHT
@@ -118,11 +118,6 @@ def create_segments():
                                 else Dims.TOWER_WIDTH * 1.15 + Dims.SEGMENT_LENGTH * i,
                                 Dims.SEGMENT_LENGTH / 2,
                                 bot_height + top_height])
-        # adds last top node for set-back support style
-        # if i == Dims.SEGMENTS and Dims.SUPPORT_TYPE != Style.TRUSS:
-        #     Comps.nodes.append([Dims.TOWER_WIDTH + Dims.SEGMENT_LENGTH * i,
-        #                         Dims.SEGMENT_LENGTH / 2,
-        #                         bot_height + top_height])
 
 
 def create_beams():
@@ -131,10 +126,6 @@ def create_beams():
         val_to_add = 3 * i + Dims.INIT_BEAM
         create_horizontal_beams(i, val_to_add)
         create_diagonal_beams(val_to_add)
-    # if Dims.SUPPORT_TYPE != Style.TRUSS:
-    #     val_to_add = 3 * Dims.SEGMENTS + Dims.INIT_BEAM
-    #     append_beam(0 + val_to_add, 2 + val_to_add)
-    #     append_beam(1 + val_to_add, 2 + val_to_add)
 
 
 def create_horizontal_beams(i, val_to_add):
@@ -143,8 +134,6 @@ def create_horizontal_beams(i, val_to_add):
         append_beam(0 + val_to_add, 1 + val_to_add)  # first horizontal (0-1)
     if i < Dims.SEGMENTS - 1:
         append_beam(2 + val_to_add, 5 + val_to_add)  # top connection
-    # if i == Dims.SEGMENTS - 1 and Dims.SUPPORT_TYPE != Style.TRUSS:
-    #     append_beam(2 + val_to_add, 5 + val_to_add)
     append_beam(1 + val_to_add, 4 + val_to_add)
     append_beam(4 + val_to_add, 3 + val_to_add)
     append_beam(3 + val_to_add, 0 + val_to_add)

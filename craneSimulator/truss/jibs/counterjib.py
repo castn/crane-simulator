@@ -84,7 +84,7 @@ def create_connected(crane_nodes, crane_beams, tower_height, tower_width,
 
 
 def create_segments():
-    """Creates all beams needed for the counterjib"""
+    """Creates all nodes needed for the counterjib"""
     for i in range(Dims.SEGMENTS + 1):
         # skips the first run-through if nodes already exist
         if not (i == 0 and Dims.IS_CONNECTED):
