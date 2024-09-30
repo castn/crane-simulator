@@ -240,20 +240,14 @@ def analyze(nodes, beams, E):
 
     # Structural analysis
     distance = nodes[beams[:, 1], :] - nodes[beams[:, 0], :]    # Distance between joints of the beam
-    print("Distance")
-    print(distance)
     L = np.sqrt((distance ** 2).sum(axis=1))                    # Length of each beam in meters
     Dims.length_of_each_beam = np.multiply(L, 1000)
     rotation = distance.transpose() / L                         # rotation matrix
-    print("Rotation")
-    print(rotation)
-    transformation_vector = np.concatenate((- rotation.transpose(),
+    transformation_matrix = np.concatenate((- rotation.transpose(),
                                             rotation.transpose()), axis=1)  # Transformation vector
-    print("Trafo vec")
-    print(transformation_vector)
 
     # Stiffness
-    K = calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_number_of_dof, transformation_vector)
+    K = calculate_global_stiffness(E, L, beams, dof, number_of_elements, total_number_of_dof, transformation_matrix)
     K_bottomleft, K_bottomright, K_topleft = get_components_of_global_stiffness(K, free_dof, support_dof)
 
     # Deformation
@@ -263,7 +257,7 @@ def analyze(nodes, beams, E):
 
     # Calculate axial forces for each beam
     axial_force = np.multiply(np.multiply(E, Comps.area_per_beam / L[:]),
-                              np.multiply(transformation_vector[:], u[:]).sum(axis=1))
+                              np.multiply(transformation_matrix[:], u[:]).sum(axis=1))
 
     # Test each beam for euler buckling
     for i in range(number_of_elements):
@@ -296,6 +290,8 @@ def calculate_reaction_forces(K_bottomleft, K_bottomright, def_free_nodes, dof):
 
 def calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes, support_dof):
     """Combines individual deformations into a single matrix"""
+    print(f'Free nodes\n{def_free_nodes}')
+    print(f'Fixed nodes\n{Conditions.def_fixed_nodes}')
     deformation = Conditions.dof_condition.astype(float).flatten()  # Matrix containing all the deformation data
     deformation[free_dof] = def_free_nodes                          # Deformation of all nodes that are free to move
     deformation[support_dof] = Conditions.def_fixed_nodes           # Deformation of all nodes that are fixed
@@ -306,7 +302,7 @@ def calculate_deformation(def_free_nodes, beams, dof, free_dof, number_of_nodes,
 
 
 def calculate_global_stiffness(E, L, beams, dof, number_of_elements,
-                               total_number_of_dof, transformation_vector):
+                               total_number_of_dof, transformation_matrix):
     """Calculates the global stiffness matrix"""
     # Empty matrix with required dimension for the stiffness matrix
     K = np.zeros([total_number_of_dof, total_number_of_dof])
@@ -314,11 +310,11 @@ def calculate_global_stiffness(E, L, beams, dof, number_of_elements,
     for k in range(number_of_elements):
         tmp = dof * beams[k, :]
         # (Local) Stiffness for each element
-        elem_stiffness = np.dot(transformation_vector[k][np.newaxis].transpose() * E * Comps.area_per_beam[k],
-                                transformation_vector[k][np.newaxis]) / L[k]
+        elem_stiffness = np.dot(transformation_matrix[k][np.newaxis].transpose() * E * Comps.area_per_beam[k],
+                                transformation_matrix[k][np.newaxis]) / L[k]
         # Index where local stiffness should be placed in global stiffness
         index = np.r_[tmp[0]:tmp[0] + dof, tmp[1]:tmp[1] + dof]
-        K[np.ix_(index, index)] = K[np.ix_(index, index)] + elem_stiffness
+        K[np.ix_(index, index)] += elem_stiffness
     return K
 
 
